@@ -51,7 +51,6 @@ ALIGNED8 static const Texture flame_seg3_texture_0301AB20[] = {
 const Gfx flame_seg3_dl_draw[] = {
     gsSPVertex(flame_seg3_vertex_030172E0, 4, 0),
     gsSP2Triangles( 0,  1,  2, 0x0,  0,  2,  3, 0x0),
-    gsDPPipeSync(),
     gsSPEndDisplayList(),
 };
 

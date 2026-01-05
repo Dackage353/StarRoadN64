@@ -24,6 +24,8 @@
 #include "actors/common1.h"
 #include "engine/gut.h"
 
+static void geo_process_node_and_siblings(struct GraphNode *firstNode);
+
 /**
  * This file contains the code that processes the scene graph for rendering.
  * The scene graph is responsible for drawing everything except the HUD / text boxes.
@@ -49,10 +51,10 @@
  *
  */
 
-s16 gMatStackIndex = 0;
-ALIGNED16 Mat4 gMatStack[32];
-ALIGNED16 Mtx *gMatStackFixed[32];
-f32 sAspectRatio;
+static s16 gMatStackIndex = 0;
+static ALIGNED16 Mat4 gMatStack[32];
+static ALIGNED16 Mtx *gMatStackFixed[32];
+static f32 sAspectRatio;
 
 /**
  * Animation nodes have state in global variables, so this struct captures
@@ -70,21 +72,21 @@ struct GeoAnimState {
 
 // For some reason, this is a GeoAnimState struct, but the current state consists
 // of separate global variables. It won't match EU otherwise.
-struct GeoAnimState gGeoTempState;
+static struct GeoAnimState gGeoTempState;
 
-u8 gCurrAnimType;
-u8 gCurrAnimEnabled;
-s16 gCurrAnimFrame;
-f32 gCurrAnimTranslationMultiplier;
-u16 *gCurrAnimAttribute;
-s16 *gCurrAnimData;
+static u8 gCurrAnimType;
+static u8 gCurrAnimEnabled;
+static s16 gCurrAnimFrame;
+static f32 gCurrAnimTranslationMultiplier;
+static u16 *gCurrAnimAttribute;
+static s16 *gCurrAnimData;
 
 /* Rendermode settings for cycle 1 for all 8 or 13 layers. */
-struct RenderModeContainer renderModeTable_1Cycle[2] = { 
+static const struct RenderModeContainer renderModeTable_1Cycle[2] = {
     [RENDER_NO_ZB] = { {
         [LAYER_FORCE] = G_RM_OPA_SURF,
-        [LAYER_CORKBOX] = G_RM_AA_OPA_SURF,
         [LAYER_OPAQUE] = G_RM_AA_OPA_SURF,
+        [LAYER_PCL] = G_RM_AA_PCL_SURF,
         [LAYER_OPAQUE_INTER] = G_RM_AA_OPA_SURF,
         [LAYER_OPAQUE_DECAL] = G_RM_AA_OPA_SURF,
         [LAYER_ALPHA] = G_RM_AA_TEX_EDGE,
@@ -95,21 +97,15 @@ struct RenderModeContainer renderModeTable_1Cycle[2] = {
         [LAYER_OCCLUDE_SILHOUETTE_OPAQUE] = G_RM_AA_OPA_SURF,
         [LAYER_OCCLUDE_SILHOUETTE_ALPHA] = G_RM_AA_TEX_EDGE,
 #endif
-        [LAYER_SMOKE_ALPHA] = G_RM_AA_TEX_EDGE,
-        [LAYER_COIN] = G_RM_AA_TEX_EDGE,
-        [LAYER_CIRCLE_SHADOW] = G_RM_CLD_SURF,
-        [LAYER_CIRCLE_SHADOW_TRANSPARENT] = G_RM_CLD_SURF,
+        [LAYER_CLD] = G_RM_CLD_SURF,
         [LAYER_TRANSPARENT_DECAL] = G_RM_AA_XLU_SURF,
         [LAYER_TRANSPARENT] = G_RM_AA_XLU_SURF,
-        [LAYER_SMOKE_TRANSPARENT] = G_RM_AA_XLU_SURF,
-        [LAYER_MIST] = G_RM_AA_XLU_SURF,
-        [LAYER_RED_FLAME] = G_RM_AA_XLU_SURF,
-        [LAYER_BLUE_FLAME] = G_RM_AA_XLU_SURF,
         [LAYER_TRANSPARENT_INTER] = G_RM_AA_XLU_SURF,
     } },
     [RENDER_ZB] = { {
         [LAYER_FORCE] = G_RM_ZB_OPA_SURF,
         [LAYER_OPAQUE] = G_RM_AA_ZB_OPA_SURF,
+        [LAYER_PCL] = G_RM_AA_ZB_PCL_SURF,
         [LAYER_OPAQUE_INTER] = G_RM_AA_ZB_OPA_INTER,
         [LAYER_OPAQUE_DECAL] = G_RM_AA_ZB_OPA_DECAL,
         [LAYER_ALPHA] = G_RM_AA_ZB_TEX_EDGE,
@@ -120,25 +116,18 @@ struct RenderModeContainer renderModeTable_1Cycle[2] = {
         [LAYER_OCCLUDE_SILHOUETTE_OPAQUE] = G_RM_AA_ZB_OPA_SURF,
         [LAYER_OCCLUDE_SILHOUETTE_ALPHA] = G_RM_AA_ZB_TEX_EDGE,
 #endif
-        [LAYER_SMOKE_ALPHA] = G_RM_AA_ZB_TEX_EDGE,
-        [LAYER_COIN] = G_RM_AA_ZB_TEX_EDGE,
-        [LAYER_CIRCLE_SHADOW] = G_RM_AA_ZB_XLU_DECAL,
-        [LAYER_CIRCLE_SHADOW_TRANSPARENT] = G_RM_ZB_CLD_SURF,
+        [LAYER_CLD] = G_RM_ZB_CLD_SURF,
         [LAYER_TRANSPARENT_DECAL] = G_RM_AA_ZB_XLU_DECAL,
         [LAYER_TRANSPARENT] = G_RM_AA_ZB_XLU_SURF,
-        [LAYER_SMOKE_TRANSPARENT] = G_RM_AA_ZB_XLU_SURF,
-        [LAYER_MIST] = G_RM_AA_ZB_XLU_SURF,
-        [LAYER_RED_FLAME] = G_RM_AA_ZB_XLU_SURF,
-        [LAYER_BLUE_FLAME] = G_RM_AA_ZB_XLU_SURF,
         [LAYER_TRANSPARENT_INTER] = G_RM_AA_ZB_XLU_INTER,
     } } };
 
 /* Rendermode settings for cycle 2 for all 13 layers. */
-struct RenderModeContainer renderModeTable_2Cycle[2] = {
+static const struct RenderModeContainer renderModeTable_2Cycle[2] = {
     [RENDER_NO_ZB] = { {
         [LAYER_FORCE] = G_RM_OPA_SURF2,
-        [LAYER_CORKBOX] = G_RM_AA_OPA_SURF2,
         [LAYER_OPAQUE] = G_RM_AA_OPA_SURF2,
+        [LAYER_PCL] = G_RM_AA_PCL_SURF2,
         [LAYER_OPAQUE_INTER] = G_RM_AA_OPA_SURF2,
         [LAYER_OPAQUE_DECAL] = G_RM_AA_OPA_SURF2,
         [LAYER_ALPHA] = G_RM_AA_TEX_EDGE2,
@@ -149,22 +138,15 @@ struct RenderModeContainer renderModeTable_2Cycle[2] = {
         [LAYER_OCCLUDE_SILHOUETTE_OPAQUE] = G_RM_AA_OPA_SURF2,
         [LAYER_OCCLUDE_SILHOUETTE_ALPHA] = G_RM_AA_TEX_EDGE2,
 #endif
-        [LAYER_SMOKE_ALPHA] = G_RM_AA_TEX_EDGE2,
-        [LAYER_COIN] = G_RM_AA_TEX_EDGE2,
-        [LAYER_CIRCLE_SHADOW] = G_RM_CLD_SURF2,
-        [LAYER_CIRCLE_SHADOW_TRANSPARENT] = G_RM_CLD_SURF2,
+        [LAYER_CLD] = G_RM_CLD_SURF2,
         [LAYER_TRANSPARENT_DECAL] = G_RM_AA_XLU_SURF2,
         [LAYER_TRANSPARENT] = G_RM_AA_XLU_SURF2,
-        [LAYER_SMOKE_TRANSPARENT] = G_RM_AA_XLU_SURF2,
-        [LAYER_MIST] = G_RM_AA_XLU_SURF2,
-        [LAYER_RED_FLAME] = G_RM_AA_XLU_SURF2,
-        [LAYER_BLUE_FLAME] = G_RM_AA_XLU_SURF2,
         [LAYER_TRANSPARENT_INTER] = G_RM_AA_XLU_SURF2,
     } },
     [RENDER_ZB] = { {
         [LAYER_FORCE] = G_RM_ZB_OPA_SURF2,
-        [LAYER_CORKBOX] = G_RM_AA_ZB_OPA_SURF2,
         [LAYER_OPAQUE] = G_RM_AA_ZB_OPA_SURF2,
+        [LAYER_PCL] = G_RM_AA_ZB_PCL_SURF2,
         [LAYER_OPAQUE_INTER] = G_RM_AA_ZB_OPA_INTER2,
         [LAYER_OPAQUE_DECAL] = G_RM_AA_ZB_OPA_DECAL2,
         [LAYER_ALPHA] = G_RM_AA_ZB_TEX_EDGE2,
@@ -175,27 +157,20 @@ struct RenderModeContainer renderModeTable_2Cycle[2] = {
         [LAYER_OCCLUDE_SILHOUETTE_OPAQUE] = G_RM_AA_ZB_OPA_SURF2,
         [LAYER_OCCLUDE_SILHOUETTE_ALPHA] = G_RM_AA_ZB_TEX_EDGE2,
 #endif
-        [LAYER_SMOKE_ALPHA] = G_RM_AA_ZB_TEX_EDGE2,
-        [LAYER_COIN] = G_RM_AA_ZB_TEX_EDGE2,
-        [LAYER_CIRCLE_SHADOW] = G_RM_AA_ZB_XLU_DECAL2,
-        [LAYER_CIRCLE_SHADOW_TRANSPARENT] = G_RM_ZB_CLD_SURF2,
+        [LAYER_CLD] = G_RM_ZB_CLD_SURF2,
         [LAYER_TRANSPARENT_DECAL] = G_RM_AA_ZB_XLU_DECAL2,
         [LAYER_TRANSPARENT] = G_RM_AA_ZB_XLU_SURF2,
-        [LAYER_SMOKE_TRANSPARENT] = G_RM_AA_ZB_XLU_SURF2,
-        [LAYER_MIST] = G_RM_AA_ZB_XLU_SURF2,
-        [LAYER_RED_FLAME] = G_RM_AA_ZB_XLU_SURF2,
-        [LAYER_BLUE_FLAME] = G_RM_AA_ZB_XLU_SURF2,
         [LAYER_TRANSPARENT_INTER] = G_RM_AA_ZB_XLU_INTER2,
     } } };
 
-ALIGNED16 struct GraphNodeRoot *gCurGraphNodeRoot = NULL;
-ALIGNED16 struct GraphNodeMasterList *gCurGraphNodeMasterList = NULL;
-ALIGNED16 struct GraphNodePerspective *gCurGraphNodeCamFrustum = NULL;
-ALIGNED16 struct GraphNodeCamera *gCurGraphNodeCamera = NULL;
-ALIGNED16 struct GraphNodeObject *gCurGraphNodeObject = NULL;
-ALIGNED16 struct GraphNodeHeldObject *gCurGraphNodeHeldObject = NULL;
+struct GraphNodeRoot *gCurGraphNodeRoot = NULL;
+struct GraphNodeMasterList *gCurGraphNodeMasterList = NULL;
+struct GraphNodePerspective *gCurGraphNodeCamFrustum = NULL;
+struct GraphNodeCamera *gCurGraphNodeCamera = NULL;
+struct GraphNodeObject *gCurGraphNodeObject = NULL;
+struct GraphNodeHeldObject *gCurGraphNodeHeldObject = NULL;
 u16 gAreaUpdateCounter = 0;
-LookAt* gCurLookAt;
+static LookAt* gCurLookAt;
 
 #if SILHOUETTE
 // AA_EN        Enable anti aliasing (not actually used for AA in this case).
@@ -232,7 +207,7 @@ struct RenderPhase {
     u8 endLayer;
 };
 
-static struct RenderPhase sRenderPhases[] = {
+static const struct RenderPhase sRenderPhases[] = {
 #if SILHOUETTE
     [RENDER_PHASE_ZEX_BEFORE_SILHOUETTE]   = {
         .startLayer = LAYER_FIRST,
@@ -272,7 +247,7 @@ extern const Gfx init_rsp[];
 #define LOWER_FIXED(x) ((int)((unsigned int)((x) * 0x10000) & 0xFFFF))
 
 // Fixed-point identity matrix with the inverse of world scale
-Mtx identityMatrixWorldScale = {{
+static const Mtx identityMatrixWorldScale = {{
     {UPPER_FIXED(1.0f / WORLD_SCALE) << 16, 0x00000000,
      UPPER_FIXED(1.0f / WORLD_SCALE) <<  0, 0x00000000},
     {0x00000000,                            UPPER_FIXED(1.0f / WORLD_SCALE) << 16,
@@ -283,45 +258,14 @@ Mtx identityMatrixWorldScale = {{
      0x00000000,                            LOWER_FIXED(1.0f)               <<  0}
 }};
 
-static const Gfx* sCoinsTextureDls[] = {
-    dl_coin_0,
-    dl_coin_22_5,
-    dl_coin_45,
-    dl_coin_67_5,
-    dl_coin_90,
-};
-
-extern const Gfx dl_shadow_circle_end[];
-static const Gfx* sRedFlameTextureDls[] = {
-    flame_seg3_dl_0301B3B0,
-    flame_seg3_dl_0301B3C8,
-    flame_seg3_dl_0301B3E0,
-    flame_seg3_dl_0301B3F8,
-    flame_seg3_dl_0301B410,
-    flame_seg3_dl_0301B428,
-    flame_seg3_dl_0301B440,
-    flame_seg3_dl_0301B458,
-};
-
-static const Gfx* sBlueFlameTextureDls[] = {
-    flame_seg3_dl_0301B500,
-    flame_seg3_dl_0301B518,
-    flame_seg3_dl_0301B530,
-    flame_seg3_dl_0301B548,
-    flame_seg3_dl_0301B560,
-    flame_seg3_dl_0301B578,
-    flame_seg3_dl_0301B590,
-    flame_seg3_dl_0301B5A8,
-};
-
-extern Gfx burn_smoke_seg4_sub_dl_begin_translucent[];
-extern Gfx burn_smoke_seg4_sub_dl_begin_alpha[];
-extern const Gfx burn_smoke_seg4_sub_dl_end[];
-extern const Gfx mist_dl[];
-extern const Gfx mist_dl_end[];
-
-extern const Gfx breakable_box_seg8_dl_cork_box_init[];
-extern const Gfx breakable_box_seg8_dl_cork_box_end[];
+static void set_render_mode(Gfx **ptempGfxHead, int zb, int layer)
+{
+#define tempGfxHead (*ptempGfxHead)
+    u32 wantMode1 = renderModeTable_1Cycle[zb].modes[layer];
+    u32 wantMode2 = renderModeTable_2Cycle[zb].modes[layer];
+    gDPSetRenderMode(tempGfxHead++, wantMode1, wantMode2);
+#undef tempGfxHead
+}
 
 /**
  * Process a master list node. This has been modified, so now it runs twice, for each microcode.
@@ -331,21 +275,65 @@ extern const Gfx breakable_box_seg8_dl_cork_box_end[];
  * would make the ZEX 0-4 render on top of Rej's 5-7.
  */
 
-void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
-    struct RenderPhase *renderPhase;
-    struct DisplayListNode *currList;
+static ALWAYS_INLINE void render_lists(Gfx **ptempGfxHead, struct DisplayListNode* currList)
+{
+#define tempGfxHead (*ptempGfxHead)
+    u32 shift = ((u32) tempGfxHead) & 0xF;
+    do {
+        void* transform = currList->transform;
+        void* displayList = currList->displayList;
+        struct DisplayListNode* next = currList->next;
+        asm volatile("": : :"memory");
+        __builtin_mips_cache(0x11, currList);
+        currList = next;
+        __builtin_mips_cache(0xd, ((u8*) tempGfxHead) + shift);
+
+        gSPMatrix(tempGfxHead++, VIRTUAL_TO_PHYSICAL(transform), (G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH));
+        _gSPDisplayListRaw(tempGfxHead++, displayList, 0);
+    } while (currList != NULL);
+#undef tempGfxHead
+}
+
+static ALWAYS_INLINE int render_batches(Gfx **ptempGfxHead, struct BatchArray* arr, int currLayer)
+{
+#define tempGfxHead (*ptempGfxHead)
+    int amountRendered = 0;
+    if (!arr)
+        return 0;
+
+    // Some "fun" display lists before may decide to change the render mode, so we need to reset it.
+    set_render_mode(&tempGfxHead, 1, currLayer);
+
+    for (int batch = 0; batch < arr->count; batch++) {
+        struct DisplayListLinks* batchLinks = &arr->batches[batch];
+        if (!batchLinks->head)
+            continue;
+
+        const struct BatchDisplayLists* batchDisplayLists = &arr->batchDLs[batch];
+        _gSPDisplayListRaw(tempGfxHead++, batchDisplayLists->startDl, batchDisplayLists->startHint);
+        amountRendered++;
+        render_lists(&tempGfxHead, batchLinks->head);
+        _gSPDisplayListRaw(tempGfxHead++, batchDisplayLists->endDl, batchDisplayLists->endHint);
+    }
+#undef tempGfxHead
+
+    return amountRendered;
+}
+
+static const uint32_t kAmbientLight     = 0x3F3F3F00;
+static const uint32_t kDirectionalLight = 0xFFFFFF00;
+
+#define SET_LIGHT_COLOR(light, c) do{ *(u32*) &((light).l.col[0]) = c; *(u32*) &((light).l.colc[0]) = c; }while(0)
+
+static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
+    const struct RenderPhase *renderPhase;
     s32 currLayer     = LAYER_FIRST;
     s32 startLayer    = LAYER_FIRST;
     s32 endLayer      = LAYER_LAST;
     s32 phaseIndex    = RENDER_PHASE_FIRST;
     s32 enableZBuffer = (node->node.flags & GRAPH_RENDER_Z_BUFFER) != 0;
     s32 finalPhase    = enableZBuffer ? RENDER_PHASE_END : 1;
-    struct RenderModeContainer *mode1List = &renderModeTable_1Cycle[enableZBuffer];
-    struct RenderModeContainer *mode2List = &renderModeTable_2Cycle[enableZBuffer];
     Gfx *tempGfxHead = gDisplayListHead;
-    int frame = gGlobalTimer % 8;
-    u32 curMode1 = 0, curMode2 = 0;
-    const Gfx* curStartDl = NULL, *curEndDl = NULL;
 
     // Loop through the render phases
     for (phaseIndex = RENDER_PHASE_FIRST; phaseIndex < finalPhase; phaseIndex++) {
@@ -364,122 +352,27 @@ void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
         // Iterate through the layers on the current render phase.
         for (currLayer = startLayer; currLayer <= endLayer; currLayer++) {
             // Set 'currList' to the first DisplayListNode on the current layer.
-            currList = node->listHeads[currLayer];
-            if (!currList)
-                continue;
-
-            // Set the render mode for the current layer.
-            u32 wantMode1 = mode1List->modes[currLayer];
-            u32 wantMode2 = mode2List->modes[currLayer];
-#if defined(DISABLE_AA) || !SILHOUETTE
-            // - do nothing...
-#else
-            if (phaseIndex == RENDER_PHASE_NON_SILHOUETTE) {
-                wantMode1 &= ~IM_RD;
-                wantMode2 &= ~IM_RD;
-            }
-#endif
-            if (currLayer == LAYER_COIN || currLayer == LAYER_SMOKE_ALPHA || wantMode1 != curMode1 || wantMode2 != curMode2)
+            struct MasterLayer* masterLayer = &node->layers[currLayer];
+            if (masterLayer->objects)
             {
-                gDPSetRenderMode(tempGfxHead++, wantMode1, wantMode2);
-                curMode1 = wantMode1; curMode2 = wantMode2;
+                gDPPipeSync(tempGfxHead++);
+                gDPPipelineMode(tempGfxHead++, G_PM_NPRIMITIVE);
+                int amt = render_batches(&tempGfxHead, masterLayer->objects, currLayer);
+                (void) amt;
+                // if (amt)
+                //     print_text_fmt_int(20, 20 + currLayer * 20, "%d", amt);
+                gDPPipeSync(tempGfxHead++);
+                gDPPipelineMode(tempGfxHead++, G_PM_1PRIMITIVE);
             }
-
-            const Gfx* startDl = NULL;
-            const Gfx* endDl = NULL;
             
-            if (currLayer == LAYER_CORKBOX)
+            struct DisplayListNode *currList = masterLayer->list.head;
+            if (currList)
             {
-                startDl = breakable_box_seg8_dl_cork_box_init;
-                endDl = breakable_box_seg8_dl_cork_box_end;
+                set_render_mode(&tempGfxHead, enableZBuffer, currLayer);
+                render_lists(&tempGfxHead, masterLayer->list.head);
             }
-
-            if (currLayer == LAYER_COIN) 
-            {
-                if (frame < 5)
-                {
-                    startDl = sCoinsTextureDls[frame];
-                }
-                else
-                {
-                    startDl = sCoinsTextureDls[8 - frame];
-                }
-                endDl = dl_coin_end;
-            }
-
-            if (LAYER_MIST == currLayer)
-            {
-                startDl = mist_dl;
-                endDl = mist_dl_end;
-            }
-            if (LAYER_RED_FLAME == currLayer)
-            {
-                int flFrame = (gGlobalTimer / 2) % 8;
-                startDl = sRedFlameTextureDls[flFrame];
-                endDl = flame_seg3_dl_end;
-            }
-            if (LAYER_BLUE_FLAME == currLayer)
-            {
-                int flFrame = (gGlobalTimer / 2) % 8;
-                startDl = sBlueFlameTextureDls[flFrame];
-                endDl = flame_seg3_dl_end;
-            }
-
-            if (currLayer == LAYER_CIRCLE_SHADOW || currLayer == LAYER_CIRCLE_SHADOW_TRANSPARENT)
-            {
-                startDl = dl_shadow_circle;
-                endDl = dl_shadow_circle_end;
-            }
-
-            if (LAYER_SMOKE_ALPHA == currLayer)
-            {
-                startDl = burn_smoke_seg4_sub_dl_begin_alpha;
-                endDl   = burn_smoke_seg4_sub_dl_end;
-            }
-
-            if (LAYER_SMOKE_TRANSPARENT == currLayer)
-            {
-                startDl = burn_smoke_seg4_sub_dl_begin_translucent;
-                endDl   = burn_smoke_seg4_sub_dl_end;
-            }
-
-            if (startDl != curStartDl)
-            {
-                // It is reasonable to expect 'startDl' and 'endDl' be paired together so it is abused here
-                // We want to switch dls as few times as possible so it is assumed that startDl+endDl can be merged together in no-op
-                if (curEndDl) gSPDisplayList(tempGfxHead++, curEndDl);
-                if (startDl)  gSPDisplayList(tempGfxHead++, startDl);
-                curStartDl = startDl;
-                curEndDl = endDl;
-            }
-
-            // Iterate through all the displaylists on the current layer.
-            do {
-                // Add the display list's transformation to the master list.
-                gSPMatrix(tempGfxHead++, VIRTUAL_TO_PHYSICAL(currList->transform),
-                          (G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH));
-#if SILHOUETTE
-                if (phaseIndex == RENDER_PHASE_SILHOUETTE) {
-                    // Add the current display list to the master list, with silhouette F3D.
-                    gSPDisplayList(tempGfxHead++, dl_silhouette_begin);
-                    gSPDisplayList(tempGfxHead++, currList->displayList);
-                    gSPDisplayList(tempGfxHead++, dl_silhouette_end);
-                } else {
-                    // Add the current display list to the master list.
-                    gSPDisplayList(tempGfxHead++, currList->displayList);
-                }
-#else
-                // Add the current display list to the master list.
-                gSPDisplayList(tempGfxHead++, currList->displayList);
-#endif
-                // Move to the next DisplayListNode.
-                currList = currList->next;
-            }
-            while (currList != NULL);
         }
     }
-
-    if (curEndDl) gSPDisplayList(tempGfxHead++, curEndDl);
 
     if (enableZBuffer) {
         // Disable z buffer.
@@ -496,6 +389,21 @@ void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
     gDisplayListHead = tempGfxHead;
 }
 
+static void append_dl(struct DisplayListLinks* list, void* dl)
+{
+    struct DisplayListNode *listNode = main_pool_alloc_aligned_cde(sizeof(struct DisplayListNode));
+
+    listNode->transform = gMatStackFixed[gMatStackIndex];
+    listNode->displayList = dl;
+    listNode->next = NULL;
+    if (list->head == NULL) {
+        list->head = listNode;
+    } else {
+        list->tail->next = listNode;
+    }
+    list->tail = listNode;
+}
+
 /**
  * Appends the display list to one of the master lists based on the layer
  * parameter. Look at the RenderModeContainer struct to see the corresponding
@@ -503,7 +411,7 @@ void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
  */
 void geo_append_display_list(void *displayList, s32 layer) {
 #ifdef F3DEX_GBI_2
-    gSPLookAt(gDisplayListHead++, gCurLookAt);
+    // gSPLookAt(gDisplayListHead++, gCurLookAt);
 #endif
 #if SILHOUETTE
     if (gCurGraphNodeObject != NULL) {
@@ -521,26 +429,20 @@ void geo_append_display_list(void *displayList, s32 layer) {
         }
     }
 #endif // F3DEX_GBI_2 || SILHOUETTE
-    if (gCurGraphNodeMasterList != NULL) {
-        struct DisplayListNode *listNode = main_pool_alloc(sizeof(struct DisplayListNode));
+    struct MasterLayer* masterLayer = &gCurGraphNodeMasterList->layers[layer];
+    append_dl(&masterLayer->list, displayList);
+}
 
-        listNode->transform = gMatStackFixed[gMatStackIndex];
-        listNode->displayList = displayList;
-        listNode->next = NULL;
-        if (gCurGraphNodeMasterList->listHeads[layer] == NULL) {
-            gCurGraphNodeMasterList->listHeads[layer] = listNode;
-        } else {
-            gCurGraphNodeMasterList->listTails[layer]->next = listNode;
-        }
-        gCurGraphNodeMasterList->listTails[layer] = listNode;
-    }
+static void geo_append_batched_display_list(void *displayList, enum RenderLayers layer, enum LayerBatches batch) {
+    struct MasterLayer* masterLayer = &gCurGraphNodeMasterList->layers[layer];
+    append_dl(&masterLayer->objects->batches[batch], displayList);
 }
 
 static void inc_mat_stack() {
     Mtx *mtx = alloc_display_list(sizeof(*mtx));
     gMatStackIndex++;
-    mtxf_to_mtx(mtx, gMatStack[gMatStackIndex]);
     gMatStackFixed[gMatStackIndex] = mtx;
+    mtxf_to_mtx(mtx, gMatStack[gMatStackIndex]);
 }
 
 static void append_dl_and_return(struct GraphNodeDisplayList *node) {
@@ -556,13 +458,23 @@ static void append_dl_and_return(struct GraphNodeDisplayList *node) {
 /**
  * Process the master list node.
  */
-void geo_process_master_list(struct GraphNodeMasterList *node) {
-    s32 layer;
 
+static void batches_clean(struct BatchArray* task)
+{
+    if (task) {
+        for (int batch = 0; batch < task->count; batch++) {
+            task->batches[batch].head = NULL;
+        }
+    }
+}
+
+void geo_process_master_list(struct GraphNodeMasterList *node) {
     if (gCurGraphNodeMasterList == NULL && node->node.children != NULL) {
         gCurGraphNodeMasterList = node;
-        for (layer = LAYER_FIRST; layer < LAYER_COUNT; layer++) {
-            node->listHeads[layer] = NULL;
+        for (int layer = LAYER_FIRST; layer < LAYER_COUNT; layer++) {
+            struct MasterLayer* masterLayer = &node->layers[layer];
+            masterLayer->list.head = NULL;
+            batches_clean(masterLayer->objects);
         }
         geo_process_node_and_siblings(node->node.children);
         geo_process_master_list_sub(gCurGraphNodeMasterList);
@@ -649,7 +561,7 @@ static f32 get_dist_from_camera(Vec3f pos) {
  */
 void geo_process_level_of_detail(struct GraphNodeLevelOfDetail *node) {
 #ifdef AUTO_LOD
-    f32 distanceFromCam = (gEmulator & EMU_CONSOLE) ? get_dist_from_camera(gMatStack[gMatStackIndex][3]) : 50.0f;
+    f32 distanceFromCam = gIsConsole ? get_dist_from_camera(gMatStack[gMatStackIndex][3]) : 50.0f;
 #else
     f32 distanceFromCam = get_dist_from_camera(gMatStack[gMatStackIndex][3]);
 #endif
@@ -680,8 +592,14 @@ void geo_process_cull(struct GraphNodeCull* node)
 
 void geo_process_coin(struct GraphNodeCoin *node)
 {
-    void* dl = gGlobalTimer % 8 < 5 ? node->displayList : node->displayList_r;
-    geo_append_display_list(dl, GET_GRAPH_NODE_LAYER(node->node.flags));
+    int* panimState = &gCurGraphNodeObjectNode->oAnimState;
+    if (*panimState >= 8)
+        *panimState = 0;
+
+    int frame = *panimState;
+    enum LayerBatches batch = LAYER_ALPHA_COINS_FIRST + (frame < 5 ? frame : 8 - frame);
+    void* dl = frame < 5 ? node->displayList : node->displayList_r;
+    geo_append_batched_display_list(dl, LAYER_ALPHA, batch);
 }
 
 /**
@@ -706,15 +624,12 @@ void geo_process_switch(struct GraphNodeSwitchCase *node) {
 
 Mat4 gCameraTransform;
 
-Lights1 defaultLight = gdSPDefLights1(
-    0x3F, 0x3F, 0x3F, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00
-);
+static const Vec3f globalLightDirection = { 0x49, 0x49, 0x49 };
 
-Vec3f globalLightDirection = { 0x49, 0x49, 0x49 };
-
-void setup_global_light() {
+static void setup_global_light() {
     Lights1* curLight = (Lights1*)alloc_display_list(sizeof(Lights1));
-    bcopy(&defaultLight, curLight, sizeof(Lights1));
+    SET_LIGHT_COLOR(curLight->a   , kAmbientLight);
+    SET_LIGHT_COLOR(curLight->l[0], kDirectionalLight);
 
 #ifdef WORLDSPACE_LIGHTING
     curLight->l->l.dir[0] = (s8)(globalLightDirection[0]);
@@ -753,17 +668,13 @@ void geo_process_camera(struct GraphNodeCamera *node) {
     // As a result, environment mapping is broken on Fast3DEX2 without the
     // changes below.
     Mat4* cameraMatrix = &gCameraTransform;
-    /**
-    * HackerSM64 2.1: Now uses the correct "up" vector for the guLookAtReflect call in geo_process_master_list_sub.
-    * It was originally sideways in vanilla, with vanilla's environment map textures sideways to accommodate, but those
-    * textures are now rotated automatically on extraction to allow for this to be fixed.
-    */
     gCurLookAt->l[0].l.dir[0] = (s8)(127.0f * (*cameraMatrix)[0][0]);
     gCurLookAt->l[0].l.dir[1] = (s8)(127.0f * (*cameraMatrix)[1][0]);
     gCurLookAt->l[0].l.dir[2] = (s8)(127.0f * (*cameraMatrix)[2][0]);
     gCurLookAt->l[1].l.dir[0] = (s8)(127.0f * -(*cameraMatrix)[0][1]);
     gCurLookAt->l[1].l.dir[1] = (s8)(127.0f * -(*cameraMatrix)[1][1]);
     gCurLookAt->l[1].l.dir[2] = (s8)(127.0f * -(*cameraMatrix)[2][1]);
+    gSPLookAt(gDisplayListHead++, gCurLookAt);    
 #endif // F3DEX_GBI_2
 
 #if WORLD_SCALE > 1
@@ -883,6 +794,18 @@ void geo_process_display_list(struct GraphNodeDisplayList *node) {
     gMatStackIndex++;
 }
 
+void geo_process_batch_display_list(struct GraphNodeBatchDisplayList *node) {
+    geo_append_batched_display_list(node->displayList, GET_GRAPH_NODE_LAYER(node->node.flags), node->batch);
+}
+
+void geo_process_batch_anim_display_list(struct GraphNodeBatchAnimDisplayList *node) {
+    int* panimState = &gCurGraphNodeObjectNode->oAnimState;
+    if (*panimState >= node->animLimit)
+        *panimState = 0;
+
+    geo_append_batched_display_list(node->displayList, GET_GRAPH_NODE_LAYER(node->node.flags), node->batch + *panimState);
+}
+
 /**
  * Process a generated list. Instead of storing a pointer to a display list,
  * the list is generated on the fly by a function.
@@ -897,6 +820,19 @@ void geo_process_generated_list(struct GraphNodeGenerated *node) {
     }
     if (node->fnNode.node.children != NULL) {
         geo_process_node_and_siblings(node->fnNode.node.children);
+    }
+}
+
+void geo_process_batch_generated_list(struct GraphNodeBatchGenerated *node) {
+    if (node->genNode.fnNode.func != NULL) {
+        Gfx *list = node->genNode.fnNode.func(GEO_CONTEXT_RENDER, &node->genNode.fnNode.node, (struct AllocOnlyPool *) gMatStack[gMatStackIndex]);
+
+        if (list != NULL) {
+            geo_append_batched_display_list((void *) VIRTUAL_TO_PHYSICAL(list), GET_GRAPH_NODE_LAYER(node->genNode.fnNode.node.flags), node->batch);
+        }
+    }
+    if (node->genNode.fnNode.node.children != NULL) {
+        geo_process_node_and_siblings(node->genNode.fnNode.node.children);
     }
 }
 
@@ -929,6 +865,7 @@ void geo_process_background(struct GraphNodeBackground *node) {
         GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(0) - 1, SCREEN_HEIGHT - gBorderHeight - 1);
         gDPPipeSync(gfx++);
         gDPSetCycleType(gfx++, G_CYC_1CYCLE);
+        gSPFlush(gfx++);
         gSPEndDisplayList(gfx++);
 
         geo_append_display_list((void *) VIRTUAL_TO_PHYSICAL(gfxStart), LAYER_FORCE);
@@ -995,7 +932,7 @@ void geo_process_animated_part(struct GraphNodeAnimatedPart *node) {
  * Initialize the animation-related global variables for the currently drawn
  * object's animation.
  */
-void geo_set_animation_globals(struct AnimInfo *node, s32 hasAnimation) {
+static void geo_set_animation_globals(struct AnimInfo *node, s32 hasAnimation) {
     struct Animation *anim = node->curAnim;
 
     if (hasAnimation) {
@@ -1080,16 +1017,13 @@ void geo_process_shadow(struct GraphNodeShadow *node) {
 
             inc_mat_stack();
 
-            s32 layer;
+            s32 layer = gCurrShadow.isDecal ? LAYER_TRANSPARENT_DECAL : LAYER_CLD;
             if (node->shadowType == SHADOW_CIRCLE) {
-                layer = gCurrShadow.isDecal ? LAYER_CIRCLE_SHADOW : LAYER_CIRCLE_SHADOW_TRANSPARENT;
+                s32 batch = gCurrShadow.isDecal ? LAYER_TRANSPARENT_DECAL_SHADOW_CIRCLE : LAYER_CLD_SHADOW_CIRCLE;
+                geo_append_batched_display_list((void *) VIRTUAL_TO_PHYSICAL(shadowList), layer, batch);
             } else {
-                layer = gCurrShadow.isDecal ? LAYER_TRANSPARENT_DECAL : LAYER_TRANSPARENT;
+                geo_append_display_list((void *) VIRTUAL_TO_PHYSICAL(shadowList), layer);
             }
-
-            geo_append_display_list(
-                (void *) VIRTUAL_TO_PHYSICAL(shadowList), layer
-            );
 
             gMatStackIndex--;
         }
@@ -1135,7 +1069,7 @@ void geo_process_shadow(struct GraphNodeShadow *node) {
 
 #define NO_CULLING_EMULATOR_BLACKLIST (EMU_CONSOLE | EMU_WIIVC | EMU_ARES | EMU_SIMPLE64 | EMU_CEN64)
 
-s32 obj_is_in_view(struct GraphNodeObject *node) {
+static s32 obj_is_in_view(struct GraphNodeObject *node) {
     struct GraphNode *geo = node->sharedChild;
 
     s16 cullingRadius;
@@ -1300,7 +1234,7 @@ void geo_process_held_object(struct GraphNodeHeldObject *node) {
     Vec3f translation;
     Mat4 tempMtx;
 
-#ifdef F3DEX_GBI_2
+#if 0
     gSPLookAt(gDisplayListHead++, gCurLookAt);
 #endif
 
@@ -1362,31 +1296,35 @@ void geo_try_process_children(struct GraphNode *node) {
 typedef void (*GeoProcessFunc)();
 
 // See enum 'GraphNodeTypes' in 'graph_node.h'.
-static GeoProcessFunc GeoProcessJumpTable[] = {
-    [GRAPH_NODE_TYPE_ORTHO_PROJECTION    ] = geo_process_ortho_projection,
-    [GRAPH_NODE_TYPE_PERSPECTIVE         ] = geo_process_perspective,
-    [GRAPH_NODE_TYPE_MASTER_LIST         ] = geo_process_master_list,
-    [GRAPH_NODE_TYPE_LEVEL_OF_DETAIL     ] = geo_process_level_of_detail,
-    [GRAPH_NODE_TYPE_SWITCH_CASE         ] = geo_process_switch,
-    [GRAPH_NODE_TYPE_CAMERA              ] = geo_process_camera,
-    [GRAPH_NODE_TYPE_TRANSLATION_ROTATION] = geo_process_translation_rotation,
-    [GRAPH_NODE_TYPE_TRANSLATION         ] = geo_process_translation,
-    [GRAPH_NODE_TYPE_ROTATION            ] = geo_process_rotation,
-    [GRAPH_NODE_TYPE_OBJECT              ] = geo_process_object,
-    [GRAPH_NODE_TYPE_ANIMATED_PART       ] = geo_process_animated_part,
-    [GRAPH_NODE_TYPE_BILLBOARD           ] = geo_process_billboard,
-    [GRAPH_NODE_TYPE_DISPLAY_LIST        ] = geo_process_display_list,
-    [GRAPH_NODE_TYPE_SCALE               ] = geo_process_scale,
-    [GRAPH_NODE_TYPE_SHADOW              ] = geo_process_shadow,
-    [GRAPH_NODE_TYPE_OBJECT_PARENT       ] = geo_process_object_parent,
-    [GRAPH_NODE_TYPE_GENERATED_LIST      ] = geo_process_generated_list,
-    [GRAPH_NODE_TYPE_BACKGROUND          ] = geo_process_background,
-    [GRAPH_NODE_TYPE_HELD_OBJ            ] = geo_process_held_object,
-    [GRAPH_NODE_TYPE_CULLING_RADIUS      ] = geo_try_process_children,
-    [GRAPH_NODE_TYPE_ROOT                ] = geo_try_process_children,
-    [GRAPH_NODE_TYPE_START               ] = geo_try_process_children,
-    [GRAPH_NODE_TYPE_CULL                ] = geo_process_cull,
-    [GRAPH_NODE_TYPE_COIN                ] = geo_process_coin,
+static const GeoProcessFunc GeoProcessJumpTable[] = {
+    [GRAPH_NODE_TYPE_ORTHO_PROJECTION    ] = (GeoProcessFunc) geo_process_ortho_projection,
+    [GRAPH_NODE_TYPE_PERSPECTIVE         ] = (GeoProcessFunc) geo_process_perspective,
+    [GRAPH_NODE_TYPE_MASTER_LIST         ] = (GeoProcessFunc) geo_process_master_list,
+    [GRAPH_NODE_TYPE_LEVEL_OF_DETAIL     ] = (GeoProcessFunc) geo_process_level_of_detail,
+    [GRAPH_NODE_TYPE_SWITCH_CASE         ] = (GeoProcessFunc) geo_process_switch,
+    [GRAPH_NODE_TYPE_CAMERA              ] = (GeoProcessFunc) geo_process_camera,
+    [GRAPH_NODE_TYPE_TRANSLATION_ROTATION] = (GeoProcessFunc) geo_process_translation_rotation,
+    [GRAPH_NODE_TYPE_TRANSLATION         ] = (GeoProcessFunc) geo_process_translation,
+    [GRAPH_NODE_TYPE_ROTATION            ] = (GeoProcessFunc) geo_process_rotation,
+    [GRAPH_NODE_TYPE_OBJECT              ] = (GeoProcessFunc) geo_process_object,
+    [GRAPH_NODE_TYPE_ANIMATED_PART       ] = (GeoProcessFunc) geo_process_animated_part,
+    [GRAPH_NODE_TYPE_BILLBOARD           ] = (GeoProcessFunc) geo_process_billboard,
+    [GRAPH_NODE_TYPE_DISPLAY_LIST        ] = (GeoProcessFunc) geo_process_display_list,
+    [GRAPH_NODE_TYPE_SCALE               ] = (GeoProcessFunc) geo_process_scale,
+    [GRAPH_NODE_TYPE_SHADOW              ] = (GeoProcessFunc) geo_process_shadow,
+    [GRAPH_NODE_TYPE_OBJECT_PARENT       ] = (GeoProcessFunc) geo_process_object_parent,
+    [GRAPH_NODE_TYPE_GENERATED_LIST      ] = (GeoProcessFunc) geo_process_generated_list,
+    [GRAPH_NODE_TYPE_BACKGROUND          ] = (GeoProcessFunc) geo_process_background,
+    [GRAPH_NODE_TYPE_HELD_OBJ            ] = (GeoProcessFunc) geo_process_held_object,
+    [GRAPH_NODE_TYPE_CULLING_RADIUS      ] = (GeoProcessFunc) geo_try_process_children,
+    [GRAPH_NODE_TYPE_ROOT                ] = (GeoProcessFunc) geo_try_process_children,
+    [GRAPH_NODE_TYPE_START               ] = (GeoProcessFunc) geo_try_process_children,
+    [GRAPH_NODE_TYPE_CULL                ] = (GeoProcessFunc) geo_process_cull,
+    [GRAPH_NODE_TYPE_COIN                ] = (GeoProcessFunc) geo_process_coin,
+
+    [GRAPH_NODE_TYPE_BATCH_DISPLAY_LIST]       = (GeoProcessFunc) geo_process_batch_display_list,
+    [GRAPH_NODE_TYPE_BATCH_GENERATED_LIST]     = (GeoProcessFunc) geo_process_batch_generated_list,
+    [GRAPH_NODE_TYPE_BATCH_ANIM_DISPLAY_LIST]  = (GeoProcessFunc) geo_process_batch_anim_display_list,
 };
 
 /**
@@ -1394,7 +1332,7 @@ static GeoProcessFunc GeoProcessJumpTable[] = {
  * The first argument is the start node, and all its siblings will
  * be iterated over.
  */
-void geo_process_node_and_siblings(struct GraphNode *firstNode) {
+static void geo_process_node_and_siblings(struct GraphNode *firstNode) {
     s32 iterateChildren = TRUE;
     struct GraphNode *curGraphNode = firstNode;
     struct GraphNode *parent = curGraphNode->parent;
@@ -1430,7 +1368,10 @@ void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor) 
         Mtx *initialMatrix;
         Vp *viewport = alloc_display_list(sizeof(*viewport));
 
-        main_pool_push_state();
+        u8* savedStart = sMainPool.regions[0].start;
+        // required for CDE optimization 
+        sMainPool.regions[0].start = (void*) ALIGN16(savedStart);
+
         initialMatrix = alloc_display_list(sizeof(*initialMatrix));
         gCurLookAt = (LookAt*)alloc_display_list(sizeof(LookAt));
         bzero(gCurLookAt, sizeof(LookAt));
@@ -1480,6 +1421,7 @@ void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor) 
             print_text_fmt_int(180, 36, "MEM %d", gDisplayListHeap->totalSpace - gDisplayListHeap->usedSpace);
         }
 #endif
-        main_pool_pop_state();
+
+        sMainPool.regions[0].start = savedStart;
     }
 }

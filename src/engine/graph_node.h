@@ -67,6 +67,9 @@ enum GraphNodeTypes {
     GRAPH_NODE_TYPE_START,
     GRAPH_NODE_TYPE_CULL,
     GRAPH_NODE_TYPE_COIN,
+    GRAPH_NODE_TYPE_BATCH_DISPLAY_LIST,
+    GRAPH_NODE_TYPE_BATCH_GENERATED_LIST,
+    GRAPH_NODE_TYPE_BATCH_ANIM_DISPLAY_LIST,
 };
 
 // Passed as first argument to a GraphNodeFunc to give information about in
@@ -142,15 +145,30 @@ struct DisplayListNode {
     struct DisplayListNode *next;
 };
 
+struct DisplayListLinks {
+    struct DisplayListNode* head;
+    struct DisplayListNode* tail;
+};
+
+struct BatchArray {
+    int count;
+    const struct BatchDisplayLists* batchDLs;
+    struct DisplayListLinks batches[0];
+};
+
+struct MasterLayer {
+    struct DisplayListLinks list;
+    struct BatchArray* objects;
+};
+
 /** GraphNode that manages the 8 top-level display lists that will be drawn
  *  Each list has its own render mode, so for example water is drawn in a
  *  different master list than opaque objects.
  *  It also sets the z-buffer on before rendering and off after.
  */
 struct GraphNodeMasterList {
-    /*0x00*/ struct GraphNode node;
-    /*0x14*/ struct DisplayListNode *listHeads[LAYER_COUNT];
-    /*0x34*/ struct DisplayListNode *listTails[LAYER_COUNT];
+    struct GraphNode node;
+    struct MasterLayer layers[LAYER_COUNT];
 };
 
 /** Simply used as a parent to group multiple children.
@@ -179,7 +197,6 @@ struct GraphNodeLevelOfDetail {
  */
 struct GraphNodeSwitchCase {
     /*0x00*/ struct FnGraphNode fnNode;
-    /*0x18*/ s32 unused;
     /*0x1C*/ s16 numCases;
     /*0x1E*/ s16 selectedCase;
 };
@@ -273,6 +290,19 @@ struct GraphNodeDisplayList {
     /*0x14*/ void *displayList;
 };
 
+struct GraphNodeBatchDisplayList {
+    /*0x00*/ struct GraphNode node;
+    /*0x14*/ void *displayList;
+    int batch;
+};
+
+struct GraphNodeBatchAnimDisplayList {
+    /*0x00*/ struct GraphNode node;
+    /*0x14*/ void *displayList;
+    int batch;
+    int animLimit;
+};
+
 /** GraphNode part that scales itself and its children.
  *  Usage example: Mario's fist or shoe, which grows when attacking. This can't
  *  be done with an animated part sine animation data doesn't support scaling.
@@ -318,6 +348,11 @@ struct GraphNodeObjectParent {
 struct GraphNodeGenerated {
     /*0x00*/ struct FnGraphNode fnNode;
     /*0x18*/ u32 parameter; // extra context for the function
+};
+
+struct GraphNodeBatchGenerated {
+    struct GraphNodeGenerated genNode;
+    s32 batch;
 };
 
 /** GraphNode that draws a background image or a rectangle of a color.
@@ -380,34 +415,36 @@ extern s16 gCurGraphNodeIndex;
 
 void init_scene_graph_node_links(struct GraphNode *graphNode, s32 type);
 
-struct GraphNodeRoot                *init_graph_node_root                (s32 alloc, struct GraphNodeRoot                *graphNode, s16 areaIndex, s16 x, s16 y, s16 width, s16 height);
-struct GraphNodeOrthoProjection     *init_graph_node_ortho_projection    (s32 alloc, struct GraphNodeOrthoProjection     *graphNode, f32 scale);
-struct GraphNodePerspective         *init_graph_node_perspective         (s32 alloc, struct GraphNodePerspective         *graphNode, f32 fov, u16 near, u16 far, GraphNodeFunc nodeFunc);
-struct GraphNodeStart               *init_graph_node_start               (s32 alloc, struct GraphNodeStart               *graphNode);
-struct GraphNodeMasterList          *init_graph_node_master_list         (s32 alloc, struct GraphNodeMasterList          *graphNode, s16 on);
-struct GraphNodeLevelOfDetail       *init_graph_node_render_range        (s32 alloc, struct GraphNodeLevelOfDetail       *graphNode, s16 minDistance, s16 maxDistance);
-struct GraphNodeSwitchCase          *init_graph_node_switch_case         (s32 alloc, struct GraphNodeSwitchCase          *graphNode, s16 numCases, s16 selectedCase, GraphNodeFunc nodeFunc, s32 unused);
-struct GraphNodeCamera              *init_graph_node_camera              (s32 alloc, struct GraphNodeCamera              *graphNode, f32 *pos, f32 *focus, GraphNodeFunc func, s32 mode);
-struct GraphNodeTranslationRotation *init_graph_node_translation_rotation(s32 alloc, struct GraphNodeTranslationRotation *graphNode, s32 drawingLayer, void *displayList, Vec3s translation, Vec3s rotation);
-struct GraphNodeTranslation         *init_graph_node_translation         (s32 alloc, struct GraphNodeTranslation         *graphNode, s32 drawingLayer, void *displayList, Vec3s translation);
-struct GraphNodeRotation            *init_graph_node_rotation            (s32 alloc, struct GraphNodeRotation            *graphNode, s32 drawingLayer, void *displayList, Vec3s rotation);
-struct GraphNodeScale               *init_graph_node_scale               (s32 alloc, struct GraphNodeScale               *graphNode, s32 drawingLayer, void *displayList, f32 scale);
-struct GraphNodeObject              *init_graph_node_object              (s32 alloc, struct GraphNodeObject              *graphNode, struct GraphNode *sharedChild, Vec3f pos, Vec3s angle, Vec3f scale);
-struct GraphNodeCullingRadius       *init_graph_node_culling_radius      (s32 alloc, struct GraphNodeCullingRadius       *graphNode, s16 radius);
-struct GraphNodeAnimatedPart        *init_graph_node_animated_part       (s32 alloc, struct GraphNodeAnimatedPart        *graphNode, s32 drawingLayer, void *displayList, Vec3s translation);
-struct GraphNodeBillboard           *init_graph_node_billboard           (s32 alloc, struct GraphNodeBillboard           *graphNode, s32 drawingLayer, void *displayList, Vec3s translation);
-struct GraphNodeDisplayList         *init_graph_node_display_list        (s32 alloc, struct GraphNodeDisplayList         *graphNode, s32 drawingLayer, void *displayList);
-struct GraphNodeShadow              *init_graph_node_shadow              (s32 alloc, struct GraphNodeShadow              *graphNode, s16 shadowScale, u8 shadowSolidity, u8 shadowType);
-struct GraphNodeObjectParent        *init_graph_node_object_parent       (s32 alloc, struct GraphNodeObjectParent        *graphNode, struct GraphNode *sharedChild);
-struct GraphNodeGenerated           *init_graph_node_generated           (s32 alloc, struct GraphNodeGenerated           *graphNode, GraphNodeFunc gfxFunc, s32 parameter);
-struct GraphNodeBackground          *init_graph_node_background          (s32 alloc, struct GraphNodeBackground          *graphNode, u16 background, GraphNodeFunc backgroundFunc, s32 zero);
-struct GraphNodeCull                *init_graph_node_cull                (s32 alloc,
-                                                                          struct GraphNodeCull *graphNode,
+struct GraphNodeRoot                *init_graph_node_root                (struct GraphNodeRoot                *graphNode, s16 areaIndex, s16 x, s16 y, s16 width, s16 height);
+struct GraphNodeOrthoProjection     *init_graph_node_ortho_projection    (struct GraphNodeOrthoProjection     *graphNode, f32 scale);
+struct GraphNodePerspective         *init_graph_node_perspective         (struct GraphNodePerspective         *graphNode, f32 fov, u16 near, u16 far, GraphNodeFunc nodeFunc);
+struct GraphNodeStart               *init_graph_node_start               (struct GraphNodeStart               *graphNode);
+struct GraphNodeMasterList          *init_graph_node_master_list         (struct GraphNodeMasterList          *graphNode, s16 on);
+struct GraphNodeLevelOfDetail       *init_graph_node_render_range        (struct GraphNodeLevelOfDetail       *graphNode, s16 minDistance, s16 maxDistance);
+struct GraphNodeSwitchCase          *init_graph_node_switch_case         (struct GraphNodeSwitchCase          *graphNode, s16 numCases, s16 selectedCase, GraphNodeFunc nodeFunc, s32 unused);
+struct GraphNodeCamera              *init_graph_node_camera              (struct GraphNodeCamera              *graphNode, f32 *pos, f32 *focus, GraphNodeFunc func, s32 mode);
+struct GraphNodeTranslationRotation *init_graph_node_translation_rotation(struct GraphNodeTranslationRotation *graphNode, s32 drawingLayer, void *displayList, Vec3s translation, Vec3s rotation);
+struct GraphNodeTranslation         *init_graph_node_translation         (struct GraphNodeTranslation         *graphNode, s32 drawingLayer, void *displayList, Vec3s translation);
+struct GraphNodeRotation            *init_graph_node_rotation            (struct GraphNodeRotation            *graphNode, s32 drawingLayer, void *displayList, Vec3s rotation);
+struct GraphNodeScale               *init_graph_node_scale               (struct GraphNodeScale               *graphNode, s32 drawingLayer, void *displayList, f32 scale);
+struct GraphNodeObject              *init_graph_node_object              (struct GraphNodeObject              *graphNode, struct GraphNode *sharedChild, Vec3f pos, Vec3s angle, Vec3f scale);
+struct GraphNodeCullingRadius       *init_graph_node_culling_radius      (struct GraphNodeCullingRadius       *graphNode, s16 radius);
+struct GraphNodeAnimatedPart        *init_graph_node_animated_part       (struct GraphNodeAnimatedPart        *graphNode, s32 drawingLayer, void *displayList, Vec3s translation);
+struct GraphNodeBillboard           *init_graph_node_billboard           (struct GraphNodeBillboard           *graphNode, s32 drawingLayer, void *displayList, Vec3s translation);
+struct GraphNodeDisplayList         *init_graph_node_display_list        (struct GraphNodeDisplayList         *graphNode, s32 drawingLayer, void *displayList);
+struct GraphNodeBatchDisplayList    *init_graph_node_batch_display_list  (struct GraphNodeBatchDisplayList    *graphNode, s32 drawingLayer, void *displayList, s32 batch);
+struct GraphNodeBatchAnimDisplayList*init_graph_node_batch_display_list_anim(struct GraphNodeBatchAnimDisplayList    *graphNode, s32 drawingLayer, void *displayList, s32 batch, s32 anim);
+struct GraphNodeShadow              *init_graph_node_shadow              (struct GraphNodeShadow              *graphNode, s16 shadowScale, u8 shadowSolidity, u8 shadowType);
+struct GraphNodeObjectParent        *init_graph_node_object_parent       (struct GraphNodeObjectParent        *graphNode, struct GraphNode *sharedChild);
+struct GraphNodeGenerated           *init_graph_node_generated           (struct GraphNodeGenerated           *graphNode, GraphNodeFunc gfxFunc, s32 parameter);
+struct GraphNodeBatchGenerated      *init_graph_node_batch_generated     (struct GraphNodeBatchGenerated      *graphNode, GraphNodeFunc gfxFunc, s32 parameter);
+struct GraphNodeBackground          *init_graph_node_background          (struct GraphNodeBackground          *graphNode, u16 background, GraphNodeFunc backgroundFunc, s32 zero);
+struct GraphNodeCull                *init_graph_node_cull                (struct GraphNodeCull *graphNode,
                                                                           s16 x0, s16 x1,
                                                                           s16 y0, s16 y1,
                                                                           s16 z0, s16 z1, s16 style);
-struct GraphNodeCoin                *init_graph_node_coin                (s32 alloc, struct GraphNodeCoin                *graphNode, s32 drawingLayer, void* displayList, void* displayList_r);
-struct GraphNodeHeldObject          *init_graph_node_held_object         (s32 alloc, struct GraphNodeHeldObject          *graphNode, struct Object *objNode, Vec3s translation, GraphNodeFunc nodeFunc, s32 playerIndex);
+struct GraphNodeCoin                *init_graph_node_coin                (struct GraphNodeCoin                *graphNode, s32 drawingLayer, void* displayList, void* displayList_r);
+struct GraphNodeHeldObject          *init_graph_node_held_object         (struct GraphNodeHeldObject          *graphNode, struct Object *objNode, Vec3s translation, GraphNodeFunc nodeFunc, s32 playerIndex);
 
 struct GraphNode *geo_add_child       (struct GraphNode *parent, struct GraphNode *childNode);
 struct GraphNode *geo_remove_child    (struct GraphNode *graphNode);

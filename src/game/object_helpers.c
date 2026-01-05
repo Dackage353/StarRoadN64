@@ -46,6 +46,7 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
 
     if (callContext == GEO_CONTEXT_RENDER) {
         struct Object *objectGraphNode = (struct Object *) gCurGraphNodeObject; // TODO: change this to object pointer?
+        struct GraphNodeBatchGenerated *currentBatchGraphNode = (struct GraphNodeBatchGenerated *) node;
         struct GraphNodeGenerated *currentGraphNode = (struct GraphNodeGenerated *) node;
         s32 parameter = currentGraphNode->parameter;
 
@@ -70,7 +71,8 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
             if (parameter == GEO_TRANSPARENCY_MODE_DECAL) {
                 SET_GRAPH_NODE_LAYER(currentGraphNode->fnNode.node.flags, LAYER_TRANSPARENT_DECAL);
             } else if (parameter == GEO_TRANSPARENCY_MODE_MIST) {
-                SET_GRAPH_NODE_LAYER(currentGraphNode->fnNode.node.flags, LAYER_MIST);
+                SET_GRAPH_NODE_LAYER(currentGraphNode->fnNode.node.flags, LAYER_TRANSPARENT);
+                currentBatchGraphNode->batch = LAYER_TRANSPARENT_MIST;
             } else {
                 SET_GRAPH_NODE_LAYER(currentGraphNode->fnNode.node.flags, LAYER_TRANSPARENT);
             }
@@ -93,8 +95,9 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
     return dlStart;
 }
 
-Gfx *geo_update_layer_transparency_envcolor(s32 callContext, struct GraphNode *node, UNUSED void *context) {
+Gfx *geo_update_layer_smoke(s32 callContext, struct GraphNode *node, UNUSED void *context) {
     Gfx *dlStart = NULL;
+    struct GraphNodeBatchGenerated *currentBatchGraphNode = (struct GraphNodeBatchGenerated *) node;
     struct GraphNodeGenerated *currentGraphNode = (struct GraphNodeGenerated *) node;
 
     if (callContext == GEO_CONTEXT_RENDER) {
@@ -104,9 +107,11 @@ Gfx *geo_update_layer_transparency_envcolor(s32 callContext, struct GraphNode *n
             objectGraphNode = gCurGraphNodeHeldObject->objNode;
         }
 
+        SET_GRAPH_NODE_LAYER(currentGraphNode->fnNode.node.flags, gIsConsole ? LAYER_ALPHA : LAYER_TRANSPARENT);
+        currentBatchGraphNode->batch = gIsConsole ? LAYER_ALPHA_SMOKE : LAYER_TRANSPARENT_SMOKE;
         o->oAnimState = gIsConsole;
-        SET_GRAPH_NODE_LAYER(currentGraphNode->fnNode.node.flags, gIsConsole ? LAYER_SMOKE_ALPHA : LAYER_SMOKE_TRANSPARENT);
         s32 objectOpacity = objectGraphNode->oOpacity;
+
         dlStart = alloc_display_list(sizeof(Gfx) * 2);
         Gfx *dlHead = dlStart;
         gDPSetEnvColor(dlHead++, 255, 255, 255, objectOpacity);
@@ -929,14 +934,12 @@ void obj_become_tangible(struct Object *obj) {
 }
 
 void cur_obj_update_floor_height(void) {
-    struct Surface *floor;
-    o->oFloorHeight = find_floor(o->oPosX, o->oPosY, o->oPosZ, &floor);
+    o->oFloorHeight = find_floor(o->oPosX, o->oPosY, o->oPosZ, &o->oFloor);
 }
 
 struct Surface *cur_obj_update_floor_height_and_get_floor(void) {
-    struct Surface *floor;
-    o->oFloorHeight = find_floor(o->oPosX, o->oPosY, o->oPosZ, &floor);
-    return floor;
+    o->oFloorHeight = find_floor(o->oPosX, o->oPosY, o->oPosZ, &o->oFloor);
+    return o->oFloor;
 }
 
 static void apply_drag_to_value(f32 *value, f32 dragStrength) {
@@ -944,16 +947,16 @@ static void apply_drag_to_value(f32 *value, f32 dragStrength) {
 
     if (*value != 0) {
         //! Can overshoot if |*value| > 1 / (dragStrength * 0.0001)
-        decel = sqr(*value) * (dragStrength * 0.0001);
+        decel = sqr(*value) * (dragStrength * 0.0001f);
 
         if (*value > 0) {
             *value -= decel;
-            if (*value < 0.001) {
+            if (*value < 0.001f) {
                 *value = 0;
             }
         } else {
             *value += decel;
-            if (*value > -0.001) {
+            if (*value > -0.001f) {
                 *value = 0;
             }
         }
@@ -964,7 +967,7 @@ void cur_obj_apply_drag_xz(f32 dragStrength) {
     apply_drag_to_value(&o->oVelX, dragStrength);
     apply_drag_to_value(&o->oVelZ, dragStrength);
 }
-
+ 
 static void cur_obj_move_xz(f32 steepSlopeNormalY, s32 careAboutEdgesAndSteepSlopes) {
     struct Surface *intendedFloor;
 

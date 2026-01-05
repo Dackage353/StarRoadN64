@@ -43,9 +43,49 @@ struct MainPoolRegion {
 };
 
 #ifndef MAIN_POOL_SINGLE_REGION
+
+#if MEMORY_FRAGMENTATION_NO_FRAGMENTATION == MEMORY_FRAGMENTATION_LEVEL
+// One giant region encompassing all of the ram. Memory layout follows vanilla implementation
+// -zbuffer-|-game/engine data-|-framebuffers-|-main pool region-
+#define MAIN_POOL_REGIONS_COUNT 1
+#endif
+
+#if MEMORY_FRAGMENTATION_ZBUFFER_AND_FRAMEBUFFERS == MEMORY_FRAGMENTATION_LEVEL
+// Region before zbuffer and region after the framebuffer2
+// -game/engine data-|-main pool region 0-|-zbuffer-|-framebuffers-|-main pool region 1-
+//                                                  ^
+//                                       0x80300000 or 0x80700000
+#define MAIN_POOL_REGIONS_COUNT 2
+#endif
+
+#if MEMORY_FRAGMENTATION_ZBUFFER_AND_FRAMEBUFFERS_SPLIT == MEMORY_FRAGMENTATION_LEVEL
+// Region after 0x80600000, before zbuffer, after the framebuffer2
+// -game/engine data-|-main pool region 1-|-zbuffer-|-framebuffers-|-main pool region 1-|-main pool region 0-
+//                                                  ^                                   ^
+//                                             0x80500000                          0x80600000
+#define MAIN_POOL_REGIONS_COUNT 3
+#endif
+
+#if MEMORY_FRAGMENTATION_ZBUFFER_AND_EACH_FRAMEBUFFER == MEMORY_FRAGMENTATION_LEVEL
+// Region before zbuffer, between fb0/fb1, after fb2
+// -game/engine data-|-main pool region 0-|-zb-|-fb0-|-main pool region 1-|-fb1-|-fb2-|-main pool region 2-
+//                                             ^                                ^
+//                                        0x80500000                       0x80700000
+#define MAIN_POOL_REGIONS_COUNT 3
+#endif
+
+#else
+#define MAIN_POOL_REGIONS_COUNT 1
+#endif
+
+struct MainPoolContext {
+    struct MainPoolRegion regions[MAIN_POOL_REGIONS_COUNT];
+};
+
+extern struct MainPoolContext sMainPool __attribute__((section(".bss.sMainPool")));
+#ifndef MAIN_POOL_SINGLE_REGION
 extern struct MainPoolRegion* gMainPoolCurrentRegion __attribute__((section(".data")));
 #else
-extern struct MainPoolContext sMainPool __attribute__((section(".bss.sMainPool")));
 // There is only 1 region which is the first region
 #define gMainPoolCurrentRegion ((struct MainPoolRegion*) &sMainPool)
 #endif
@@ -163,10 +203,150 @@ struct MemoryPool *mem_pool_init(u32 size);
 void *mem_pool_alloc(struct MemoryPool *pool, u32 size);
 void mem_pool_free(struct MemoryPool *pool, void *addr);
 
-void *alloc_display_list(u32 size);
 void setup_dma_table_list(struct DmaHandlerList *list, void *srcAddr, void *buffer);
 s32 load_patchable_table(struct DmaHandlerList *list, s32 index);
 
 
 extern uintptr_t sSegmentROMTable[32] __attribute__((section(".bss.sSegmentROMTable")));
+
+#define main_pool_alloc_aligned_cde(_size) ({ \
+    struct MainPoolRegion* region = gMainPoolCurrentRegion; \
+    u32 size = ALIGN16(_size); \
+    u8* ptr = region->start; \
+    if (__builtin_constant_p(_size)) { \
+        switch (size) { \
+            case 0x0: \
+                break; \
+            case 0x10: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                break; \
+            case 0x20: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                __builtin_mips_cache(0xd, ptr + 0x10); \
+                break; \
+            case 0x30: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                __builtin_mips_cache(0xd, ptr + 0x10); \
+                __builtin_mips_cache(0xd, ptr + 0x20); \
+                break; \
+            case 0x40: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                __builtin_mips_cache(0xd, ptr + 0x10); \
+                __builtin_mips_cache(0xd, ptr + 0x20); \
+                __builtin_mips_cache(0xd, ptr + 0x30); \
+                break; \
+            case 0x50: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                __builtin_mips_cache(0xd, ptr + 0x10); \
+                __builtin_mips_cache(0xd, ptr + 0x20); \
+                __builtin_mips_cache(0xd, ptr + 0x30); \
+                __builtin_mips_cache(0xd, ptr + 0x40); \
+                break; \
+            case 0x60: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                __builtin_mips_cache(0xd, ptr + 0x10); \
+                __builtin_mips_cache(0xd, ptr + 0x20); \
+                __builtin_mips_cache(0xd, ptr + 0x30); \
+                __builtin_mips_cache(0xd, ptr + 0x40); \
+                __builtin_mips_cache(0xd, ptr + 0x50); \
+                break; \
+            case 0x70: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                __builtin_mips_cache(0xd, ptr + 0x10); \
+                __builtin_mips_cache(0xd, ptr + 0x20); \
+                __builtin_mips_cache(0xd, ptr + 0x30); \
+                __builtin_mips_cache(0xd, ptr + 0x40); \
+                __builtin_mips_cache(0xd, ptr + 0x50); \
+                __builtin_mips_cache(0xd, ptr + 0x60); \
+                break; \
+            case 0x80: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                __builtin_mips_cache(0xd, ptr + 0x10); \
+                __builtin_mips_cache(0xd, ptr + 0x20); \
+                __builtin_mips_cache(0xd, ptr + 0x30); \
+                __builtin_mips_cache(0xd, ptr + 0x40); \
+                __builtin_mips_cache(0xd, ptr + 0x50); \
+                __builtin_mips_cache(0xd, ptr + 0x60); \
+                __builtin_mips_cache(0xd, ptr + 0x70); \
+                break; \
+            default: \
+                break; \
+        } \
+    } \
+    u8* newStart = ptr + size; \
+    region->start = newStart; \
+    if (!ptr) __builtin_unreachable(); \
+    (void*) ptr; \
+})
+
+extern u8 *gGfxPoolEnd __attribute__((section(".bss.gGfxPoolEnd")));
+#define alloc_display_list(_size) ({\
+    u32 size = ALIGN16(_size); \
+    void* ptr = gGfxPoolEnd - size; \
+    if (__builtin_constant_p(_size)) { \
+        switch (size) { \
+            case 0x0: \
+                break; \
+            case 0x10: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                break; \
+            case 0x20: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                __builtin_mips_cache(0xd, ptr + 0x10); \
+                break; \
+            case 0x30: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                __builtin_mips_cache(0xd, ptr + 0x10); \
+                __builtin_mips_cache(0xd, ptr + 0x20); \
+                break; \
+            case 0x40: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                __builtin_mips_cache(0xd, ptr + 0x10); \
+                __builtin_mips_cache(0xd, ptr + 0x20); \
+                __builtin_mips_cache(0xd, ptr + 0x30); \
+                break; \
+            case 0x50: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                __builtin_mips_cache(0xd, ptr + 0x10); \
+                __builtin_mips_cache(0xd, ptr + 0x20); \
+                __builtin_mips_cache(0xd, ptr + 0x30); \
+                __builtin_mips_cache(0xd, ptr + 0x40); \
+                break; \
+            case 0x60: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                __builtin_mips_cache(0xd, ptr + 0x10); \
+                __builtin_mips_cache(0xd, ptr + 0x20); \
+                __builtin_mips_cache(0xd, ptr + 0x30); \
+                __builtin_mips_cache(0xd, ptr + 0x40); \
+                __builtin_mips_cache(0xd, ptr + 0x50); \
+                break; \
+            case 0x70: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                __builtin_mips_cache(0xd, ptr + 0x10); \
+                __builtin_mips_cache(0xd, ptr + 0x20); \
+                __builtin_mips_cache(0xd, ptr + 0x30); \
+                __builtin_mips_cache(0xd, ptr + 0x40); \
+                __builtin_mips_cache(0xd, ptr + 0x50); \
+                __builtin_mips_cache(0xd, ptr + 0x60); \
+                break; \
+            case 0x80: \
+                __builtin_mips_cache(0xd, ptr + 0x0); \
+                __builtin_mips_cache(0xd, ptr + 0x10); \
+                __builtin_mips_cache(0xd, ptr + 0x20); \
+                __builtin_mips_cache(0xd, ptr + 0x30); \
+                __builtin_mips_cache(0xd, ptr + 0x40); \
+                __builtin_mips_cache(0xd, ptr + 0x50); \
+                __builtin_mips_cache(0xd, ptr + 0x60); \
+                __builtin_mips_cache(0xd, ptr + 0x70); \
+                break; \
+            default: \
+                break; \
+        } \
+    } \
+    gGfxPoolEnd = ptr; \
+    if (!ptr) __builtin_unreachable(); \
+    if (0 != (((uintptr_t) ptr) & 0xf)) __builtin_unreachable(); \
+    (void*) ptr; \
+})
+
 #endif // MEMORY_H

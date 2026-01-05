@@ -175,6 +175,8 @@ void init_z_buffer(s32 resetZB) {
 
     gDPFillRectangle(tempGfxHead++, 0, gBorderHeight, SCREEN_WIDTH - 1,
                      SCREEN_HEIGHT - 1 - gBorderHeight);
+                 
+    gSPFlush(tempGfxHead++);
 
     gDisplayListHead = tempGfxHead;
 }

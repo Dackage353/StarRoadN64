@@ -30,46 +30,6 @@
 #define	DOWN(s, align)	(((u32)(s)) & ~((align)-1))
 #define DOWN4(s) DOWN(s, 4)
 
-#ifndef MAIN_POOL_SINGLE_REGION
-
-#if MEMORY_FRAGMENTATION_NO_FRAGMENTATION == MEMORY_FRAGMENTATION_LEVEL
-// One giant region encompassing all of the ram. Memory layout follows vanilla implementation
-// -zbuffer-|-game/engine data-|-framebuffers-|-main pool region-
-#define MAIN_POOL_REGIONS_COUNT 1
-#endif
-
-#if MEMORY_FRAGMENTATION_ZBUFFER_AND_FRAMEBUFFERS == MEMORY_FRAGMENTATION_LEVEL
-// Region before zbuffer and region after the framebuffer2
-// -game/engine data-|-main pool region 0-|-zbuffer-|-framebuffers-|-main pool region 1-
-//                                                  ^
-//                                       0x80300000 or 0x80700000
-#define MAIN_POOL_REGIONS_COUNT 2
-#endif
-
-#if MEMORY_FRAGMENTATION_ZBUFFER_AND_FRAMEBUFFERS_SPLIT == MEMORY_FRAGMENTATION_LEVEL
-// Region after 0x80600000, before zbuffer, after the framebuffer2
-// -game/engine data-|-main pool region 1-|-zbuffer-|-framebuffers-|-main pool region 1-|-main pool region 0-
-//                                                  ^                                   ^
-//                                             0x80500000                          0x80600000
-#define MAIN_POOL_REGIONS_COUNT 3
-#endif
-
-#if MEMORY_FRAGMENTATION_ZBUFFER_AND_EACH_FRAMEBUFFER == MEMORY_FRAGMENTATION_LEVEL
-// Region before zbuffer, between fb0/fb1, after fb2
-// -game/engine data-|-main pool region 0-|-zb-|-fb0-|-main pool region 1-|-fb1-|-fb2-|-main pool region 2-
-//                                             ^                                ^
-//                                        0x80500000                       0x80700000
-#define MAIN_POOL_REGIONS_COUNT 3
-#endif
-
-#else
-#define MAIN_POOL_REGIONS_COUNT 1
-#endif
-
-struct MainPoolContext {
-    struct MainPoolRegion regions[MAIN_POOL_REGIONS_COUNT];
-};
-
 struct MainPoolState {
     struct MainPoolContext ctx;
     struct MainPoolState* prev;
@@ -109,11 +69,9 @@ struct MemoryPool *gEffectsMemoryPool __attribute__((section(".data")));
 
 
 uintptr_t sSegmentTable[32];
-#ifndef MAIN_POOL_SINGLE_REGION
-static struct MainPoolContext sMainPool;
-struct MainPoolRegion* gMainPoolCurrentRegion;
-#else
 struct MainPoolContext sMainPool;
+#ifndef MAIN_POOL_SINGLE_REGION
+struct MainPoolRegion* gMainPoolCurrentRegion;
 #endif
 
 static struct MainPoolState *gMainPoolState = NULL;
@@ -723,17 +681,6 @@ void mem_pool_free(struct MemoryPool *pool, void *addr) {
             }
         }
     }
-}
-
-void *alloc_display_list(u32 size) {
-    void *ptr = NULL;
-
-    size = ALIGN8(size);
-    if (gGfxPoolEnd - size >= (u8 *) gDisplayListHead) {
-        gGfxPoolEnd -= size;
-        ptr = gGfxPoolEnd;
-    }
-    return ptr;
 }
 
 static struct DmaTable *load_dma_table_address(u8 *srcAddr) {

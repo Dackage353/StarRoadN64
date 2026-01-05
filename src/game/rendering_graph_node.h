@@ -13,7 +13,6 @@ extern struct GraphNodeObject      *gCurGraphNodeObject;
 extern struct GraphNodeHeldObject  *gCurGraphNodeHeldObject;
 #define gCurGraphNodeObjectNode ((struct Object *)gCurGraphNodeObject)
 extern u16 gAreaUpdateCounter;
-extern Vec3f globalLightDirection;
 
 #define GRAPH_ROOT_PERSP 0
 #define GRAPH_ROOT_ORTHO 1
@@ -68,7 +67,6 @@ struct RenderModeContainer {
 
 #define RENDER_PHASE_FIRST 0
 
-void geo_process_node_and_siblings(struct GraphNode *firstNode);
 void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor);
 
 #endif // RENDERING_GRAPH_NODE_H
