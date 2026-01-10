@@ -6083,3 +6083,29 @@ const BehaviorScript RM_Scroll_Texture[] = {
         CALL_NATIVE(bhv_murder),
     END_LOOP(),
 };
+
+extern void bhv_star_road_ow_music();
+const BehaviorScript bhvStarRoadOWMusic[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    CALL_NATIVE(bhv_star_road_ow_music),
+    BEGIN_LOOP(),
+    END_LOOP(),
+};
+
+extern void bhv_star_road_yoshi_init();
+const BehaviorScript bhvStarRoadYoshi[] = {
+    BEGIN(OBJ_LIST_GENACTOR),
+    OR_INT(oFlags, (OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO | OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    LOAD_ANIMATIONS(oAnimations, yoshi_seg5_anims_05024100),
+    SET_INTERACT_TYPE(INTERACT_TEXT),
+    DROP_TO_FLOOR(),
+    SET_HITBOX(/*Radius*/ 160, /*Height*/ 150),
+    ANIMATE(YOSHI_ANIM_IDLE),
+    SET_HOME(),
+    CALL_NATIVE( bhv_bobomb_buddy_init),
+    CALL_NATIVE( bhv_star_road_yoshi_init),
+    BEGIN_LOOP(),
+        SET_INT(oIntangibleTimer,0),
+        CALL_NATIVE( bhv_bobomb_buddy_loop),
+    END_LOOP(),
+};

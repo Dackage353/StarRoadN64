@@ -12,5 +12,7 @@
 #include "make_const_nonconst.h"
 
 #include "levels/castle_grounds/header.h"
+#include "levels/castle_grounds/custom_c/custom.model.inc.h"
 
 #include "levels/castle_grounds/geo.inc.c"
+#include "levels/castle_grounds/custom_c/custom.geo.inc.c"
