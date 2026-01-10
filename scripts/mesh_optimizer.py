@@ -728,8 +728,13 @@ class ShapelyAdapter:
         key = (int(poly[0]), int(poly[1]))
         return self._cache[key]
 
+class ParserVbo:
+    def __init__(self):
+        self.vertices_model_name = None
+        self.vbo = [ None ] * 64
+
 class ModelMeshEntry(TriKit):
-    def __init__(self, next_line, model, vtxopt_name):
+    def __init__(self, next_line, model, vtxopt_name, parser_vbo):
         self._model = model
         self._name = vtxopt_name
 
@@ -750,10 +755,7 @@ class ModelMeshEntry(TriKit):
         self._triangles = []
         self._triangles_lookup = set()
 
-        self._parser_vertices_model_name = None
-        self._parser_vbo = []
-        for i in range(64):
-            self._parser_vbo.append(None)
+        self.parser = parser_vbo
 
     def _vtx(self, vertex):
         assert vertex
@@ -769,7 +771,7 @@ class ModelMeshEntry(TriKit):
         if self._tri_trivial(tri_indices):
             return
 
-        tri = self._tri_normalize([ self._vtx(self._parser_vbo[i]) for i in tri_indices ])
+        tri = self._tri_normalize([ self._vtx(self.parser.vbo[i]) for i in tri_indices ])
         if self._tri_trivial(tri):
             return
     
@@ -830,10 +832,10 @@ class ModelMeshEntry(TriKit):
             vtx_arg_split = vtx_arg.split(' ')
 
             vertices_model_name = vtx_arg_split[0]
-            if self._parser_vertices_model_name != vertices_model_name:
-                self._parser_vertices_model_name = vertices_model_name
+            if self.parser.vertices_model_name != vertices_model_name:
+                self.parser.vertices_model_name = vertices_model_name
                 _, model_entry = self._model.find(vertices_model_name)
-                self._parser_vertices_model_entry = model_entry
+                self.parser.vertices_model_entry = model_entry
 
             if len(vtx_arg_split) > 1:
                 assert '+' == vtx_arg_split[1], "incorrect vtx declaration"
@@ -844,7 +846,7 @@ class ModelMeshEntry(TriKit):
             num = int(args[1])
             vbo_offset = int(args[2])
             for i in range(num):
-                self._parser_vbo[vbo_offset + i] = self._parser_vertices_model_entry.vertices[vtx_offset + i]
+                self.parser.vbo[vbo_offset + i] = self.parser.vertices_model_entry.vertices[vtx_offset + i]
 
             return
 
@@ -1412,6 +1414,7 @@ def optimize_model(model):
 
         mlist = ModelMeshEntryList(old_entry.data[0])
         entry = None
+        parser = ParserVbo()
 
         num = 0
         have_tile = None
@@ -1433,7 +1436,7 @@ def optimize_model(model):
                 continue
             else:
                 if not entry:
-                    entry = ModelMeshEntry(line, model, f'{mlist.name}_{num}')
+                    entry = ModelMeshEntry(line, model, f'{mlist.name}_{num}', parser)
                     num += 1 
                 entry.add(line)
                 

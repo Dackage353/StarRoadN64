@@ -16,11 +16,10 @@
 #include "levels/castle_grounds/header.h"
 
 /* Fast64 begin persistent block [scripts] */
-#include "levels/castle_grounds/custom_c/custom.collision.inc.c"
 extern const BehaviorScript bhvStarRoadOWMusic[];
 extern const BehaviorScript bhvStarRoadYoshi[];
 
-extern const Collision col_castle_grounds_1_0xe071d98[];
+#include "levels/castle_grounds/custom_c/custom.collision.inc.c"
 #define castle_grounds_area_1_collision col_castle_grounds_1_0xe071d98
 extern const GeoLayout Geo_castle_grounds_1_0x1c81700[];
 #define castle_grounds_area_1 Geo_castle_grounds_1_0x1c81700

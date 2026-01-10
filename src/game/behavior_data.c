@@ -6134,3 +6134,41 @@ const BehaviorScript bhvStarRoadYoshi[] = {
         CALL_NATIVE( bhv_bobomb_buddy_loop),
     END_LOOP(),
 };
+
+const BehaviorScript bhvStarRoadChainChomp[] = {
+    BEGIN(OBJ_LIST_GENACTOR),
+    OR_INT(oFlags,8393),
+    LOAD_ANIMATIONS(oAnimations, chain_chomp_seg6_anims_06025178),
+    ANIMATE(0),
+    SET_OBJ_PHYSICS(/*Wall hitbox radius*/ 0, /*Gravity*/ -400, /*Bounciness*/ -50, /*Drag strength*/ 0, /*Friction*/ 1000, /*Buoyancy*/ 200, /*Unused*/ 0, 0),
+    SET_HOME(),
+    SET_FLOAT(oGraphYOffset,240),
+    SCALE(0,168),
+    BEGIN_LOOP(),
+        CALL_NATIVE( bhv_chain_chomp_update),
+    END_LOOP(),
+};
+
+extern const Collision col_hmc_geo_000530_0xeacf27[];
+const BehaviorScript bhvStarRoadBOIRock[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    OR_INT(oFlags,1),
+    LOAD_COLLISION_DATA(col_hmc_geo_000530_0xeacf27),
+    CALL_NATIVE( bhv_init_room),
+    BEGIN_LOOP(),
+    CALL_NATIVE( bhv_breakable_box_loop),
+    CALL_NATIVE( load_object_collision_model),
+    END_LOOP(),
+};
+
+extern const Collision col_hmc_geo_000570_0xeb0f6f[];
+const BehaviorScript bhvStarRoadBOIPlatform[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    OR_INT(oFlags,17),
+    LOAD_COLLISION_DATA(col_hmc_geo_000570_0xeb0f6f),
+    CALL_NATIVE( bhv_ssl_moving_pyramid_wall_init),
+    BEGIN_LOOP(),
+        CALL_NATIVE( bhv_ssl_moving_pyramid_wall_loop),
+        CALL_NATIVE( load_object_collision_model),
+    END_LOOP(),
+};

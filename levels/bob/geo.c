@@ -14,3 +14,6 @@
 #include "levels/bob/header.h"
 
 #include "levels/bob/geo.inc.c"
+#include "levels/bob/custom_c/custom.model.inc.h"
+#include "levels/bob/custom_c/custom.geo.inc.c"
+#include "levels/bob/custom_c/custom_object.geo.inc.c"
