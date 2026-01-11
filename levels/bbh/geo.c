@@ -14,3 +14,7 @@
 #include "levels/bbh/header.h"
 
 #include "levels/bbh/geo.inc.c"
+#include "levels/bbh/custom_c/custom.modelopt.inc.h"
+#include "levels/bbh/custom_c/custom.geo.inc.c"
+#include "levels/bbh/custom_c/obj.model.inc.h"
+#include "levels/bbh/custom_c/obj.geo.inc.c"

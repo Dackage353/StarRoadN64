@@ -1420,6 +1420,7 @@ def optimize_model(model):
         have_tile = None
         for i in range(1, len(old_entry.data)):
             line = old_entry.data[i]
+            print(line)
             if 'gsDPLoadTile' in line:
                 have_tile = True
 

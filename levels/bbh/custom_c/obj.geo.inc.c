@@ -1,0 +1,53 @@
+// MODEL_RR_OCTAGONAL_PLATFORM
+const GeoLayout sr_rr_geo_0008A8[]= {
+    GEO_CULLING_RADIUS(1300),
+    GEO_OPEN_NODE(),
+    GEO_DISPLAY_LIST(LAYER_OPAQUE,DL_rr_geo_0008A8_0x701a9b0),
+    GEO_CLOSE_NODE(),
+    GEO_END(),
+};
+
+// MODEL_RR_SLIDING_PLATFORM
+const GeoLayout sr_rr_geo_0008C0[]= {
+    GEO_CULLING_RADIUS(700),
+    GEO_OPEN_NODE(),
+    GEO_DISPLAY_LIST(LAYER_OPAQUE,DL_rr_geo_0008C0_0x701acf0),
+    GEO_CLOSE_NODE(),
+    GEO_END(),
+};
+
+// 4
+const GeoLayout sr_rr_geo_000678[]= {
+    GEO_CULLING_RADIUS(1000),
+    GEO_OPEN_NODE(),
+    GEO_DISPLAY_LIST(LAYER_ALPHA,DL_rr_geo_000678_0x701f238),
+    GEO_CLOSE_NODE(),
+    GEO_END(),
+};
+
+// 5
+const GeoLayout sr_rr_geo_000690[]= {
+    GEO_CULLING_RADIUS(3000),
+    GEO_OPEN_NODE(),
+    GEO_DISPLAY_LIST(LAYER_OPAQUE,DL_rr_geo_000690_0x7021278),
+    GEO_CLOSE_NODE(),
+    GEO_END(),
+};
+
+// 6
+const GeoLayout sr_rr_geo_0006A8[]= {
+    GEO_CULLING_RADIUS(3000),
+    GEO_OPEN_NODE(),
+    GEO_DISPLAY_LIST(LAYER_OPAQUE,DL_rr_geo_0006A8_0x7025928),
+    GEO_CLOSE_NODE(),
+    GEO_END(),
+};
+
+// 7
+const GeoLayout sr_rr_geo_0006C0[]= {
+    GEO_CULLING_RADIUS(3500),
+    GEO_OPEN_NODE(),
+    GEO_DISPLAY_LIST(LAYER_OPAQUE,DL_rr_geo_0006C0_0x70181f8),
+    GEO_CLOSE_NODE(),
+    GEO_END(),
+};
