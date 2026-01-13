@@ -7,6 +7,12 @@ from scipy.spatial import ConvexHull
 import shapely
 from shapely.ops import triangulate
 
+VTX_FILTER = None
+VTX_SUFFIX = 'opt'
+
+# CCCoral
+VTX_FILTER = lambda vtx: vtx.pos.y < 373
+VTX_SUFFIX = 'opt_p'
 
 HAS_EX3_COMMANDS = True
 HAS_TRI3 = False
@@ -742,7 +748,7 @@ class ModelMeshEntry(TriKit):
         vtx_arg = vtx_args[0]
         vtx_arg_split = vtx_arg.split(' ')
 
-        self._base_vertices_model_entry = ModelVtxEntry(f'static Vtx {vtxopt_name}_vtxopt[] = {{\n')
+        self._base_vertices_model_entry = ModelVtxEntry(f'static Vtx {vtxopt_name}_vtx{VTX_SUFFIX}[] = {{\n')
         if len(vtx_arg_split) > 1:
             assert '+' == vtx_arg_split[1], "offset must be 0"
             if '0' != vtx_arg_split[2]:
@@ -1420,7 +1426,7 @@ def make_opt_name(path):
     extensions = [ '.inc.c', '.inc.h', '.h', '.c' ]
     for ext in extensions:
         if path.endswith(ext):
-            return path[:-len(ext)] + 'opt' + ext
+            return path[:-len(ext)] + VTX_SUFFIX + ext
 
     assert False, f"unknown extension for {path}"
 
@@ -1433,7 +1439,7 @@ if '__main__' in __name__:
         header_patched_path = make_opt_name(header_path)
 
         model = load_model(model_path)
-        optimize_model(model, None)
+        optimize_model(model, VTX_FILTER)
         serialize_model(model, model_patched_path)
         patch_header(header_path, header_patched_path)
     else:

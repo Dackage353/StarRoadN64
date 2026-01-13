@@ -62,30 +62,33 @@ void bhv_star_road_yoshi_init()
     return;
 }
 
-Gfx *geo_star_road_p(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx)
+Gfx *geo_star_road_cull(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx)
 {
     if (callContext == GEO_CONTEXT_RENDER) {
         struct GraphNodeGenerated *genNode = (struct GraphNodeGenerated *) node;
         struct GraphNodeDisplayList *graphNode = (struct GraphNodeDisplayList *) node->next;
-
-        int active = gMarioStates->pos[1] < 0;
-        if (active) {
-            graphNode->node.flags |= GRAPH_RENDER_ACTIVE;
-        } else {
-            graphNode->node.flags &= ~GRAPH_RENDER_ACTIVE;
+        int param = genNode->parameter;
+        int active = 0;
+        switch (param)
+        {
+            // Castle courtyard
+            case 0:
+                active = gMarioStates->pos[1] < 0;
+                break;
+            case 1:
+                active = gMarioStates->pos[1] >= 0;
+                break;
+            
+            // CCCoral
+            case 2:
+                active = gMarioStates->pos[1] < 1783;
+                break;
+            case 3:
+                active = gMarioStates->pos[1] >= 1783;
+                break;
         }
-    }
 
-    return NULL;
-}
 
-Gfx *geo_star_road_n(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx)
-{
-    if (callContext == GEO_CONTEXT_RENDER) {
-        struct GraphNodeGenerated *genNode = (struct GraphNodeGenerated *) node;
-        struct GraphNodeDisplayList *graphNode = (struct GraphNodeDisplayList *) node->next;
-
-        int active = gMarioStates->pos[1] > 0;
         if (active) {
             graphNode->node.flags |= GRAPH_RENDER_ACTIVE;
         } else {

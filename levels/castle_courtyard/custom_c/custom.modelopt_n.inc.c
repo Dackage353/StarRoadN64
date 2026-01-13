@@ -2743,6 +2743,7 @@ static Vtx DL_castle_courtyard_1_0xe072a00_78_vtxopt_n[] = {
 
 Gfx DL_castle_courtyard_1_0xe072a00_n[] = {
 gsDPPipeSync(),
+gsDPPipelineMode(G_PM_NPRIMITIVE),
 gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, SHADE,TEXEL0, 0, SHADE, 0, 0, 0, 0, SHADE),
 gsDPSetTile(0, 2, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0),
 gsSPTexture(65535, 65535, 0, 0, 1),
@@ -3909,7 +3910,10 @@ gsDPSetTile(0, 2, 8, 0, 0, 0, 0, 5, 0, 0, 5, 0),
 gsDPSetTileSize(0, 0, 0, 124, 124),
 	gsSPVertex(DL_castle_courtyard_1_0xe072a00_78_vtxopt_n, 4, 0),
 	gsSP2Triangles(0, 1, 2, 0, 0, 3, 1, 0),
+
+gsDPPipeSync(),
 gsSPTexture(65535, 65535, 0, 0, 0),
+gsDPPipelineMode(G_PM_1PRIMITIVE),
 gsSPEndDisplayList(),
 };
 
@@ -4222,6 +4226,7 @@ static Vtx DL_castle_courtyard_1_0xe08fbb0_9_vtxopt_n[] = {
 
 Gfx DL_castle_courtyard_1_0xe08fbb0_n[] = {
 gsDPPipeSync(),
+gsDPPipelineMode(G_PM_NPRIMITIVE),
 gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, SHADE,TEXEL0, 0, SHADE, 0, 0, 0, 0, SHADE),
 gsDPSetTile(0, 2, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0),
 gsSPTexture(65535, 65535, 0, 0, 1),
@@ -4387,6 +4392,7 @@ gsDPTileSync(),
 	gsSP2Triangles(12, 13, 14, 0, 12, 15, 13, 0),
 gsSPTexture(65535, 65535, 0, 0, 0),
 gsDPPipeSync(),
+gsDPPipelineMode(G_PM_1PRIMITIVE),
 gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, SHADE,TEXEL0, 0, SHADE, 0, 0, 0, 0, SHADE),
 gsSPEndDisplayList(),
 };

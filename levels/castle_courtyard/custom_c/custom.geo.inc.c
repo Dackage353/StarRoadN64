@@ -1,5 +1,4 @@
-Gfx *geo_star_road_p(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx);
-Gfx *geo_star_road_n(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx);
+Gfx *geo_star_road_cull(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx);
 
 const GeoLayout Geo_castle_courtyard_1_0x2541700[]= {
 GEO_NODE_SCREEN_AREA(10,160,120,160,120),
@@ -17,13 +16,13 @@ GEO_CAMERA_FRUSTUM_WITH_FUNC(45,100,30000, geo_camera_fov),
 GEO_OPEN_NODE(),
 GEO_CAMERA(1,0,2000,6000,3072,0,60928, geo_camera_main),
 GEO_OPEN_NODE(),
-GEO_ASM(0, geo_star_road_p),
+GEO_ASM(0, geo_star_road_cull),
 GEO_DISPLAY_LIST(LAYER_OPAQUE,DL_castle_courtyard_1_0xe072a00_n),
-GEO_ASM(0, geo_star_road_p),
+GEO_ASM(0, geo_star_road_cull),
 GEO_DISPLAY_LIST(LAYER_TRANSPARENT,DL_castle_courtyard_1_0xe08fbb0_n),
-GEO_ASM(0, geo_star_road_n),
+GEO_ASM(1, geo_star_road_cull),
 GEO_DISPLAY_LIST(LAYER_OPAQUE,DL_castle_courtyard_1_0xe072a00_p),
-GEO_ASM(0, geo_star_road_n),
+GEO_ASM(1, geo_star_road_cull),
 GEO_DISPLAY_LIST(LAYER_TRANSPARENT,DL_castle_courtyard_1_0xe08fbb0_p),
 GEO_RENDER_OBJ(),
 GEO_ASM(0, geo_envfx_main),
