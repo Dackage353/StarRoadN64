@@ -16,3 +16,4 @@
 #include "levels/ssl/geo.inc.c"
 #include "levels/ssl/custom_c/custom.modelopt.inc.h"
 #include "levels/ssl/custom_c/custom.geo.inc.c"
+#include "levels/ssl/custom_c/object.geo.inc.c"

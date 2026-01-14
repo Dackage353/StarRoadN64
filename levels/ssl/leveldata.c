@@ -18,3 +18,4 @@
 #include "levels/ssl/custom_c/movtextNew.inc.c"
 #include "levels/ssl/custom_c/custom.modelopt.inc.c"
 #include "levels/ssl/custom_c/object.collision.inc.c"
+#include "levels/ssl/custom_c/object.model.inc.c"

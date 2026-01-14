@@ -23,22 +23,25 @@ extern const GeoLayout Geo_ssl_1_0x1581700[];
 
 extern const BehaviorScript bhvStarRoadLLFMushroom[]; // 5
 #define bhvCameraLakitu bhvStarRoadLLFMushroom
-extern const BehaviorScript bhvStarRoadLLFMips[]; // 100
+extern const BehaviorScript bhvStarRoadLLFMips[];
 #define bhvUkikiCage bhvStarRoadLLFMips
 
-extern const BehaviorScript bhvStarRoadYoshiCoin[]; // 56 = 0x38 = MODEL_TTM_YELLOW_SMILEY
+extern const BehaviorScript bhvStarRoadYoshiCoin[];
 #define bhvWfBreakableWallLeft bhvStarRoadYoshiCoin
 
-extern const BehaviorScript bhvStarRoadLLFVine[]; // 57
+extern const BehaviorScript bhvStarRoadLLFVine[];
 #define bhvLllDrawbridgeSpawner bhvStarRoadLLFVine
 
-extern const BehaviorScript bhvStarRoadLLFLillypad[]; // 18
+extern const BehaviorScript bhvStarRoadLLFLillypad[]; // 18 = 0x12
 #define Bhv_Custom_0x1300496c bhvStarRoadLLFLillypad
 // 58 - tree
 
 #define bhvFish3 bhvTankFishGroup
 #define bhvFish2 bhvTankFishGroup
 #define bhvBetaFishSplashSpawner bhvCoinFormation
+
+extern const GeoLayout star_road_llf_mushroom_geo[];
+extern const GeoLayout star_road_llf_lillypad_geo[];
 /* Fast64 end persistent block [scripts] */
 
 const LevelScript level_ssl_entry[] = {
@@ -77,6 +80,8 @@ const LevelScript level_ssl_entry[] = {
 	JUMP_LINK(script_func_global_1),
 	JUMP_LINK(script_func_global_12),
 	JUMP_LINK(script_func_global_16),
+	LOAD_MODEL_FROM_GEO(5, star_road_llf_mushroom_geo),
+	LOAD_MODEL_FROM_GEO(18, star_road_llf_lillypad_geo),
 	/* Fast64 begin persistent block [level commands] */
 	/* Fast64 end persistent block [level commands] */
 
@@ -89,7 +94,7 @@ const LevelScript level_ssl_entry[] = {
 		SET_BACKGROUND_MUSIC(0,36),
 		TERRAIN_TYPE(0),
 		OBJECT_WITH_ACTS(0,-2081,1019,-5519,0,32,0,0xa0000, bhvSpinAirborneWarp,63),
-		OBJECT_WITH_ACTS(5,-20,-21,2392,0,-154,0,0x0, bhvCameraLakitu,63),
+		OBJECT_WITH_ACTS(5,-20,-21,2392,0,-154,0,0x0, bhvCameraLakitu,62),
 		OBJECT_WITH_ACTS(58,-3144,-537,-4803,0,-153,0,0x0, bhvTree,62),
 		OBJECT_WITH_ACTS(58,6219,159,967,0,107,0,0x0, bhvTree,63),
 		OBJECT_WITH_ACTS(58,-3475,-759,3825,0,-95,0,0x0, bhvTree,63),
