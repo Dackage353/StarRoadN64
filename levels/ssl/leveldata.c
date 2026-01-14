@@ -14,3 +14,7 @@
 #include "levels/ssl/areas/2/movtext.inc.c"
 
 #include "levels/ssl/leveldata.inc.c"
+#include "levels/ssl/custom_c/textureNew.inc.c"
+#include "levels/ssl/custom_c/movtextNew.inc.c"
+#include "levels/ssl/custom_c/custom.modelopt.inc.c"
+#include "levels/ssl/custom_c/object.collision.inc.c"

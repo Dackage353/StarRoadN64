@@ -16,4 +16,3 @@
 #include "levels/lll/geo.inc.c"
 #include "levels/lll/custom_c/custom.modelopt.inc.h"
 #include "levels/lll/custom_c/custom.geo.inc.c"
-#include "levels/lll/custom_c/object.geo.inc.c"

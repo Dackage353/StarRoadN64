@@ -36,9 +36,6 @@ extern const BehaviorScript bhvStarRoadPiranhaPlant[];
 
 #define bhvTreasureChestsShip bhvKoopa
 
-extern const GeoLayout star_road_sun_geo[];
-extern const GeoLayout star_road_yoshi_coin_geo[];
-
 extern const BehaviorScript bhvStarRoadBowserStub[];
 #define bhvBowser bhvStarRoadBowserStub
 /* Fast64 end persistent block [scripts] */
@@ -80,8 +77,6 @@ const LevelScript level_lll_entry[] = {
 	JUMP_LINK(script_func_global_1),
 	JUMP_LINK(script_func_global_6),
 	JUMP_LINK(script_func_global_15),
-	LOAD_MODEL_FROM_GEO(55, star_road_sun_geo),
-	LOAD_MODEL_FROM_GEO(56, star_road_yoshi_coin_geo),
 	/* Fast64 begin persistent block [level commands] */
 	/* Fast64 end persistent block [level commands] */
 

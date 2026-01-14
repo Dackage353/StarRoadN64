@@ -6419,3 +6419,53 @@ const BehaviorScript bhvStarRoadPiranhaPlant[] = {
         BEGIN_LOOP(),
     END_LOOP(),
 };
+
+extern const Collision col_ttm_geo_0007A8_0x117ee13[];
+const BehaviorScript bhvStarRoadLLFMushroom[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    OR_INT(oFlags,17),
+    LOAD_COLLISION_DATA(col_ttm_geo_0007A8_0x117ee13),
+    CALL_NATIVE( bhv_ssl_moving_pyramid_wall_init),
+    BEGIN_LOOP(),
+        CALL_NATIVE( bhv_ssl_moving_pyramid_wall_loop),
+        CALL_NATIVE( load_object_collision_model),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvStarRoadLLFMips[] = {
+    BEGIN(OBJ_LIST_GENACTOR),
+    OR_INT(oFlags,9257),
+    LOAD_ANIMATIONS(oAnimations, mips_seg6_anims_06015634),
+    SET_INTERACT_TYPE(8388608),
+    DROP_TO_FLOOR(),
+    SET_HITBOX(100,60),
+    ANIMATE(0),
+    SET_INT(oYoshiChosenHome,0),
+    SET_HOME(),
+    CALL_NATIVE( bhv_bobomb_buddy_init),
+    BEGIN_LOOP(),
+        SET_INT(oIntangibleTimer,0),
+        CALL_NATIVE( bhv_bobomb_buddy_loop),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvStarRoadLLFVine[] = {
+    BEGIN(OBJ_LIST_POLELIKE),
+    BILLBOARD(),
+    OR_INT(oFlags,1),
+    SET_INT(oInteractType,64),
+    SET_HITBOX(80,500),
+    SET_INT(oIntangibleTimer,0),
+    SCALE(0,48),
+    BEGIN_LOOP(),
+        CALL_NATIVE( bhv_pole_base_loop),
+    END_LOOP(),
+};
+
+extern const Collision col_ttm_geo_000990_0x11827cb[];
+const BehaviorScript bhvStarRoadLLFLillypad[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    OR_INT(oFlags,1),
+    LOAD_COLLISION_DATA(col_ttm_geo_000990_0x11827cb),
+    GOTO( Bhv_Custom_0x13003b70),
+};

@@ -901,7 +901,7 @@ To use this, simply place this file inside your source directory after exporting
 extern u8 bbh_1_Movtex_0[];
 extern u8 ccm_1_Movtex_0[];
 extern u8 hmc_1_Movtex_0[];
-extern u8 ssl_1_Movtex_0[] = {};
+extern u8 ssl_1_Movtex_0[];
 extern u8 bob_1_Movtex_0[];
 extern u8 sl_1_Movtex_0[] = {};
 extern u8 jrb_1_Movtex_0[];

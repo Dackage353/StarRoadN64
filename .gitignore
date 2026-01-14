@@ -1522,8 +1522,6 @@ textures/machine/ttc_textures.08400.rgba16.png
 textures/mountain/ttm_textures.00000.rgba16.png
 textures/mountain/ttm_textures.00800.rgba16.png
 textures/mountain/ttm_textures.01800.rgba16.png
-textures/mountain/ttm_textures.02800.rgba16.png
-textures/mountain/ttm_textures.03000.rgba16.png
 textures/mountain/ttm_textures.03800.rgba16.png
 textures/mountain/ttm_textures.04000.rgba16.png
 textures/mountain/ttm_textures.04800.rgba16.png
@@ -1534,10 +1532,8 @@ textures/mountain/ttm_textures.07000.rgba16.png
 textures/mountain/ttm_textures.07800.rgba16.png
 textures/mountain/ttm_textures.08000.rgba16.png
 textures/mountain/ttm_textures.08800.rgba16.png
-textures/mountain/ttm_textures.09800.rgba16.png
 textures/mountain/ttm_textures.0A000.rgba16.png
 textures/mountain/ttm_textures.0A800.rgba16.png
-textures/mountain/ttm_textures.0B000.rgba16.png
 textures/mountain/ttm_textures.0B800.rgba16.png
 textures/mountain/ttm_textures.0C000.rgba16.png
 textures/outside/castle_grounds_textures.00000.rgba16.png
