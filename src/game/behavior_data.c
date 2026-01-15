@@ -6520,3 +6520,17 @@ const BehaviorScript bhvStarRoadMMMCannon[] = {
     CALL_NATIVE( bhv_cannon_base_loop),
     END_LOOP(),
 };
+
+extern const BehaviorScript bhvStarRoadShyguy[] = {
+    BEGIN(OBJ_LIST_PUSHABLE),
+    OR_INT(oFlags,8265),
+    LOAD_ANIMATIONS(oAnimations, flyguy_seg8_anims_08011A64),
+    ANIMATE(FLY_GUY_ANIM_FLYING),
+    SET_HOME(),
+    SET_OBJ_PHYSICS(40,65136,65486,1000,1000,0,0,0),
+    CALL_NATIVE( bhv_goomba_init),
+    BEGIN_LOOP(),
+    CALL_NATIVE( bhv_goomba_update),
+    BEGIN(OBJ_LIST_PLAYER),
+    END_LOOP(),
+};
