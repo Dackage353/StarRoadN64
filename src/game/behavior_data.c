@@ -2045,10 +2045,14 @@ const BehaviorScript bhvBowser[] = {
 
 const BehaviorScript bhvStarRoadBowserStub[] = {
     BEGIN(OBJ_LIST_GENACTOR),
-    SET_INT(oInteractType, INTERACT_GRABBABLE),
-    SET_HITBOX(/*Radius*/ 400, /*Height*/ 400),
+    SET_INTERACT_TYPE(INTERACT_DAMAGE),
+    SET_HITBOX(/*Radius*/ 100, /*Height*/ 300),
+    SET_INT(oInteractionSubtype, INT_SUBTYPE_BIG_KNOCKBACK),
     CALL_NATIVE(bhv_bowser_init),
-    BREAK(),
+    BEGIN_LOOP(),
+        SET_INT(oIntangibleTimer, 0),
+        SET_INT(oInteractStatus, 0),
+    END_LOOP(),
 };
 
 const BehaviorScript bhvBowserBodyAnchor[] = {
@@ -6543,6 +6547,19 @@ const BehaviorScript bhvStarRoadB2Skulls[] = {
     LOAD_COLLISION_DATA(col_ttm_geo_000920_0x117d853),
     BEGIN_LOOP(),
     CALL_NATIVE( bhv_lll_moving_octagonal_mesh_platform_loop),
+    CALL_NATIVE( load_object_collision_model),
+    END_LOOP(),
+};
+
+extern Collision col_lll_geo_000A78_0x107592f[];
+const BehaviorScript bhvStarRoadB2FightPlatform[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    OR_INT(oFlags,9),
+    LOAD_COLLISION_DATA(col_lll_geo_000A78_0x107592f),
+    SET_HOME(),
+    BEGIN_LOOP(),
+    SET_INT(oAngleVelYaw,256),
+    ADD_INT(oMoveAngleYaw,256),
     CALL_NATIVE( load_object_collision_model),
     END_LOOP(),
 };

@@ -15,3 +15,7 @@
 
 #include "levels/bowser_2/tilting_platform/geo.inc.c"
 #include "levels/bowser_2/areas/1/geo.inc.c"
+#include "geo.inc.c"
+#include "levels/bowser_2/custom_c/custom.modelopt.inc.h"
+#include "levels/bowser_2/custom_c/custom.geo.inc.c"
+#include "levels/bowser_2/custom_c/obj.geo.inc.c"
