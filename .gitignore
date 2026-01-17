@@ -63,8 +63,6 @@ actors/amp/amp_mouth.rgba16.png
 actors/blue_coin_switch/blue_coin_switch_side.rgba16.png
 actors/blue_coin_switch/blue_coin_switch_top.rgba16.png
 actors/blue_fish/blue_fish.rgba16.png
-actors/bobomb/bob-omb_buddy_left_side.rgba16.png
-actors/bobomb/bob-omb_buddy_right_side.rgba16.png
 actors/bobomb/bob-omb_eyes.rgba16.png
 actors/bobomb/bob-omb_eyes_blink.rgba16.png
 actors/bobomb/bob-omb_left_side.rgba16.png
@@ -146,7 +144,6 @@ actors/burn_smoke/burn_smoke.ia16.png
 actors/butterfly/butterfly_wing.rgba16.png
 actors/cannon_barrel/cannon_barrel.rgba16.png
 actors/cannon_base/cannon_base.rgba16.png
-actors/cannon_lid/cannon_lid.rgba16.png
 actors/capswitch/cap_switch_base.rgba16.png
 actors/capswitch/cap_switch_head.ia16.png
 actors/chain_ball/chain_ball.rgba16.png

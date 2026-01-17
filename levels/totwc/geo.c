@@ -14,3 +14,6 @@
 #include "levels/totwc/header.h"
 
 #include "levels/totwc/geo.inc.c"
+#include "levels/totwc/custom_c/custom.modelopt.inc.h"
+#include "levels/totwc/custom_c/custom.geo.inc.c"
+#include "levels/totwc/custom_c/obj.geo.inc.c"

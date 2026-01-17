@@ -6624,3 +6624,15 @@ const BehaviorScript bhvStarRoadCSWhomp[] = {
         CALL_NATIVE( load_object_collision_model),
     END_LOOP(),
 };
+
+extern const Collision col_dorrie_geo_0xa71784[];
+const BehaviorScript bhvStarRoadWCBlade[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    OR_INT(oFlags,1),
+    LOAD_COLLISION_DATA(col_dorrie_geo_0xa71784),
+    BEGIN_LOOP(),
+        CALL_NATIVE( bhv_ttc_spinner_update),
+        CALL_NATIVE( bhv_ttc_spinner_update),
+        CALL_NATIVE( load_object_collision_model),
+    END_LOOP(),
+};

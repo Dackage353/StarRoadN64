@@ -912,7 +912,7 @@ extern u8 ending_1_Movtex_0[] = {};
 extern u8 castle_courtyard_1_Movtex_0[];
 extern u8 pss_1_Movtex_0[];
 extern u8 cotmc_1_Movtex_0[];
-extern u8 totwc_1_Movtex_0[] = {};
+extern u8 totwc_1_Movtex_0[];
 extern u8 wmotr_1_Movtex_0[] = {};
 
 static void *RM2C_Water_Box_Array[33][8][3] = {
