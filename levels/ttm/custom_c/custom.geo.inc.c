@@ -1,26 +1,21 @@
-Gfx *geo_star_road_cull(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx);
-
-extern Gfx DL_wdw_1_0xe079560_part[];
-const GeoLayout Geo_wdw_1_0x1821700[]= {
+const GeoLayout Geo_ttm_1_0x2c41700[]= {
 GEO_NODE_SCREEN_AREA(10,160,120,160,120),
 GEO_OPEN_NODE(),
 GEO_ZBUFFER(0),
 GEO_OPEN_NODE(),
 GEO_NODE_ORTHO(100),
 GEO_OPEN_NODE(),
-GEO_BACKGROUND(SkyboxCustom26050240_skybox_Index+10, geo_skybox_main),
+GEO_BACKGROUND(3, geo_skybox_main),
 GEO_CLOSE_NODE(),
 GEO_CLOSE_NODE(),
 GEO_ZBUFFER(1),
 GEO_OPEN_NODE(),
 GEO_CAMERA_FRUSTUM_WITH_FUNC(45,100,30000, geo_camera_fov),
 GEO_OPEN_NODE(),
-GEO_CAMERA(16,0,2000,6000,3072,0,60928, geo_camera_main),
+GEO_CAMERA(1,0,2000,6000,3072,0,60928, geo_camera_main),
 GEO_OPEN_NODE(),
-GEO_DISPLAY_LIST(LAYER_OPAQUE,DL_wdw_1_0xe079560),
-GEO_ASM(4, geo_star_road_cull),
-GEO_DISPLAY_LIST(LAYER_OPAQUE,DL_wdw_1_0xe079560_part),
-GEO_DISPLAY_LIST(LAYER_ALPHA,DL_wdw_1_0xe09f140),
+GEO_DISPLAY_LIST(LAYER_OPAQUE,DL_ttm_1_0xe036d50),
+GEO_DISPLAY_LIST(LAYER_ALPHA,DL_ttm_1_0xe0472b0),
 GEO_RENDER_OBJ(),
 GEO_ASM(0, geo_envfx_main),
 GEO_CLOSE_NODE(),

@@ -6586,3 +6586,41 @@ const BehaviorScript bhvStarRoadCCCandyDomino[] = {
     CALL_NATIVE( load_object_collision_model),
     END_LOOP(),
 };
+
+const BehaviorScript bhvStarRoadCSSwing[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    LOAD_COLLISION_DATA(rr_seg7_collision_pendulum),
+    OR_INT(oFlags,1),
+    SET_FLOAT(oCollisionDistance,2000),
+    SCALE(0,160),
+    CALL_NATIVE( bhv_swing_platform_init),
+    BEGIN_LOOP(),
+        CALL_NATIVE( bhv_swing_platform_update),
+        CALL_NATIVE( load_object_collision_model),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvStarRoadCSDrop[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    OR_INT(oFlags,9),
+    LOAD_COLLISION_DATA(rr_seg7_collision_donut_platform),
+    ADD_FLOAT(oPosY,65230),
+    SET_HOME(),
+    BEGIN_LOOP(),
+    CALL_NATIVE( bhv_lll_sinking_rock_block_loop),
+    CALL_NATIVE( bhv_lll_sinking_rock_block_loop),
+    CALL_NATIVE( load_object_collision_model),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvStarRoadCSWhomp[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    LOAD_COLLISION_DATA(thwomp_seg5_collision_0500B7D0),
+    OR_INT(oFlags,73),
+    SET_FLOAT(oGraphYOffset,5),
+    CALL_NATIVE( bhv_butterfly_init),
+    BEGIN_LOOP(),
+        CALL_NATIVE( bhv_butterfly_loop),
+        CALL_NATIVE( load_object_collision_model),
+    END_LOOP(),
+};

@@ -11,3 +11,8 @@
 #include "levels/ttm/areas/1/movtext.inc.c"
 
 #include "levels/ttm/leveldata.inc.c"
+
+#include "levels/ttm/custom_c/textureNew.inc.c"
+#include "levels/ttm/custom_c/movtextNew.inc.c"
+#include "levels/ttm/custom_c/custom.modelopt.inc.c"
+#include "levels/ttm/custom_c/obj.model.inc.c"
