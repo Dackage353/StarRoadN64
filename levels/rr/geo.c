@@ -14,3 +14,6 @@
 #include "levels/rr/header.h"
 
 #include "levels/rr/geo.inc.c"
+#include "levels/rr/custom_c/custom.modelopt.inc.h"
+#include "levels/rr/custom_c/custom.geo.inc.c"
+#include "levels/rr/custom_c/obj.geo.inc.c"

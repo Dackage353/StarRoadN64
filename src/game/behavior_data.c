@@ -6727,3 +6727,85 @@ const BehaviorScript bhvStarRoadBOFBarrel[] = {
     CALL_NATIVE( load_object_collision_model),
     END_LOOP(),
 };
+
+const BehaviorScript bhvStarRoadSRCannon[] = {
+    BEGIN(OBJ_LIST_LEVEL),
+    OR_INT(oFlags,201),
+    SET_INT(oInteractType,16384),
+    ADD_FLOAT(oPosY,65196),
+    SET_HOME(),
+    SET_HITBOX(150,166),
+    SET_INT(oIntangibleTimer,0),
+    BEGIN_LOOP(),
+        CALL_NATIVE( bhv_cannon_base_loop),
+    END_LOOP(),
+};
+
+extern const Collision col_ssl_geo_000630_0xed2bcb[];
+const BehaviorScript bhvStarRoadSRRoomba[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    LOAD_COLLISION_DATA(col_ssl_geo_000630_0xed2bcb),
+    OR_INT(oFlags,1097),
+    ADD_FLOAT(oPosY,256),
+    SET_HOME(),
+    BEGIN_LOOP(),
+        CALL_NATIVE( bhv_chuckya_loop),
+        CALL_NATIVE( bhv_spindrift_loop),
+        SCALE(0,64),
+        CALL_NATIVE( load_object_collision_model),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvStarRoadSRPlatform[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    LOAD_COLLISION_DATA(col_ssl_geo_000630_0xed2bcb),
+    OR_INT(oFlags,1097),
+    ADD_FLOAT(oPosY,256),
+    SET_HOME(),
+    BEGIN_LOOP(),
+        CALL_NATIVE( bhv_spindrift_loop),
+        SCALE(0,64),
+        CALL_NATIVE( load_object_collision_model),
+    END_LOOP(),
+};
+
+extern const Collision col_ssl_geo_000794_0xee8613[];
+const BehaviorScript bhvStarRoadSRRotating[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    LOAD_COLLISION_DATA(col_ssl_geo_000794_0xee8613),
+    OR_INT(oFlags,1097),
+    SET_FLOAT(oCollisionDistance,450),
+    SET_HOME(),
+    BEGIN_LOOP(),
+        CALL_NATIVE( bhv_ttc_spinner_update),
+        CALL_NATIVE( load_object_collision_model),
+    END_LOOP(),
+};
+
+extern const Collision col_ssl_geo_000764_0xee84db[];
+const BehaviorScript bhvStarRoadSRPushing[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    OR_INT(oFlags,17),
+    LOAD_COLLISION_DATA(col_ssl_geo_000764_0xee84db),
+    SET_HOME(),
+    CALL_NATIVE( bhv_ttc_moving_bar_init),
+    BEGIN_LOOP(),
+        CALL_NATIVE( bhv_ttc_moving_bar_update),
+        CALL_NATIVE( load_object_collision_model),
+    END_LOOP(),
+};
+
+extern const Collision col_ssl_geo_000734_0xee8457[];
+const BehaviorScript bhvStarRoadSRSquishing[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    LOAD_COLLISION_DATA(col_ssl_geo_000734_0xee8457),
+    OR_INT(oFlags,1),
+    SET_HOME(),
+    SCALE(0,91),
+    CALL_NATIVE( bhv_horizontal_grindel_init),
+    BEGIN_LOOP(),
+        CALL_NATIVE( bhv_squishable_platform_loop),
+        CALL_NATIVE( bhv_squishable_platform_loop),
+        CALL_NATIVE( load_object_collision_model),
+    END_LOOP(),
+};

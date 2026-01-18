@@ -184,14 +184,6 @@ actors/door/zero_star_door_sign.rgba16.png
 actors/dorrie/dorrie_eye.rgba16.png
 actors/dorrie/dorrie_skin.rgba16.png
 actors/dorrie/dorrie_tongue.rgba16.png
-actors/exclamation_box/exclamation_box_front.rgba16.png
-actors/exclamation_box/exclamation_box_side.rgba16.png
-actors/exclamation_box/metal_cap_box_front.rgba16.png
-actors/exclamation_box/metal_cap_box_side.rgba16.png
-actors/exclamation_box/vanish_cap_box_front.rgba16.png
-actors/exclamation_box/vanish_cap_box_side.rgba16.png
-actors/exclamation_box/wing_cap_box_front.rgba16.png
-actors/exclamation_box/wing_cap_box_side.rgba16.png
 actors/exclamation_box_outline/exclamation_box_outline.rgba16.png
 actors/exclamation_box_outline/exclamation_point.rgba16.png
 actors/explosion/explosion_0.rgba16.png
@@ -201,11 +193,6 @@ actors/explosion/explosion_3.rgba16.png
 actors/explosion/explosion_4.rgba16.png
 actors/explosion/explosion_5.rgba16.png
 actors/explosion/explosion_6.rgba16.png
-actors/eyerok/eyerok_bricks.rgba16.png
-actors/eyerok/eyerok_eye_closed.rgba16.png
-actors/eyerok/eyerok_eye_mostly_closed.rgba16.png
-actors/eyerok/eyerok_eye_mostly_open.rgba16.png
-actors/eyerok/eyerok_eye_open.rgba16.png
 actors/flame/flame_0.ia16.png
 actors/flame/flame_1.ia16.png
 actors/flame/flame_2.ia16.png
