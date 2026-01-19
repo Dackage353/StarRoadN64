@@ -6809,3 +6809,14 @@ const BehaviorScript bhvStarRoadSRSquishing[] = {
         CALL_NATIVE( load_object_collision_model),
     END_LOOP(),
 };
+
+const BehaviorScript bhvStarRoadB3SlidingPlatform[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    OR_INT(oFlags,65),
+    SET_HOME(),
+    CALL_NATIVE( bhv_sliding_platform_init),
+    BEGIN_LOOP(),
+        CALL_NATIVE( bhv_sliding_platform_loop),
+        CALL_NATIVE( load_object_collision_model),
+    END_LOOP(),
+};

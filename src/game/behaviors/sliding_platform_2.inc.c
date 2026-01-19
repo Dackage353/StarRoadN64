@@ -14,7 +14,7 @@ static Collision const *sSlidingPlatformsCollisionData[] = {
 void bhv_sliding_platform_init(void) {
     s32 collisionDataIndex = GET_BPARAM1(o->oBehParams) & SLIDING_PLATFORM_BP1_TYPES_MASK;
 
-    o->collisionData = segmented_to_virtual(sSlidingPlatformsCollisionData[collisionDataIndex]);
+    o->collisionData = segmented_to_virtual(bitdw_seg7_collision_0700F688);
     o->oBackAndForthPlatformPathLength = 50.0f * (GET_BPARAM2(o->oBehParams) & SLIDING_PLATFORM_BP2_LENGTH_MASK);
 
     if (collisionDataIndex < SLIDING_PLATFORM_BP1_RR_PYRAMID || collisionDataIndex > SLIDING_PLATFORM_BP1_NULL) {

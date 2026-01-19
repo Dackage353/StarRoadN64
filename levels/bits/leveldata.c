@@ -7,3 +7,7 @@
 #include "make_const_nonconst.h"
 
 #include "levels/bits/leveldata.inc.c"
+#include "levels/bits/custom_c/textureNew.inc.c"
+#include "levels/bits/custom_c/movtextNew.inc.c"
+#include "levels/bits/custom_c/custom.modelopt.inc.c"
+
