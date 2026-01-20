@@ -61,7 +61,7 @@
         "inst0": {
             "release_rate": 10,
             "envelope": "envelope0",
-            "sound": "30_rarefaction-lahna"
+            "sound": "49_0"
         },
         "inst1": {
             "release_rate": 208,
@@ -106,7 +106,7 @@
         "inst7": {
             "release_rate": 114,
             "envelope": "envelope7",
-            "sound": "34_alto_flute"
+            "sound": "4A_4"
         },
         "inst8": {
             "release_rate": 15,
