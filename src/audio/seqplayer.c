@@ -1447,6 +1447,7 @@ void sequence_channel_set_volume(struct SequenceChannel *seqChannel, u8 volume) 
     Music_setVolumeHook(seqChannel, volume);
 }
 
+extern s16 gCurrLevelNum;
 void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
     struct M64ScriptState *state;
     struct SequencePlayer *seqPlayer;
@@ -1782,7 +1783,10 @@ void sequence_channel_process_script(struct SequenceChannel *seqChannel) {
 #endif
 
                     case 0xd4: // chan_setreverb
-                        seqChannel->reverbVol = m64_read_u8(state);
+                        if (gCurrLevelNum != LEVEL_BOWSER_3)
+                            seqChannel->reverbVol = m64_read_u8(state);
+                        else
+                            seqChannel->reverbVol = m64_read_u8(state) / 1.3f;
                         break;
 
                     case 0xc6: // chan_setbank; switch bank within set
