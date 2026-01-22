@@ -58,6 +58,7 @@ def load_and_fix(model_path):
     
     with open(model_path, "r") as f_model:
         tri_vtx = []
+        first_vtx = False
         keep_loading = False
         while True:
             line = f_model.readline()
@@ -67,17 +68,20 @@ def load_and_fix(model_path):
             if 'Vtx' in line:
                 assert not keep_loading
                 keep_loading = True
+                first_vtx = True
                 lines.append(line)
             elif '};' in line:
+                print(tri_vtx)
                 assert len(tri_vtx) == 0
                 keep_loading = False
                 lines.append(line)
             elif keep_loading:
                 vtx = Vtx(line)
-                if vtx.color[0] != 0 or vtx.color[1] != 0 or vtx.color[2] != 0:
+                if first_vtx and (vtx.color[0] != 0 or vtx.color[1] != 0 or vtx.color[2] != 0):
                     lines.append(line)
                     continue
 
+                first_vtx = False
                 tri_vtx.append(Vtx(line))
                 if len(tri_vtx) == 3:
                     # Calculate normal for the triangle
