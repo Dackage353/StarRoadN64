@@ -6664,6 +6664,7 @@ const BehaviorScript bhvStarRoadFFFInvPyramid[] = {
     BEGIN_LOOP(),
         CALL_NATIVE( bhv_tilting_inverted_pyramid_loop),
         CALL_NATIVE( load_object_collision_model),
+        SET_FLOAT(oDrawingDistance, 20000),
     END_LOOP(),
 };
 
@@ -6675,16 +6676,18 @@ const BehaviorScript bhvStarRoadFFFWallPlatform[] = {
     SET_INT_RAND_RSHIFT(oYoshiTargetYaw,1,32),
     SET_HOME(),
     BEGIN_LOOP(),
-    CALL_NATIVE( bhv_arrow_lift_loop),
-    CALL_NATIVE( load_object_collision_model),
+        CALL_NATIVE( bhv_arrow_lift_loop),
+        CALL_NATIVE( load_object_collision_model),
+        SET_FLOAT(oDrawingDistance, 20000),
     END_LOOP(),
 };
 
 static const BehaviorScript Bhv_Custom_0x13004864[] = {
     CALL_NATIVE( bhv_ssl_moving_pyramid_wall_init),
     BEGIN_LOOP(),
-    CALL_NATIVE( bhv_ssl_moving_pyramid_wall_loop),
-    CALL_NATIVE( load_object_collision_model),
+        CALL_NATIVE( bhv_ssl_moving_pyramid_wall_loop),
+        CALL_NATIVE( load_object_collision_model),
+        SET_FLOAT(oDrawingDistance, 20000),
     END_LOOP(),
 };
 
@@ -6713,6 +6716,7 @@ const BehaviorScript bhvStarRoadFFFAutoscroller[] = {
     BEGIN_LOOP(),
         CALL_NATIVE( bhv_platform_on_track_update),
         CALL_NATIVE( load_object_collision_model),
+        SET_FLOAT(oDrawingDistance, 20000),
     END_LOOP(),
 };
 
@@ -6725,9 +6729,10 @@ const BehaviorScript bhvStarRoadFFFSink[] = {
     SET_FLOAT(oCollisionDistance,2000),
     SET_HOME(),
     BEGIN_LOOP(),
-    CALL_NATIVE( bhv_lll_sinking_square_platforms_loop),
-    CALL_NATIVE( bhv_lll_sinking_square_platforms_loop),
-    CALL_NATIVE( load_object_collision_model),
+        CALL_NATIVE( bhv_lll_sinking_square_platforms_loop),
+        CALL_NATIVE( bhv_lll_sinking_square_platforms_loop),
+        CALL_NATIVE( load_object_collision_model),
+        SET_FLOAT(oDrawingDistance, 20000),
     END_LOOP(),
 };
 
