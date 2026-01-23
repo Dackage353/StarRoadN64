@@ -9,7 +9,7 @@
 
 #include "config.h"
 
-#define TEST_LEVEL LEVEL_VCUTM
+#define TEST_LEVEL LEVEL_WDW
 
 extern const LevelScript level_main_scripts_entry[];
 const LevelScript level_script_entry[] = {
