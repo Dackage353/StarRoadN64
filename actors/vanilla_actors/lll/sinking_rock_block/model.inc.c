@@ -71,6 +71,7 @@ const Gfx lll_seg7_dl_0701A878[] = {
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPDisplayList(lll_seg7_dl_0701A7E8),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
+    gsSPSetGeometryMode(G_SHADING_SMOOTH),
 
     gsDPPipeSync(),
     gsDPSetCycleType(G_CYC_1CYCLE),

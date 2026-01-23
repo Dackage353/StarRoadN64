@@ -127,6 +127,7 @@ const Gfx lll_seg7_dl_0701AD70[] = {
     gsSPDisplayList(lll_seg7_dl_0701AC20),
     gsSPDisplayList(lll_seg7_dl_0701ACE8),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
+    gsSPSetGeometryMode(G_SHADING_SMOOTH),
 
     gsDPPipeSync(),
     gsDPSetCycleType(G_CYC_1CYCLE),
