@@ -455,10 +455,8 @@ static void level_cmd_init_mario(void) {
 }
 
 static void level_cmd_place_object(void) {
-    if (
-        sCurrAreaIndex != -1
-        && (CMD_GET(u8, 2) & (1 << (gCurrActNum - 1)))
-    ) {
+    u8 val7 = 1 << (gCurrActNum - 1);
+    if (sCurrAreaIndex != -1 && ((CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
         ModelID16 model = CMD_GET(u32, 0x18);
         struct SpawnInfo *spawnInfo = main_pool_alloc(sizeof(struct SpawnInfo));
 
