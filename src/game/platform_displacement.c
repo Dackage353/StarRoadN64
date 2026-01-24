@@ -17,6 +17,7 @@
 struct Object *gMarioPlatform = NULL;
 static struct PlatformDisplacementInfo sMarioDisplacementInfo;
 static Vec3f sMarioAmountDisplaced;
+static s8 sWasOnPlatform = 0;
 
 /**
  * Determine if Mario is standing on a platform object, meaning that he is
@@ -134,6 +135,7 @@ void apply_platform_displacement(struct PlatformDisplacementInfo *displaceInfo, 
     // If the object is Mario, set inertia
     if (pos == gMarioState->pos) {
         vec3_diff(sMarioAmountDisplaced, pos, oldPos);
+        sWasOnPlatform = platform->behavior == bhvPlatformOnTrack;
     }
 }
 
@@ -157,9 +159,12 @@ static void apply_mario_inertia(void) {
 #endif
 
 #ifdef MARIO_INERTIA_LATERAL
-    // Apply sideways inertia
-    gMarioState->pos[0] += sMarioAmountDisplaced[0];
-    gMarioState->pos[2] += sMarioAmountDisplaced[2];
+    if (sWasOnPlatform)
+    {
+        // Apply sideways inertia
+        gMarioState->pos[0] += sMarioAmountDisplaced[0];
+        gMarioState->pos[2] += sMarioAmountDisplaced[2];
+    }
 
     // Drag
     sMarioAmountDisplaced[0] *= 0.97f;
@@ -170,6 +175,10 @@ static void apply_mario_inertia(void) {
     if (!(gMarioState->action & ACT_FLAG_AIR) || (gMarioState->action == ACT_GROUND_POUND)) {
         sShouldApplyInertia = FALSE;
     }
+}
+
+void drop_mario_inertia(void) {
+    vec3_set(sMarioAmountDisplaced, 0.0f, 0.0f, 0.0f);
 }
 
 /**

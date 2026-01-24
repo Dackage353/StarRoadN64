@@ -256,13 +256,15 @@ static void platform_on_track_act_move_along_track(void) {
 #ifdef CONTROLLABLE_PLATFORM_SPEED
                 f32 targetVel = gMarioObject->platform == o
                     ? (o->oDistanceToMario * coss(o->oAngleToMario - o->oMoveAngleYaw)) - 10.0f
-                    : 10.0f;
+                    : 5.0f;
+
+                f32 decelRate = gMarioObject->platform == o ? 0.5f : 1.5f;
                 if (targetVel < 10.0f) {
                     targetVel = 10.0f;
-                } else if (targetVel > 16.0f) {
-                    targetVel = 16.0f;
+                } else if (targetVel > 26.0f) {
+                    targetVel = 26.0f;
                 }
-                obj_forward_vel_approach(targetVel, 0.1f);
+                obj_forward_vel_approach(targetVel, 0.5f);
 #else
                 o->oForwardVel = 10.0f;
 #endif

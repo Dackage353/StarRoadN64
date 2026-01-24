@@ -1800,7 +1800,9 @@ s32 execute_mario_action(UNUSED struct Object *obj) {
  *                  INITIALIZATION                *
  **************************************************/
 
+void drop_mario_inertia(void);
 void init_mario(void) {
+    drop_mario_inertia();
     gMarioState->actionTimer = 0;
     gMarioState->framesSinceA = 0xFF;
     gMarioState->framesSinceB = 0xFF;

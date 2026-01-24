@@ -5383,6 +5383,7 @@ const BehaviorScript bhvPlatformOnTrack[] = {
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_platform_on_track_update),
         CALL_NATIVE(load_object_collision_model),
+        SET_FLOAT(oDrawingDistance, 20000),
     END_LOOP(),
 };
 
