@@ -5262,7 +5262,8 @@ const BehaviorScript bhvWigglerHead[] = {
     SCALE(/*Unused*/ 0, /*Field*/ 400),
     SET_FLOAT(oWigglerFallThroughFloorsHeight, 5000),
     BEGIN_LOOP(),
-        CALL_NATIVE(bhv_wiggler_update),
+        CALL_NATIVE( bhv_wiggler_update),
+        CALL_NATIVE( bhv_wiggler_update),
     END_LOOP(),
 };
 
