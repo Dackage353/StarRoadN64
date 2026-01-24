@@ -26,6 +26,7 @@ extern const BehaviorScript bhvStarRoadB3SlidingPlatform[]; // 56 = 0x38
 #define bhvCastleFloorTrap bhvStarRoadB3SlidingPlatform
 
 #define bhvClockMinuteHand bhvStarRoadStarReplica
+extern const GeoLayout geo_bitdw_0004F8[];
 /* Fast64 end persistent block [scripts] */
 
 const LevelScript level_bits_entry[] = {
@@ -64,6 +65,7 @@ const LevelScript level_bits_entry[] = {
 	JUMP_LINK(script_func_global_1),
 	JUMP_LINK(script_func_global_4),
 	JUMP_LINK(script_func_global_18),
+    LOAD_MODEL_FROM_GEO(MODEL_LEVEL_GEOMETRY_10,       geo_bitdw_0004F8),
 	/* Fast64 begin persistent block [level commands] */
 	/* Fast64 end persistent block [level commands] */
 

@@ -10,4 +10,5 @@
 #include "levels/bits/custom_c/textureNew.inc.c"
 #include "levels/bits/custom_c/movtextNew.inc.c"
 #include "levels/bits/custom_c/custom.modelopt.inc.c"
+#include "levels/bits/track/model.inc.c"
 

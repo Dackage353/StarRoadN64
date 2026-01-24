@@ -16,3 +16,4 @@
 #include "levels/bits/geo.inc.c"
 #include "levels/bits/custom_c/custom.modelopt.inc.h"
 #include "levels/bits/custom_c/custom.geo.inc.c"
+#include "levels/bits/track/geo.inc.c"
