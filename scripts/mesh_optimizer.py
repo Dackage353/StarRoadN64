@@ -7,8 +7,8 @@ from scipy.spatial import ConvexHull
 import shapely
 from shapely.ops import triangulate
 
-VTX_FILTER = None
-VTX_SUFFIX = 'opt'
+VTX_FILTER = lambda vtx: vtx.pos.y < -2316
+VTX_SUFFIX = 'opt_l'
 
 # CCCoral
 #VTX_FILTER = lambda vtx: vtx.pos.y < 373
