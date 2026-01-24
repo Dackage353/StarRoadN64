@@ -6884,5 +6884,6 @@ const BehaviorScript bhvStarRoadHPBlock[] = {
     BEGIN_LOOP(),
         CALL_NATIVE( bhv_ssl_moving_pyramid_wall_loop),
         CALL_NATIVE( load_object_collision_model),
+        SET_FLOAT(oDrawingDistance, 20000),
     END_LOOP(),
 };
