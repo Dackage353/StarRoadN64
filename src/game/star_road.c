@@ -101,6 +101,12 @@ Gfx *geo_star_road_cull(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx
             case 6:
                 active = gMarioStates->pos[1] >= -1320;
                 break;
+            
+            case 7:
+                active = (gMarioStates->pos[1] >= -1320)
+                      && (-6600 < gMarioStates->pos[2] && gMarioStates->pos[2] < -1689)
+                      && (-5347 < gMarioStates->pos[0] && gMarioStates->pos[0] < 6327);
+                break;
         }
 
 
