@@ -317,10 +317,6 @@ actors/monty_mole/monty_mole_tooth.rgba16.png
 actors/monty_mole_hole/monty_mole_hole.ia16.png
 actors/mr_i_eyeball/mr_i_eyeball_left_side.rgba16.png
 actors/mr_i_eyeball/mr_i_eyeball_right_side.rgba16.png
-actors/mr_i_iris/mr_i_iris_closed.rgba16.png
-actors/mr_i_iris/mr_i_iris_mostly_closed.rgba16.png
-actors/mr_i_iris/mr_i_iris_mostly_open.rgba16.png
-actors/mr_i_iris/mr_i_iris_open.rgba16.png
 actors/mushroom_1up/1-up_mushroom.rgba16.png
 actors/peach/peach_chest_jewel.rgba16.png
 actors/peach/peach_crown_jewel.rgba16.png
