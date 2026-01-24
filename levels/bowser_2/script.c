@@ -72,7 +72,7 @@ const LevelScript level_bowser_2_entry[] = {
 		TERRAIN_TYPE(0),
 
 		OBJECT_WITH_ACTS(0,-48,1360,-3192,0,0,0,0xa0000, bhvAirborneWarp,31),
-		OBJECT_WITH_ACTS(0,85,1076,1364,0,270,0,0x0, bhvBowser,31),
+		OBJECT_WITH_ACTS(0,85,-100+1076,1364,0,270,0,0x0, bhvBowser,31),
 		OBJECT_WITH_ACTS(9,-48,1492,-135,0,0,0,0x0, bhvWdwExpressElevator,31),
 		OBJECT_WITH_ACTS(9,-48,1492,1875,0,0,0,0x0, bhvWdwExpressElevator,31),
 		OBJECT_WITH_ACTS(87,-46,1843,1843,0,270,0,0x0, bhvBigBully,31),

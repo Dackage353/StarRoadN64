@@ -3228,6 +3228,8 @@ void init_camera(struct Camera *c) {
     marioOffset[1] = 125.f;
     marioOffset[2] = 400.f;
 
+    if (sWarpDest.nodeId != WARP_NODE_FAIL_WARP)
+    {
     // Set the camera's starting position or start a cutscene for certain levels
     switch (gCurrLevelNum) {
         // Calls the initial cutscene when you enter Bowser battle levels
@@ -3282,6 +3284,8 @@ void init_camera(struct Camera *c) {
             break;
 #endif
     }
+    }
+
     if (c->mode == CAMERA_MODE_8_DIRECTIONS) {
         gCameraMovementFlags |= CAM_MOVE_ZOOMED_OUT;
     }
