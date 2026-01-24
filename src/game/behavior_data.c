@@ -6779,6 +6779,7 @@ const BehaviorScript bhvStarRoadSRRoomba[] = {
         CALL_NATIVE( bhv_spindrift_loop),
         SCALE(0,64),
         CALL_NATIVE( load_object_collision_model),
+        SET_FLOAT(oDrawingDistance, 10000),
     END_LOOP(),
 };
 
@@ -6792,6 +6793,7 @@ const BehaviorScript bhvStarRoadSRPlatform[] = {
         CALL_NATIVE( bhv_spindrift_loop),
         SCALE(0,64),
         CALL_NATIVE( load_object_collision_model),
+        SET_FLOAT(oDrawingDistance, 10000),
     END_LOOP(),
 };
 
@@ -6805,6 +6807,7 @@ const BehaviorScript bhvStarRoadSRRotating[] = {
     BEGIN_LOOP(),
         CALL_NATIVE( bhv_ttc_spinner_update),
         CALL_NATIVE( load_object_collision_model),
+        SET_FLOAT(oDrawingDistance, 10000),
     END_LOOP(),
 };
 
@@ -6818,6 +6821,7 @@ const BehaviorScript bhvStarRoadSRPushing[] = {
     BEGIN_LOOP(),
         CALL_NATIVE( bhv_ttc_moving_bar_update),
         CALL_NATIVE( load_object_collision_model),
+        SET_FLOAT(oDrawingDistance, 10000),
     END_LOOP(),
 };
 
@@ -6833,6 +6837,7 @@ const BehaviorScript bhvStarRoadSRSquishing[] = {
         CALL_NATIVE( bhv_squishable_platform_loop),
         CALL_NATIVE( bhv_squishable_platform_loop),
         CALL_NATIVE( load_object_collision_model),
+        SET_FLOAT(oDrawingDistance, 10000),
     END_LOOP(),
 };
 
