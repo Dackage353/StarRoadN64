@@ -28,6 +28,9 @@ extern const GeoLayout Geo_totwc_1_0x27e1700[];
 extern const BehaviorScript bhvStarRoadWCBlade[];
 #define Bhv_Custom_0x13005664 bhvStarRoadWCBlade
 
+extern const BehaviorScript bhvStarRoadWCPole[];
+#define bhvPoleGrabbing bhvStarRoadWCPole
+
 extern const GeoLayout star_road_wc_blade[];
 /* Fast64 end persistent block [scripts] */
 
@@ -112,7 +115,6 @@ const LevelScript level_totwc_entry[] = {
 		OBJECT_WITH_ACTS(0,3037,-1840,4679,0,0,0,0x0, bhvHidden1upTrigger,31),
 		OBJECT_WITH_ACTS(0,4361,-1609,5885,0,0,0,0x0, bhvHidden1upTrigger,31),
 		OBJECT_WITH_ACTS(0,4361,-1609,3476,0,0,0,0x0, bhvHidden1upTrigger,31),
-		OBJECT_WITH_ACTS(0,-4212,1056,2521,0,0,0,0xfa0000, bhvPoleGrabbing,31),
 		OBJECT_WITH_ACTS(128,2029,852,-3523,0,0,0,0x7f0000, bhvCannon,31),
 		OBJECT_WITH_ACTS(212,3837,-1846,4674,0,359,0,0x40000, bhvHidden1up,31),
 		OBJECT_WITH_ACTS(212,-4224,6172,-409,0,359,0,0x0, bhv1Up,31),

@@ -491,6 +491,19 @@ const BehaviorScript bhvGiantPole[] = {
     END_LOOP(),
 };
 
+extern void bhv_pole_star_road_wc_pole_init(void);
+const BehaviorScript bhvStarRoadWCPole[] = {
+    BEGIN(OBJ_LIST_POLELIKE),
+    OR_INT(oFlags, OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE),
+    SET_INT(oInteractType, INTERACT_POLE),
+    SET_HITBOX(/*Radius*/ 80, /*Height*/ 1500),
+    CALL_NATIVE(bhv_pole_star_road_wc_pole_init),
+    SET_INT(oIntangibleTimer, 0),
+    BEGIN_LOOP(),
+        CALL_NATIVE(bhv_pole_base_loop),
+    END_LOOP(),
+};
+
 const BehaviorScript bhvPoleGrabbing[] = {
     BEGIN(OBJ_LIST_POLELIKE),
     OR_INT(oFlags, OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE),

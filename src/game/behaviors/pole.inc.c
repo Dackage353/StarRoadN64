@@ -21,6 +21,11 @@ void bhv_pole_init(void) {
     o->hitboxHeight = GET_BPARAM12(o->oBehParams) * 10;
 }
 
+void bhv_pole_star_road_wc_pole_init(void)
+{
+    o->hitboxHeight = 4650.0f;
+}
+
 /**
  * Main loop for bhvGiantPole. It is equivalent to bhv_pole_base_loop() except
  * for the fact that it spawns a yellow sphere at the top of the pole on the
