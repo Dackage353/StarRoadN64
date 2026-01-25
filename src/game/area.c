@@ -316,13 +316,16 @@ extern bool configVIAntialiasing;
 extern bool configVIDedither;
 void set_vi_mode_from_config()
 {
-    int mode = 0;
+    int mode = 2;
     if (!configVIAntialiasing) {
-        mode |= 3;
+        mode |= 1;
     }
     if (!configVIDedither) {
         mode |= 4;
     }
+
+    if (2 == mode)
+        mode = 0;
 
     set_vi_mode(mode);
 }
