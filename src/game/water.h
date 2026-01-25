@@ -9,4 +9,5 @@ enum {
     WATER_PPP,
     WATER_CH,
     WATER_CORAL,
+    WATER_OW2,
 };

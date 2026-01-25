@@ -11,4 +11,5 @@ extern const LevelScript level_castle_courtyard_entry[];
 
 #include "levels/castle_courtyard/header.inc.h"
 
+#include "ow2_water/header.h"
 #endif
