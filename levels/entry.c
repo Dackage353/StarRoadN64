@@ -9,7 +9,7 @@
 
 #include "config.h"
 
-#define TEST_LEVEL LEVEL_BOWSER_2
+#define TEST_LEVEL LEVEL_SSL
 
 extern const LevelScript level_main_scripts_entry[];
 const LevelScript level_script_entry[] = {

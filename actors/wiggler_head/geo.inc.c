@@ -31,7 +31,7 @@ const GeoLayout wiggler_head_geo[] = {
                   GEO_CLOSE_NODE(),
                   GEO_ANIMATED_PART(LAYER_OPAQUE, 143, 0, 0, NULL),
                GEO_CLOSE_NODE(),
-               GEO_ANIMATED_PART(LAYER_ALPHA, 157, 0, 0, wiggler_seg5_dl_0500E518),
+               GEO_ANIMATED_PART(LAYER_ALPHA, 157, 0, 0, NULL),
                GEO_ANIMATED_PART(LAYER_ALPHA, 157, 0, 0, wiggler_seg5_dl_0500E430),
                GEO_ANIMATED_PART(LAYER_ALPHA, 157, 0, 0, wiggler_seg5_dl_0500E2F8),
                GEO_ANIMATED_PART(LAYER_OPAQUE, -16, 23, 51, NULL),
