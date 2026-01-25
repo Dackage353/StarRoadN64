@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "levels/castle_grounds/cg_water/header.h"
+#include "levels/bob/boi_water/header.h"
 
 struct WaterConfig
 {
@@ -17,17 +18,24 @@ struct WaterConfig
 
 static struct WaterConfig get_water_config(int param)
 {
+#define WATER_DECL(adl, avb) \
+    (struct WaterConfig){ \
+        .dl             = adl, \
+        .vtxBuffer      = avb, \
+        .vtxBufferCount = sizeof(avb) / sizeof(Vtx), \
+    }
+
     switch (param)
     {
         case WATER_CASTLE_GROUNDS:
-            return (struct WaterConfig){
-                .dl             = cg_water_Plane_001_mesh,
-                .vtxBuffer      = cg_water_Plane_001_mesh_vtx_0,
-                .vtxBufferCount = sizeof(cg_water_Plane_001_mesh_vtx_0) / sizeof(Vtx),
-            };
+            return WATER_DECL(cg_water_Plane_001_mesh, cg_water_Plane_001_mesh_vtx_0);
+        case WATER_BOI:
+            return WATER_DECL(boi_water_node_001_mesh, boi_water_node_001_mesh_vtx_0);
         default:
             return (struct WaterConfig){0};
     }
+
+#undef WATER_DECL
 }
 
 struct CloneResult {

@@ -4,4 +4,5 @@ extern Gfx *geo_render_water_dl(s32 callContext, struct GraphNode *node, UNUSED 
 
 enum {
     WATER_CASTLE_GROUNDS,
+    WATER_BOI,
 };

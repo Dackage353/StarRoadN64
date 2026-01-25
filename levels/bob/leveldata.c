@@ -15,3 +15,4 @@
 #include "levels/bob/custom_c/custom_object.texture.inc.c"
 #include "levels/bob/custom_c/custom_object.modelopt.inc.c"
 #include "levels/bob/custom_c/custom_object.collision.inc.c"
+#include "boi_water/model.inc.c"

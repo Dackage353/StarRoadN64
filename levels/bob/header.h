@@ -12,4 +12,5 @@ extern const LevelScript level_bob_entry[];
 
 #include "levels/bob/header.inc.h"
 
+#include "boi_water/header.h"
 #endif
