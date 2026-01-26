@@ -46,7 +46,7 @@ const LevelScript level_main_menu_entry_file_select[] = {
 
     FREE_LEVEL_POOL(),
     LOAD_AREA(/*area*/ 1),
-    SET_MENU_MUSIC(/*seq*/ 0x2d),
+    SET_MENU_MUSIC(/*seq*/ 0x0d),
     TRANSITION(/*transType*/ WARP_TRANSITION_FADE_FROM_COLOR, /*time*/ 16, /*color*/ 0xFF, 0xFF, 0xFF),
     CALL(     /*arg*/ 0, /*func*/ lvl_init_menu_values_and_cursor_pos),
     CALL_LOOP(/*arg*/ 0, /*func*/ lvl_update_obj_and_load_file_selected),
@@ -83,7 +83,7 @@ const LevelScript level_main_menu_entry_act_select[] = {
     CALL(/*arg*/ 0, /*func*/ lvl_init_act_selector_values_and_stars),
     TRANSITION(/*transType*/ WARP_TRANSITION_FADE_FROM_COLOR, /*time*/ 16, /*color*/ 0xFF, 0xFF, 0xFF),
     SLEEP(/*frames*/ 16),
-    SET_MENU_MUSIC(/*seq*/ 0x000D),
+    SET_MENU_MUSIC(/*seq*/ 0x2d),
     CALL_LOOP(/*arg*/ 0, /*func*/ lvl_update_obj_and_load_act_button_actions),
     GET_OR_SET(/*op*/ OP_SET, /*var*/ VAR_CURR_ACT_NUM),
     STOP_MUSIC(/*fadeOutTime*/ 0x00BE),
