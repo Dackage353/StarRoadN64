@@ -1232,7 +1232,6 @@ sound/sequences/sh/1F_cutscene_victory.m64
 sound/sequences/sh/20_cutscene_ending.m64
 sound/sequences/sh/21_menu_file_select.m64
 sound/sequences/sh/22_cutscene_lakitu.m64
-sound/sequences/us/09_level_slide.m64
 sound/sequences/us/0A_level_spooky.m64
 textures/cave/hmc_textures.00000.rgba16.png
 textures/cave/hmc_textures.01000.rgba16.png
