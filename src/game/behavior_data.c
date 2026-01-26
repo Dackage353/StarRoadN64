@@ -4086,7 +4086,7 @@ const BehaviorScript bhvBigChillBully[] = {
     OR_INT(oFlags, (OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
     LOAD_ANIMATIONS(oAnimations, chilly_chief_seg6_anims_06003994),
     DROP_TO_FLOOR(),
-    SET_HOME(),
+    SCALE(0,176),
     SET_INT(oBullySubtype, 0x0010),
     CALL_NATIVE(bhv_big_bully_init),
     BEGIN_LOOP(),
