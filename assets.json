@@ -1946,7 +1946,6 @@
 "sound/samples/sfx_mario_peach/04_mario_on_fire.aiff": [0,{"jp":["@sound",110],"us":["@sound",122],"eu":["@sound",122],"sh":["@sound",122]}],
 "sound/samples/sfx_mario_peach/05_mario_uh2.aiff": [0,{"jp":["@sound",111],"us":["@sound",123],"eu":["@sound",123],"sh":["@sound",123]}],
 "sound/samples/sfx_mario_peach/06_mario_coughing.aiff": [0,{"jp":["@sound",112],"us":["@sound",124],"eu":["@sound",124],"sh":["@sound",124]}],
-"sound/samples/sfx_mario_peach/07_mario_its_a_me_mario.aiff": [0,{"jp":["@sound",113],"us":["@sound",125],"eu":["@sound",125],"sh":["@sound",125]}],
 "sound/samples/sfx_mario_peach/08_mario_punch_yah.aiff": [0,{"jp":["@sound",114],"us":["@sound",126],"eu":["@sound",126],"sh":["@sound",126]}],
 "sound/samples/sfx_mario_peach/09_mario_punch_hoo.aiff": [0,{"jp":["@sound",115],"us":["@sound",127],"eu":["@sound",127],"sh":["@sound",127]}],
 "sound/samples/sfx_mario_peach/0A_mario_mama_mia.aiff": [0,{"jp":["@sound",116],"us":["@sound",128],"eu":["@sound",128],"sh":["@sound",128]}],
