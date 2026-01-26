@@ -40,7 +40,7 @@ const LevelScript level_bowser_3_entry[] = {
 		OBJECT(MODEL_BOWSER_BOMB, -2712, 328, -1969, 0, 0, 0, 0x00000000, bhvBowserBomb),
 		OBJECT(MODEL_BOWSER_BOMB, 1034, 328, -3166, 0, 0, 0, 0x00000000, bhvBowserBomb),
 		OBJECT(MODEL_BOWSER, 13, 307, -1024, 0, 0, 0, 0x00000000, bhvBowser),
-		OBJECT(MODEL_NONE, 0, 1307, 0, 0, 0, 0, 0x000a0000, bhvSpinAirborneCircleWarp),
+		OBJECT(MODEL_NONE, 0, 1307, 0, 0, 183, 0, 0x000a0000, bhvSpinAirborneCircleWarp),
 		TERRAIN(bowser_3_area_1_collision),
 		MACRO_OBJECTS(bowser_3_area_1_macro_objs),
 		SET_BACKGROUND_MUSIC(0x00, 0x2e),

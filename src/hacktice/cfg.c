@@ -110,11 +110,9 @@ static const ConfigDescriptor sShortcutsDescriptors[] =
 };
 #define sShortcutsMaxAllowedOption (sizeof(sShortcutsDescriptors) / sizeof(*sShortcutsDescriptors) - 1)
 
-static const u8 kWarpTargets[] = { 0, 1, 2, 3, 4, 18, 24, 28 };
-
 // Warp
 static const ConfigDescriptor sWarpDescriptors[] = {
-    { &Config_gWarp, uSELECT_WARP_TARGET, NULL, sizeof(kWarpTargets) },
+    { &Config_gWarp, uSELECT_WARP_TARGET, NULL, 29 },
 };
 #define sWarpMaxAllowedOption 0
 
@@ -176,14 +174,20 @@ static void renderOptionAt(const ConfigDescriptor* const desc, int x, int y)
     print_generic_string_centered(x, y,      desc->name);
     if (desc->name == uSELECT_WARP_TARGET)
     {
+        char line[32];
         const HC* courseName = uOFF;
         if (0 != value)
         {
             HC** courseNameTbl = (HC**) segmented_to_virtual(sCourseNames);
-            int id = kWarpTargets[value] - 1;
-            if (LevelConv_PlainLevels_F1 - 1 <= id)
+            int id = value - 1;
+            if (LevelConv_PlainLevels_S3 - 1 == id)
             {
-                courseName = "BOWSER FIGHT";
+                courseName = "ENDING";
+            }
+            else if (LevelConv_PlainLevels_F1 - 1 <= id)
+            {
+                sprintf(line, "BOWSER FIGHT %d", id - (LevelConv_PlainLevels_F1 - 1) + 1);
+                courseName = line;
             }
             else
             {
@@ -345,7 +349,7 @@ LevelConv_PlainLevels Config_warpIdAndReset()
         sPage = Pages_SHORTCUTS;
     }
 
-    return kWarpTargets[w];
+    return w;
 }   
 
 #define BUTTONS_PRESSED(mask) (((gControllers->buttonDown) & (mask)) == (mask))
