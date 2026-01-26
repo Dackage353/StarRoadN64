@@ -134,7 +134,26 @@ void bhv_star_spawn_loop(void) {
 }
 
 struct Object *spawn_star(struct Object *starObj, f32 x, f32 y, f32 z) {
-    starObj = spawn_object_abs_with_rot(o, 0, MODEL_STAR, bhvStarSpawnCoordinates, o->oPosX, o->oPosY, o->oPosZ, 0, 0, 0);
+    int model = MODEL_STAR;    
+    const BehaviorScript* bhv = bhvStarSpawnCoordinates;
+
+    f32 px, py, pz;
+    if (gCurrLevelNum == LEVEL_BOWSER_1 || gCurrLevelNum == LEVEL_BOWSER_2)
+    {
+        model = MODEL_BOWSER_KEY;
+        bhv = bhvBowserKey;
+        px = x;
+        py = y;
+        pz = z;
+    }
+    else
+    {
+        px = o->oPosX;
+        py = o->oPosY;
+        pz = o->oPosZ;
+    }
+
+    starObj = spawn_object_abs_with_rot(o, 0, model, bhv, px, py, pz, 0, 0, 0);
     starObj->oBehParams = o->oBehParams;
     vec3f_set(&starObj->oHomeVec, x, y, z);
     starObj->oFaceAnglePitch = 0;

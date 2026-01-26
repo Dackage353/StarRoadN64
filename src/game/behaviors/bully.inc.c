@@ -202,8 +202,6 @@ void bully_act_level_death(void) {
                 spawn_default_star(4513.0f, 3964.0f, 3332.0f);
             } else {
                 spawn_default_star(-48.0f, 2145.0f, 2235.0f);
-                spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvLllTumblingBridge,
-                                          0, 154, -5631, 0, 0, 0);
             }
         }
     }
