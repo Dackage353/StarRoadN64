@@ -14,6 +14,7 @@
 #include "mario_step.h"
 #include "save_file.h"
 #include "rumble_init.h"
+#include "options_menu.h"
 
 #include "config.h"
 
@@ -63,6 +64,8 @@ s32 check_fall_damage(struct MarioState *m, u32 hardFallAction) {
 #ifdef NO_FALL_DAMAGE
     return FALSE;
 #endif
+    if (configNoFallDamage)
+        return FALSE;
 
     f32 fallHeight = m->peakHeight - m->pos[1];
 

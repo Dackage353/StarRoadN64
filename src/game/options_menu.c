@@ -97,25 +97,27 @@ struct SubMenu {
 
 /* submenu definitions */
 
-bool configVIAntialiasing = true;
-bool configVIDedither = true;
-bool configFallDamage = true;
-bool configFailWarp = false;
-bool config45DegreeWallkicks = false;
-bool configExtraWallkickFrames = false;
-bool configFastSwimming = false;
-bool configSteepSlopeJumps = false;
-bool configLives = true;
-bool configAllowExitLevel = false;
-bool configFasterObjects = false;
+bool configVIAntialiasing       = true;
+bool configVIDedither           = true;
+
+bool configNoFallDamage         = false;
+bool configFailWarp             = false;
+bool config45DegreeWallkicks    = false;
+bool configExtraWallkickFrames  = false;
+bool configFastSwimming         = false;
+bool configSteepSlopeJumps      = false;
+bool configNoLives              = false;
+bool configAllowExitLevel       = false;
+bool configFasterObjects        = false;
 bool configNoActSpecificObjects = false;
+
 u32 configPreset = 0;
 
 static const char sViAntialiasingExplanation[]       = "Smooths out jagged edges,\n"
                                                        "but adds more blur. Reduces performance.";
 static const char sViDeditherExplanation[]           = "Reduces color dither patterns,\n"
                                                        "but adds more blur. Reduces performance.";
-static const char sFallDamageExplanation[]           = "Enables fall damage from\n"
+static const char sFallDamageExplanation[]           = "Disables fall damage from\n"
                                                        "high falls.";
 static const char sFailWarpExplanation[]             = "Warps the player to the\n"
                                                        "last safe spot on death.";
@@ -127,7 +129,7 @@ static const char sFastSwimmingExplanation[]         = "Increases swimming movem
                                                        "Hold A for fastest swim.";
 static const char sSteepSlopeJumpsExplanation[]      = "Allows proper jumps on slopes\n"
                                                        "that are very steep.";
-static const char sLivesExplanation[]                = "Enables lives system";
+static const char sLivesExplanation[]                = "Disables lives system";
 static const char sAllowExitLevelExplanation[]       = "Adds extra pause option to exit\n"
                                                        "immediately outside the level or\n"
                                                        "back to the castle grounds.";
@@ -141,13 +143,13 @@ static const char sAdvancedExplanation[]             = "Select exact patches you
                                                        "Overrides the preset selection.";
 
 static struct Option optsAudio[] = {
-    DEF_OPT_TOGGLE("Fall damage"            , sFallDamageExplanation          , &configFallDamage),
+    DEF_OPT_TOGGLE("No fall damage"         , sFallDamageExplanation          , &configNoFallDamage),
     DEF_OPT_TOGGLE("Fail warps"             , sFailWarpExplanation            , &configFailWarp),
     DEF_OPT_TOGGLE("45 degree wallkicks"    , s45DegreeWallkicksExplanation   , &config45DegreeWallkicks),
     DEF_OPT_TOGGLE("Extra wallkick frames"  , sExtraWallkickFramesExplanation , &configExtraWallkickFrames),
     DEF_OPT_TOGGLE("Faster swimming"        , sFastSwimmingExplanation        , &configFastSwimming),
     DEF_OPT_TOGGLE("Steep slope jumps"      , sSteepSlopeJumpsExplanation     , &configSteepSlopeJumps),
-    DEF_OPT_TOGGLE("Lives"                  , sLivesExplanation               , &configLives),
+    DEF_OPT_TOGGLE("No lives"               , sLivesExplanation               , &configNoLives),
     DEF_OPT_TOGGLE("Allow extra exit level" , sAllowExitLevelExplanation      , &configAllowExitLevel),
     DEF_OPT_TOGGLE("Faster objects"         , sFasterObjectsExplanation       , &configFasterObjects),
     DEF_OPT_TOGGLE("No act specific objects", sNoActSpecificObjectsExplanation, &configNoActSpecificObjects),
@@ -258,37 +260,37 @@ static void optmenu_opt_change(struct Option *opt, s32 val) {
             if (opt->uval == &configPreset) {
                 switch (configPreset) {
                     case 0: // Classic
-                        configFallDamage           = true;
+                        configNoFallDamage         = false;
                         configFailWarp             = false;
                         config45DegreeWallkicks    = false;
                         configExtraWallkickFrames  = false;
                         configFastSwimming         = false;
                         configSteepSlopeJumps      = false;
-                        configLives                = true;
+                        configNoLives              = false;
                         configAllowExitLevel       = false;
                         configFasterObjects        = false;
                         configNoActSpecificObjects = false;
                         break;
                     case 1: // QoL Only
-                        configFallDamage           = true;
+                        configNoFallDamage         = false;
                         configFailWarp             = false;
                         config45DegreeWallkicks    = false;
                         configExtraWallkickFrames  = false;
                         configFastSwimming         = false;
                         configSteepSlopeJumps      = false;
-                        configLives                = false;
+                        configNoLives              = true;
                         configAllowExitLevel       = true;
                         configFasterObjects        = true;
                         configNoActSpecificObjects = true;
                         break;
                     case 2: // Modern
-                        configFallDamage           = true;
+                        configNoFallDamage         = true;
                         configFailWarp             = true;
                         config45DegreeWallkicks    = true;
                         configExtraWallkickFrames  = true;
                         configFastSwimming         = true;
                         configSteepSlopeJumps      = true;
-                        configLives                = true;
+                        configNoLives              = true;
                         configAllowExitLevel       = true;
                         configFasterObjects        = true;
                         configNoActSpecificObjects = true;
