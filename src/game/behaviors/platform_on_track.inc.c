@@ -10,6 +10,7 @@
 #include "levels/hmc/header.h"
 #include "levels/lll/header.h"
 #include "levels/rr/header.h"
+#include "game/options_menu.h"
 
 /**
  * Collision models for the different types of platforms.
@@ -145,7 +146,9 @@ static void platform_on_track_mario_not_on_platform(void) {
 /**
  * Init function for bhvPlatformOnTrack.
  */
+static bool sDoFasterObjects = false;
 void bhv_platform_on_track_init(void) {
+    sDoFasterObjects = configFasterObjects;
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
         s16 pathIndex = (u16)(o->oBehParams >> 16) & PLATFORM_ON_TRACK_BP_MASK_PATH;
         o->oPlatformOnTrackType = ((u16)(o->oBehParams >> 16) & PLATFORM_ON_TRACK_BP_MASK_TYPE) >> 4;
@@ -254,7 +257,7 @@ static void platform_on_track_act_move_along_track(void) {
             if (!o->oPlatformOnTrackIsNotSkiLift) {
                 obj_forward_vel_approach(10.0, 0.1f);
             } else {
-                if (o->behavior != bhvStarRoadCCCoralBoat)
+                if (sDoFasterObjects && o->behavior != bhvStarRoadCCCoralBoat)
                 {
                     f32 targetVel = gMarioObject->platform == o
                         ? (o->oDistanceToMario * coss(o->oAngleToMario - o->oMoveAngleYaw)) - 10.0f

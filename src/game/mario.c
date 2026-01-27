@@ -32,6 +32,7 @@
 #include "save_file.h"
 #include "sound_init.h"
 #include "rumble_init.h"
+#include "options_menu.h"
 
 
 /**************************************************
@@ -581,7 +582,7 @@ s32 mario_floor_is_steep(struct MarioState *m) {
         return TRUE;
 
 #ifdef JUMP_KICK_FIX
-    if (m->floor->type == SURFACE_NOT_SLIPPERY) {
+    if (configSteepSlopeJumps && m->floor->type == SURFACE_NOT_SLIPPERY) {
         return FALSE;
     }
 #endif

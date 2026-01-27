@@ -4,6 +4,7 @@
 #include "game/area.h"
 #include "game/level_update.h"
 #include "game/mario.h"
+#include "options_menu.h"
 
 extern void set_camera_mode_8_directions(struct Camera *c);
 extern s16 s8DirModeYawOffset;
@@ -86,6 +87,11 @@ static void spoof_warp(struct MarioState *m)
 
 void fail_warp_pre_level_trigger_warp(struct MarioState *m, s32* warpOp)
 {
+    if (!configFailWarp)
+    {
+        return;
+    }
+
     int damage = 0;
     if (*warpOp != WARP_OP_DEATH && *warpOp != WARP_OP_WARP_FLOOR)
     {
