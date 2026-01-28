@@ -190,7 +190,11 @@ static void create_dl_rotation_matrix_z(s8 pushOp, u16 a) {
     }
 }
 
-#define create_dl_rotation_matrix(op, a, x, y, z) create_dl_rotation_matrix_z(op, (s16) ((a) / 360.f * 0x10000))
+static inline s16 angle_to_s16(f32 angle) {
+    return angle / 360.0f * 65536.0f;
+}
+
+#define create_dl_rotation_matrix(op, a, x, y, z) create_dl_rotation_matrix_z(op, angle_to_s16(a))
 
 void create_dl_scale_matrix(s8 pushOp, f32 x, f32 y, f32 z) {
     Mtx *matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
@@ -1825,7 +1829,7 @@ void render_pause_castle_menu_box(s16 x, s16 y) {
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 
     create_dl_translation_matrix(MENU_MTX_PUSH, x - 9, y - 101, 0);
-    create_dl_rotation_matrix(MENU_MTX_NOPUSH, 270.0f, 0, 0, 1.0f);
+    create_dl_rotation_matrix(MENU_MTX_NOPUSH, -90.0f, 0, 0, 1.0f);
     gSPDisplayList(gDisplayListHead++, dl_draw_triangle);
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
