@@ -474,8 +474,8 @@ void thread3_main(UNUSED void *arg) {
 #endif
 
     if (!gIsConsole) {
-        // gDPSetScissor(&gSciCmd, G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        // gDPFillRectangle(&gFillRectCmd, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        gDPSetScissor(&gSciCmd, G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        gDPFillRectangle(&gFillRectCmd, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 #ifdef RCVI_HACK
         VI.comRegs.vSync = 525*20;   
         change_vi(&VI, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -484,9 +484,8 @@ void thread3_main(UNUSED void *arg) {
         osViSetSpecialFeatures(OS_VI_GAMMA_OFF);
 #endif
     } else {
-        gBorderHeight = BORDER_HEIGHT_CONSOLE;
-        // gDPSetScissor(&gSciCmd, G_SC_NON_INTERLACE, BORDER_WIDTH_CONSOLE, BORDER_HEIGHT_CONSOLE, SCREEN_WIDTH - BORDER_WIDTH_CONSOLE, SCREEN_HEIGHT - BORDER_HEIGHT_CONSOLE);
-        // gDPFillRectangle(&gFillRectCmd, BORDER_WIDTH_CONSOLE, BORDER_HEIGHT_CONSOLE, SCREEN_WIDTH - BORDER_WIDTH_CONSOLE, SCREEN_HEIGHT - BORDER_HEIGHT_CONSOLE);
+        gDPSetScissor(&gSciCmd, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT_CONSOLE, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT_CONSOLE);
+        gDPFillRectangle(&gFillRectCmd, 0, BORDER_HEIGHT_CONSOLE, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT_CONSOLE);
     }
 #ifdef DEBUG
     gIdleThreadStack[0] = 0;

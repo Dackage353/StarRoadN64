@@ -50,7 +50,8 @@ struct Controller gControllers[MAXCONTROLLERS];
 OSContStatus gControllerStatuses[MAXCONTROLLERS];
 OSContPadEx gControllerPads[MAXCONTROLLERS];
 u8 gControllerBits = 0b0000;
-u8 gBorderHeight;
+Gfx gSciCmd;
+Gfx gFillRectCmd;
 #ifdef VANILLA_STYLE_CUSTOM_DEBUG
 u8 gCustomDebugMode;
 #endif
@@ -159,7 +160,7 @@ void my_rsp_init(void) {
 /**
  * Initialize the z buffer for the current frame.
  */
-void init_z_buffer(s32 resetZB) {
+static void init_z_buffer(s32 resetZB) {
     Gfx *tempGfxHead = gDisplayListHead;
 
     gDPPipeSync(tempGfxHead++);
@@ -167,16 +168,14 @@ void init_z_buffer(s32 resetZB) {
     gDPSetDepthSource(tempGfxHead++, G_ZS_PIXEL);
     gDPSetDepthImage(tempGfxHead++, gPhysicalZBuffer);
 
-    gDPSetColorImage(tempGfxHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, gPhysicalZBuffer);
-    if (!resetZB)
-        return;
-    gDPSetFillColor(tempGfxHead++,
-                    GPACK_ZDZ(G_MAXFBZ, 0) << 16 | GPACK_ZDZ(G_MAXFBZ, 0));
-
-    gDPFillRectangle(tempGfxHead++, 0, gBorderHeight, SCREEN_WIDTH - 1,
-                     SCREEN_HEIGHT - 1 - gBorderHeight);
-                 
-    gSPFlush(tempGfxHead++);
+    if (resetZB)
+    {
+        gDPSetColorImage(tempGfxHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, gPhysicalZBuffer);
+        gDPSetFillColor(tempGfxHead++,
+                        GPACK_ZDZ(G_MAXFBZ, 0) << 16 | GPACK_ZDZ(G_MAXFBZ, 0));
+        *tempGfxHead++ = gFillRectCmd;
+        gSPFlush(tempGfxHead++);
+    }
 
     gDisplayListHead = tempGfxHead;
 }
@@ -192,8 +191,7 @@ void select_framebuffer(void) {
     gDPSetCycleType(tempGfxHead++, G_CYC_1CYCLE);
     gDPSetColorImage(tempGfxHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH,
                      gPhysicalFramebuffers[sRenderingFramebuffer]);
-    gDPSetScissor(tempGfxHead++, G_SC_NON_INTERLACE, 0, gBorderHeight, SCREEN_WIDTH,
-                  SCREEN_HEIGHT - gBorderHeight);
+    *(gDisplayListHead++) = gSciCmd;
 
     gDisplayListHead = tempGfxHead;
 }
@@ -211,9 +209,7 @@ void clear_framebuffer(s32 color) {
     gDPSetCycleType(tempGfxHead++, G_CYC_FILL);
 
     gDPSetFillColor(tempGfxHead++, color);
-    gDPFillRectangle(tempGfxHead++,
-                     GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(0), gBorderHeight,
-                     GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(0) - 1, SCREEN_HEIGHT - gBorderHeight - 1);
+    *tempGfxHead++ = gFillRectCmd;
 
     gDPPipeSync(tempGfxHead++);
 
@@ -257,25 +253,7 @@ void clear_viewport(Vp *viewport, s32 color) {
  * Draw the horizontal screen borders.
  */
 void draw_screen_borders(void) {
-    Gfx *tempGfxHead = gDisplayListHead;
-
-    gDPPipeSync(tempGfxHead++);
-
-    gDPSetScissor(tempGfxHead++, G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    gDPSetRenderMode(tempGfxHead++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
-    gDPSetCycleType(tempGfxHead++, G_CYC_FILL);
-
-    gDPSetFillColor(tempGfxHead++, GPACK_RGBA5551(0, 0, 0, 0) << 16 | GPACK_RGBA5551(0, 0, 0, 0));
-
-    if (gBorderHeight) {
-        gDPFillRectangle(tempGfxHead++, GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(0), 0,
-                        GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(0) - 1, gBorderHeight - 1);
-        gDPFillRectangle(tempGfxHead++,
-                        GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(0), SCREEN_HEIGHT - gBorderHeight,
-                        GFX_DIMENSIONS_RECT_FROM_RIGHT_EDGE(0) - 1, SCREEN_HEIGHT - 1);
-    }
-
-    gDisplayListHead = tempGfxHead;
+    return;
 }
 
 /**
