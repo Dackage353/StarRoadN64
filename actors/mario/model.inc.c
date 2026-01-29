@@ -6120,8 +6120,8 @@ Gfx mario_foot_dl_R_mesh_layer_1_tri_1[] = {
 
 
 Gfx mat_mario_blue[] = {
-	gsSPLightColor(LIGHT_1, 0xFFFFFFFF),
-	gsSPLightColor(LIGHT_2, 0x343A7FFF),
+	gsSPLightColor(LIGHT_1, 0xFFFFB4FF),
+	gsSPLightColor(LIGHT_2, 0x343A48FF),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(PRIMITIVE, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, PRIMITIVE, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
 	gsDPSetAlphaDither(G_AD_NOISE),
@@ -6160,8 +6160,8 @@ Gfx mat_revert_mario_metal[] = {
 };
 
 Gfx mat_mario_red[] = {
-	gsSPLightColor(LIGHT_1, 0xFFFFFFFF),
-	gsSPLightColor(LIGHT_2, 0x7F4753FF),
+	gsSPLightColor(LIGHT_1, 0xF8FFFFFF),
+	gsSPLightColor(LIGHT_2, 0x914753FF),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(PRIMITIVE, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, PRIMITIVE, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
 	gsDPSetAlphaDither(G_AD_NOISE),
@@ -6177,8 +6177,8 @@ Gfx mat_revert_mario_red[] = {
 };
 
 Gfx mat_mario_button[] = {
-	gsSPLightColor(LIGHT_1, 0xFFFFFFFF),
-	gsSPLightColor(LIGHT_2, 0x343A7FFF),
+	gsSPLightColor(LIGHT_1, 0xFFFFB4FF),
+	gsSPLightColor(LIGHT_2, 0x343A48FF),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
 	gsDPSetAlphaDither(G_AD_NOISE),
@@ -6275,8 +6275,8 @@ Gfx mat_revert_mario_hair[] = {
 };
 
 Gfx mat_mario_logo[] = {
-	gsSPLightColor(LIGHT_1, 0xFFFFFFFF),
-	gsSPLightColor(LIGHT_2, 0x7F4753FF),
+	gsSPLightColor(LIGHT_1, 0xF8FFFFFF),
+	gsSPLightColor(LIGHT_2, 0x914753FF),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
 	gsDPSetAlphaDither(G_AD_NOISE),
