@@ -142,9 +142,13 @@ struct Object *spawn_star(struct Object *starObj, f32 x, f32 y, f32 z) {
     {
         model = MODEL_BOWSER_KEY;
         bhv = bhvBowserKey;
-        px = x;
-        py = y;
-        pz = z;
+    }
+
+    if (gCurrLevelNum == LEVEL_BOWSER_2)
+    {
+        px = gMarioStates->pos[0];
+        py = gMarioStates->pos[1];
+        pz = gMarioStates->pos[2];
     }
     else
     {
