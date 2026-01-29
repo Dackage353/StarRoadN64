@@ -858,7 +858,7 @@ s32 check_common_automatic_cancels(struct MarioState *m) {
 s32 mario_execute_automatic_action(struct MarioState *m) {
     s32 cancel = FALSE;
 
-    if (check_common_automatic_cancels(m)) {
+    if (ACT_IN_CANNON != m->action && check_common_automatic_cancels(m)) {
         return TRUE;
     }
 
