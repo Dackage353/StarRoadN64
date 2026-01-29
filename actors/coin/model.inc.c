@@ -190,7 +190,7 @@ const Gfx coin_seg3_dl_red[] = {
 };
 
 const Gfx coin_seg3_dl_red_r[] = {
-    gsSPVertex(coin_seg3_vertex_red, 4, 0),
+    gsSPVertex(coin_seg3_vertex_red_r, 4, 0),
     gsSP2Triangles( 0,  1,  2, 0x0,  0,  2,  3, 0x0),
     gsSPEndDisplayList(),
 };
