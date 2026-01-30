@@ -8847,6 +8847,9 @@ void cutscene_non_painting_death_override_offset(UNUSED struct Camera *c) {
         default:
             vec3f_set(sCutsceneVars[5].point, 107.f, 246.f, 1307.f);
             break;
+        case LEVEL_BITDW:
+            vec3f_set(sCutsceneVars[5].point, 127.f, 226.f, 1187.f);
+            break;
     }
 }
 
