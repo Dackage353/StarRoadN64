@@ -16,8 +16,8 @@
 #include "levels/cotmc/header.h"
 
 /* Fast64 begin persistent block [scripts] */
-#include "levels/cotmc/custom_c/custom.collision.inc.c"
-#define cotmc_area_1_collision col_cotmc_1_0xe061700
+#include "levels/cotmc/custom_c/custom.collision_u.inc.c"
+#define cotmc_area_1_collision col_cotmc_1_0xe061700_u
 extern const GeoLayout Geo_cotmc_1_0x2701700[];
 #define cotmc_area_1 Geo_cotmc_1_0x2701700
 #define bhvClockMinuteHand bhvStarRoadStarReplica
