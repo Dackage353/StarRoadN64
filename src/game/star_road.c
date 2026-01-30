@@ -95,17 +95,23 @@ Gfx *geo_star_road_cull(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx
                     active = 0;
                 break;
             
+            // SR c15
             case 5:
-                active = gMarioStates->pos[1] < -1320;
+                active = gMarioStates->pos[1] < -1320
+                      || ((-6600 < gMarioStates->pos[2] && gMarioStates->pos[2] < -1689)
+                      && (0 < gMarioStates->pos[0] && gMarioStates->pos[0] < 6327));
                 break;
             case 6:
-                active = gMarioStates->pos[1] >= -1320;
+                active = gMarioStates->pos[1] >= -1320
+                      && !((-6600 < gMarioStates->pos[2] && gMarioStates->pos[2] < -1689)
+                      && (0 < gMarioStates->pos[0] && gMarioStates->pos[0] < 6327));
                 break;
-            
             case 7:
                 active = (gMarioStates->pos[1] >= -1320)
                       && (-6600 < gMarioStates->pos[2] && gMarioStates->pos[2] < -1689)
-                      && (-5347 < gMarioStates->pos[0] && gMarioStates->pos[0] < 6327);
+                      && (-5347 < gMarioStates->pos[0] && gMarioStates->pos[0] < 6327)
+                      && !((-6600 < gMarioStates->pos[2] && gMarioStates->pos[2] < -1689)
+                      && (0 < gMarioStates->pos[0] && gMarioStates->pos[0] < 6327));
                 break;
             
             case 8:
