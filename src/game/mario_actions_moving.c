@@ -1490,7 +1490,7 @@ s32 act_crouch_slide(struct MarioState *m) {
 }
 
 s32 act_slide_kick_slide(struct MarioState *m) {
-    if (m->input & INPUT_A_PRESSED) {
+    if ((m->input & INPUT_A_PRESSED) || (m->input & INPUT_B_PRESSED)) {
 #if ENABLE_RUMBLE
         queue_rumble_data(5, 80);
 #endif
