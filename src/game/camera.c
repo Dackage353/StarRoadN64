@@ -3149,7 +3149,7 @@ void reset_camera(struct Camera *c) {
     sZeroZoomDist = 0.f;
     sBehindMarioSoundTimer = 0;
     sCSideButtonYaw = 0;
-    s8DirModeBaseYaw = 0;
+    s8DirModeBaseYaw = gCurrLevelNum == LEVEL_DED ? -0x4000 : 0;
     s8DirModeYawOffset = 0;
     c->doorStatus = DOOR_DEFAULT;
     sMarioCamState->headRotation[0] = 0;

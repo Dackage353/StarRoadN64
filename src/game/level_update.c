@@ -893,6 +893,7 @@ void initiate_delayed_warp(void) {
                 case WARP_OP_GAME_OVER:
                     save_file_reload();
                     gCurrLevelNum = LEVEL_DED;
+                    gCurrCourseNum = COURSE_NONE;
                     warp_special(WARP_SPECIAL_MARIO_HEAD_DIZZY);
                     break;
 

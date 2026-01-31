@@ -1024,7 +1024,25 @@ void check_main_menu_clicked_buttons(void) {
  * sSelectedButtonID is MENU_BUTTON_NONE when the file select
  * is loaded, and that checks what buttonID is clicked in the main menu.
  */
+extern void seq_player_play_sequence(u8 player, u8 seqId, u16 arg2);
 void bhv_menu_button_manager_loop(void) {
+#if 0
+    static int music = 0;
+    if (gPlayer1Controller->buttonPressed & R_JPAD)
+    {
+        music++;
+        seq_player_play_sequence(0, music, 0);
+    }
+    if (gPlayer1Controller->buttonPressed & L_JPAD)
+    {
+        if (music)
+            music--;
+
+        seq_player_play_sequence(0, music, 0);
+    }
+
+    print_text_fmt_int(20, 20, "%d", music);
+#endif
     switch (sSelectedButtonID) {
         case MENU_BUTTON_NONE: check_main_menu_clicked_buttons(); break;
 

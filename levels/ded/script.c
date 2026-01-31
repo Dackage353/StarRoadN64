@@ -35,7 +35,7 @@ const LevelScript level_ded_entry[] = {
 		WARP_NODE(0x0A, LEVEL_BOB, 0x01, 0x0A, WARP_NO_CHECKPOINT),
 		TERRAIN(ded_area_1_collision),
 		MACRO_OBJECTS(ded_area_1_macro_objs),
-		SET_BACKGROUND_MUSIC(0x00, 0),
+		SET_BACKGROUND_MUSIC(0x00, 0x30),
 		TERRAIN_TYPE(TERRAIN_GRASS),
 		OBJECT_WITH_ACTS(0, 2791,-4218,-1630,0,30,0,0x7f7f7f7f, bhvWarp,63),
 		WARP_NODE(0x7f,18,1,10,0),
