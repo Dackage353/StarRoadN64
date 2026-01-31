@@ -111,7 +111,7 @@ const LevelScript level_ttc_entry[] = {
 		OBJECT_WITH_ACTS(0,1709,2078,-4597,0,90,0,0x0, bhvFlamethrower,32),
 		OBJECT_WITH_ACTS(0,1862,1178,-1743,0,90,0,0x0, bhvFlamethrower,32),
 		OBJECT_WITH_ACTS(0,782,2659,-4873,0,0,0,0x0, bhvFlamethrower,32),
-		OBJECT_WITH_ACTS(122,1393,3686,-3531,0,0,0,0x0, bhvStar,15),
+		OBJECT_WITH_ACTS_SPECIAL(122,1393,3686,-3531,0,0,0,0x0, bhvStar,15, 31),
 		OBJECT_WITH_ACTS(84,-4310,-1373,3602,0,0,0,0x0, bhvBulletBill,63),
 		OBJECT_WITH_ACTS(84,-2521,-1373,3602,0,0,0,0x0, bhvBulletBill,63),
 		OBJECT_WITH_ACTS(84,-1910,-1373,3602,0,0,0,0x0, bhvBulletBill,63),
