@@ -22,11 +22,7 @@
 .word  0x00000000               /* Unknown */
 #endif
 .word  0x0000004E               /* Cartridge */
-#if defined(EEP4K) && !defined(EMU_DEFAULT_TO_GCN)
-.ascii "SM"                     /* Cartridge ID */
-#else
 .ascii "ED"                     /* Cartridge ID */
-#endif
 
 /* Region */
 #if defined(VERSION_JP) || defined(VERSION_SH)
