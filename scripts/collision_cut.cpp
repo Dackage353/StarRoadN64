@@ -6938,7 +6938,7 @@ struct Pack
 
 static bool want(const Vtx& vtx)
 {
-	return vtx.v[1] > 4000.f;
+	return vtx.v[1] < 2760.f;
 } 
 
 int main()

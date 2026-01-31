@@ -458,7 +458,7 @@ Gfx *movtex_gen_quads_id(s16 id, s16 y, void *movetexQuadsSegmented) {
         }
         i++;
     }
-    return NULL;
+    return movtex_gen_from_quad_array(y, collection[0].quadArraySegmented);
 }
 
 extern Movtex bbh_movtex_merry_go_round_water_entrance[];
@@ -489,60 +489,9 @@ extern Movtex ttm_movtex_puddle[];
 /**
  * Find the quadCollection for a given quad collection id.
  */
-extern void *GetRomhackWaterBox(u32 id);
-void *get_quad_collection_from_id(u32 id) {
-    switch (id) {
-        case BBH_MOVTEX_MERRY_GO_ROUND_WATER_ENTRANCE:
-            return bbh_movtex_merry_go_round_water_entrance;
-        case BBH_MOVTEX_MERRY_GO_ROUND_WATER_SIDE:
-            return bbh_movtex_merry_go_round_water_side;
-        case CCM_MOVTEX_PENGUIN_PUDDLE_WATER:
-            return ccm_movtex_penguin_puddle_water;
-        case INSIDE_CASTLE_MOVTEX_GREEN_ROOM_WATER:
-            return inside_castle_movtex_green_room_water;
-        case INSIDE_CASTLE_MOVTEX_MOAT_WATER:
-            return inside_castle_movtex_moat_water;
-        case HMC_MOVTEX_DORRIE_POOL_WATER:
-            return hmc_movtex_dorrie_pool_water;
-        case HMC_MOVTEX_TOXIC_MAZE_MIST:
-            return hmc_movtex_toxic_maze_mist;
-        case SSL_MOVTEX_PUDDLE_WATER:
-            return ssl_movtex_puddle_water;
-        case SSL_MOVTEX_TOXBOX_QUICKSAND_MIST:
-            return ssl_movtex_toxbox_quicksand_mist;
-        case SL_MOVTEX_WATER:
-            return sl_movtex_water;
-        case WDW_MOVTEX_AREA1_WATER:
-            return wdw_movtex_area1_water;
-        case WDW_MOVTEX_AREA2_WATER:
-            return wdw_movtex_area2_water;
-        case JRB_MOVTEX_WATER:
-            return jrb_movtex_water;
-        case JRB_MOVTEX_INITIAL_MIST:
-            return jrb_movtex_initial_mist;
-        case JRB_MOVTEX_SUNKEN_SHIP_WATER:
-            return jrb_movtex_sunken_ship_water;
-        case THI_MOVTEX_AREA1_WATER:
-            return thi_movtex_area1_water;
-        case THI_MOVTEX_AREA2_WATER:
-            return thi_movtex_area2_water;
-        case CASTLE_GROUNDS_MOVTEX_WATER:
-            return castle_grounds_movtex_water;
-        case LLL_MOVTEX_VOLCANO_FLOOR_LAVA:
-            return lll_movtex_volcano_floor_lava;
-        case DDD_MOVTEX_AREA1_WATER:
-            return ddd_movtex_area1_water;
-        case DDD_MOVTEX_AREA2_WATER:
-            return ddd_movtex_area2_water;
-        case WF_MOVTEX_WATER:
-            return wf_movtex_water;
-        case CASTLE_COURTYARD_MOVTEX_STAR_STATUE_WATER:
-            return castle_courtyard_movtex_star_statue_water;
-        case TTM_MOVTEX_PUDDLE:
-            return ttm_movtex_puddle;
-		default:
-            return GetRomhackWaterBox(id);
-    }
+static void *GetRomhackWaterBox(u32 id);
+static void *get_quad_collection_from_id(u32 id) {
+    return GetRomhackWaterBox(id);
 }
 
 /**
@@ -550,19 +499,13 @@ void *get_quad_collection_from_id(u32 id) {
  * quadCollection.
  */
 void movtex_change_texture_format(u32 quadCollectionId, Gfx **gfx) {
-    switch (quadCollectionId) {
-        case HMC_MOVTEX_TOXIC_MAZE_MIST:
-            gSPDisplayList((*gfx)++, dl_waterbox_ia16_begin);
-            break;
-        case SSL_MOVTEX_TOXBOX_QUICKSAND_MIST:
-            gSPDisplayList((*gfx)++, dl_waterbox_ia16_begin);
-            break;
-        case JRB_MOVTEX_INITIAL_MIST:
-            gSPDisplayList((*gfx)++, dl_waterbox_ia16_begin);
-            break;
-        default:
-            gSPDisplayList((*gfx)++, dl_waterbox_rgba16_begin);
-            break;
+    if (20482 == quadCollectionId)
+    {
+        gSPDisplayList((*gfx)++, dl_waterbox_ia16_begin);
+    }
+    else
+    {
+        gSPDisplayList((*gfx)++, dl_waterbox_rgba16_begin);
     }
 }
 
@@ -915,39 +858,29 @@ extern u8 cotmc_1_Movtex_0[];
 extern u8 totwc_1_Movtex_0[];
 extern u8 wmotr_1_Movtex_0[];
 
-static void *RM2C_Water_Box_Array[33][8][3] = {
-    { {NULL,NULL,NULL,},{&bbh_1_Movtex_0,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{&ssl_1_Movtex_0,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{&sl_1_Movtex_0,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{&jrb_1_Movtex_0,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{&lll_1_Movtex_0,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{&ending_1_Movtex_0,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{&castle_courtyard_1_Movtex_0,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{&pss_1_Movtex_0,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{&cotmc_1_Movtex_0,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{&totwc_1_Movtex_0,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, },
-    { {NULL,NULL,NULL,},{&wmotr_1_Movtex_0,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,},{NULL,NULL,NULL,}, }
-};
-
-void *GetRomhackWaterBox(u32 id)
+static void *GetRomhackWaterBox(u32 id)
 {
-    id = id&0xF;
-    return RM2C_Water_Box_Array[gCurrLevelNum-4][gCurrAreaIndex][id];
+    switch (gCurrLevelNum)
+    {
+        case LEVEL_BBH:
+            return bbh_1_Movtex_0;
+        case LEVEL_SSL:
+            return ssl_1_Movtex_0;
+        case LEVEL_SL:
+            return sl_1_Movtex_0;
+        case LEVEL_LLL:
+            return lll_1_Movtex_0;
+        case LEVEL_ENDING:
+            return ending_1_Movtex_0;
+        case LEVEL_PSS:
+            return pss_1_Movtex_0;
+        case LEVEL_DED:
+            return cotmc_1_Movtex_0;
+        case LEVEL_TOTWC:
+            return totwc_1_Movtex_0;
+        case LEVEL_WMOTR:
+            return wmotr_1_Movtex_0;
+    }
+
+    return NULL;
 };

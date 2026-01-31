@@ -8,5 +8,4 @@
 #include "levels/cotmc/movtext.inc.c"
 
 #include "levels/cotmc/custom_c/textureNew.inc.c"
-#include "levels/cotmc/custom_c/movtextNew.inc.c"
-#include "levels/cotmc/custom_c/custom.modelopt.inc.c"
+#include "levels/cotmc/custom_c/custom.modelopt_u.inc.c"

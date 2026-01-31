@@ -1,4 +1,7 @@
-const GeoLayout Geo_cotmc_1_0x2701700[]= {
+extern Gfx DL_cotmc_1_0xe04b2b0_d[];
+extern Gfx DL_cotmc_1_0xe06bbf0_d[];
+
+const GeoLayout Geo_cotmc_1_0x2701700_d[]= {
 GEO_NODE_SCREEN_AREA(10,160,120,160,120),
 GEO_OPEN_NODE(),
 GEO_ZBUFFER(0),
@@ -14,10 +17,11 @@ GEO_CAMERA_FRUSTUM_WITH_FUNC(45,100,30000, geo_camera_fov),
 GEO_OPEN_NODE(),
 GEO_CAMERA(16,0,2000,6000,3072,0,60928, geo_camera_main),
 GEO_OPEN_NODE(),
-GEO_DISPLAY_LIST(LAYER_OPAQUE,DL_cotmc_1_0xe04b2b0),
-GEO_DISPLAY_LIST(LAYER_ALPHA,DL_cotmc_1_0xe06bbf0),
+GEO_DISPLAY_LIST(LAYER_OPAQUE,DL_cotmc_1_0xe04b2b0_d),
+GEO_DISPLAY_LIST(LAYER_ALPHA,DL_cotmc_1_0xe06bbf0_d),
 GEO_RENDER_OBJ(),
 GEO_ASM(0, geo_envfx_main),
+GEO_ASM(20482, geo_movtex_draw_water_regions),
 GEO_CLOSE_NODE(),
 GEO_CLOSE_NODE(),
 GEO_CLOSE_NODE(),

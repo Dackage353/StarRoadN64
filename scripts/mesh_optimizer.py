@@ -18,8 +18,12 @@ VTX_SUFFIX = 'opt'
 #VTX_FILTER = lambda vtx: vtx.pos.y < 373
 #VTX_SUFFIX = 'opt_p'
 
-VTX_FILTER = lambda vtx: vtx.pos.x - vtx.pos.z < 200
-VTX_SUFFIX = 'opt_s'
+# Castke grounds?
+#VTX_FILTER = lambda vtx: vtx.pos.x - vtx.pos.z < 200
+#VTX_SUFFIX = 'opt_s'
+
+VTX_FILTER = lambda vtx: vtx.pos.y > 2760
+VTX_SUFFIX = 'opt_d'
 
 HAS_EX3_COMMANDS = True
 HAS_TRI3 = False
