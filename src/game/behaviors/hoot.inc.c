@@ -1,4 +1,5 @@
 // hoot.inc.c
+#include "game/options_menu.h"
 
 void bhv_hoot_init(void) {
     cur_obj_init_animation(HOOT_ANIM_DEFAULT);
@@ -153,6 +154,7 @@ void hoot_action_loop(void) {
     f32 xPrev = o->oPosX;
     f32 yPrev = o->oPosY;
     f32 zPrev = o->oPosZ;
+    const s32 vel = configFasterObjects ? 60 : 20;
 
     switch (o->oAction) {
         case HOOT_ACT_ASCENT:
@@ -173,7 +175,7 @@ void hoot_action_loop(void) {
                 }
             }
 
-            hoot_carry_step(20, xPrev, zPrev);
+            hoot_carry_step(vel, xPrev, zPrev);
             break;
 
         case HOOT_ACT_TIRED:
@@ -181,7 +183,7 @@ void hoot_action_loop(void) {
 
             o->oMoveAnglePitch = 0;
 
-            hoot_carry_step(20, xPrev, zPrev);
+            hoot_carry_step(vel, xPrev, zPrev);
 
             if (o->oTimer > 60) {
                 gMarioObject->oInteractStatus |= INT_STATUS_MARIO_DROP_FROM_HOOT;
@@ -227,7 +229,7 @@ void bhv_hoot_loop(void) {
                 o->oHootAvailability = HOOT_AVAIL_WANTS_TO_TALK;
             }
 #ifdef HOOT_TREE_PARTICLES
-            if (random_float() < 0.05f) {
+            if (configFasterObjects && random_float() < 0.05f) {
                 struct Object *obj   = spawn_object(o, MODEL_LEAVES, bhvTreeLeaf);
                 f32 scale            = (random_float() * 3.0f);
                 obj_scale(obj, scale);
