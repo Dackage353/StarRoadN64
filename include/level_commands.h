@@ -359,6 +359,11 @@ enum GoddardScene {
 
 #define OBJECT_WITH_ACTS(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) \
     OBJECT_WITH_ACTS_SPECIAL(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts, ACT_NO_SPECIAL)
+    
+#define OBJECT_WITH_ACTS_FORCE_ACTIVE(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) \
+    OBJECT_WITH_ACTS_SPECIAL(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts, ACT_FORCE_ACTIVE)
+#define OBJECT_WITH_ACTS_FORCE_INACTIVE(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) \
+    OBJECT_WITH_ACTS_SPECIAL(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts, ACT_FORCE_INACTIVE)
 
 #define OBJECT(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh) \
     OBJECT_WITH_ACTS(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, ALL_ACTS)
