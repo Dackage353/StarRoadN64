@@ -83,6 +83,12 @@ enum LevelActs {
     ALL_ACTS = (ACT_1 | ACT_2 | ACT_3 | ACT_4 | ACT_5 | ACT_6),
 };
 
+enum SpecialActsConfig {
+    ACT_NO_SPECIAL = 0,
+    ACT_FORCE_ACTIVE = 0x3f,
+    ACT_FORCE_INACTIVE = 0x80,
+};
+
 enum LevelCommandEvalOperation {
     OP_AND,
     OP_NAND,
@@ -344,12 +350,15 @@ enum GoddardScene {
     CMD_PTR(unk4), \
     CMD_W(unk8)
 
-#define OBJECT_WITH_ACTS(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) \
-    CMD_BBBB(LEVEL_CMD_PLACE_OBJECT, 0x1C, acts, 0x00), \
+#define OBJECT_WITH_ACTS_SPECIAL(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts, special) \
+    CMD_BBBB(LEVEL_CMD_PLACE_OBJECT, 0x1C, acts, special), \
     CMD_HHHHHH(posX, posY, posZ, angleX, angleY, angleZ), \
     CMD_W(behParam), \
     CMD_PTR(beh), \
     CMD_W(model)
+
+#define OBJECT_WITH_ACTS(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) \
+    OBJECT_WITH_ACTS_SPECIAL(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts, ACT_NO_SPECIAL)
 
 #define OBJECT(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh) \
     OBJECT_WITH_ACTS(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, ALL_ACTS)

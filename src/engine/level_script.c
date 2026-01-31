@@ -29,6 +29,7 @@
 #include "game/puppycam2.h"
 #include "game/puppyprint.h"
 #include "game/emutest.h"
+#include "game/options_menu.h"
 
 #include "config.h"
 
@@ -456,7 +457,21 @@ static void level_cmd_init_mario(void) {
 
 static void level_cmd_place_object(void) {
     u8 val7 = 1 << (gCurrActNum - 1);
-    if (sCurrAreaIndex != -1 && ((CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
+    u8 special = CMD_GET(u8, 3);
+    u8 mode = CMD_GET(u8, 2);
+    if (configNoActSpecificObjects && special)
+    {
+        if (special & 0x80)
+        {
+            mode = 0;
+        }
+        else
+        {
+            mode = special;
+        }
+    }
+
+    if (sCurrAreaIndex != -1 && ((mode & val7) || mode == 0x1F)) {
         ModelID16 model = CMD_GET(u32, 0x18);
         struct SpawnInfo *spawnInfo = main_pool_alloc(sizeof(struct SpawnInfo));
 
