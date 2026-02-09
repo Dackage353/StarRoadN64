@@ -117,25 +117,25 @@ static const char sViAntialiasingExplanation[]       = "Smooths out jagged edges
                                                        "but adds more blur. Reduces performance.";
 static const char sViDeditherExplanation[]           = "Reduces color dither patterns,\n"
                                                        "but adds more blur. Reduces performance.";
-static const char sFallDamageExplanation[]           = "Disables fall damage from\n"
-                                                       "high falls.";
+static const char sFallDamageExplanation[]           = "Disables fall damage\n"
+                                                       "from high falls.";
 static const char sFailWarpExplanation[]             = "Warps player to the\n"
                                                        "last safe spot on death.";
 static const char s45DegreeWallkicksExplanation[]    = "Allows wallkicks on\n"
-                                                       "45 degree walls jumps.";
+                                                       "45 degree wall jumps.";
 static const char sExtraWallkickFramesExplanation[]  = "Gives 3 extra frames to\n"
                                                        "perform wallkicks.";
-static const char sFastSwimmingExplanation[]         = "Increases swimming movement speed.\n"
+static const char sFastSwimmingExplanation[]         = "Increases swimming speed.\n"
                                                        "Hold A for fastest swim.";
 static const char sSteepSlopeJumpsExplanation[]      = "Fixes small movement issues:\n"
-                                                       "jumps on steep slopes, vines movement,\n"
+                                                       "jumps on steep slopes, vine movement,\n"
                                                        "slope physics, false ledgegrabs.";
 static const char sLivesExplanation[]                = "Disables lives system";
 static const char sAllowExitLevelExplanation[]       = "Adds extra pause option to exit\n"
                                                        "immediately outside the level or\n"
                                                        "back to the castle grounds.";
 static const char sFasterObjectsExplanation[]        = "Improves behavior of lots of objects.\n"
-                                                       "Moving platforms speed depends on Mario position.\n"
+                                                       "Moving platform speed depends on Mario's position.\n"
                                                        "Nerfs enemies speeds.";
 static const char sNoActSpecificObjectsExplanation[] = "Removes unnecessary act specific objects.";
 static const char sPresetExplanation[]               = "Classic - close to original hack\n"
@@ -144,7 +144,7 @@ static const char sPresetExplanation[]               = "Classic - close to origi
 static const char sAdvancedExplanation[]             = "Select exact patches you want to use.\n"
                                                        "Overrides the preset selection.";
 static const char sWideScreenExplanation[]           = "Squishes the game for widescreen support\n"
-                                                       "Set display mode to stretched 16:9.";
+                                                       "Sets display mode to stretched 16:9.";
 static const char sHardModeExplanation[]             = "Enables Hard Mode.\n"
                                                        "Any damage kills.";
 static const char sRedCoinRadarExplanation[]         = "Shows red coins radar during reds mission.\n"
@@ -158,7 +158,7 @@ static struct Option optsAudio[] = {
     DEF_OPT_TOGGLE("Faster swimming"              , sFastSwimmingExplanation        , &configFastSwimming),
     DEF_OPT_TOGGLE("Fixed movement"               , sSteepSlopeJumpsExplanation     , &configSteepSlopeJumps),
     DEF_OPT_TOGGLE("No lives"                     , sLivesExplanation               , &configNoLives),
-    DEF_OPT_TOGGLE("Allow extra exit level"       , sAllowExitLevelExplanation      , &configAllowExitLevel),
+    DEF_OPT_TOGGLE("Extra level exit options"       , sAllowExitLevelExplanation      , &configAllowExitLevel),
     DEF_OPT_TOGGLE("Better objects"               , sFasterObjectsExplanation       , &configFasterObjects),
     DEF_OPT_TOGGLE("Red coin radar"               , sRedCoinRadarExplanation        , &configRedCoinRadar),
     DEF_OPT_TOGGLE("Reduced act specific objects" , sNoActSpecificObjectsExplanation, &configNoActSpecificObjects),
@@ -180,7 +180,7 @@ static const char* sPresets[] = {
 static struct Option optsMain[] = {
     DEF_OPT_TOGGLE("VI antialiasing"        , sViAntialiasingExplanation      , &configVIAntialiasing),
     DEF_OPT_TOGGLE("VI dedither"            , sViDeditherExplanation          , &configVIDedither),
-    DEF_OPT_CHOICE("Patches preset"         , sPresetExplanation              , &configPreset, sPresets),
+    DEF_OPT_CHOICE("Patch preset"         , sPresetExplanation              , &configPreset, sPresets),
     DEF_OPT_SUBMENU("Advanced patches menu..." , sAdvancedExplanation, &menuAudio ),
 };
 
