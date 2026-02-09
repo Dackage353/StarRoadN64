@@ -538,16 +538,23 @@ Gfx *geo_movtex_draw_water_regions(s32 callContext, struct GraphNode *node, UNUS
             gfx = gfxHead;
         }
         asGenerated = (struct GraphNodeGenerated *) node;
-        if (asGenerated->parameter == JRB_MOVTEX_INITIAL_MIST) {
+
+        int param = asGenerated->parameter;
+        if (param == 20483)
+        {
+            param = 20482;
+        }
+
+        if (param == JRB_MOVTEX_INITIAL_MIST) {
             if (gLakituState.goalPos[1] < 1024.0f) { // if camera under water
                 return NULL;
             }
             if (gCurrActNum != 1) {
                 return NULL;
             }
-        } else if (asGenerated->parameter == HMC_MOVTEX_TOXIC_MAZE_MIST) {
+        } else if (param == HMC_MOVTEX_TOXIC_MAZE_MIST) {
             gMovtexVtxColor = MOVTEX_VTX_COLOR_YELLOW;
-        } else if (asGenerated->parameter == SSL_MOVTEX_TOXBOX_QUICKSAND_MIST) {
+        } else if (param == SSL_MOVTEX_TOXBOX_QUICKSAND_MIST) {
             gMovtexVtxColor = MOVTEX_VTX_COLOR_RED;
         }
         quadCollection = get_quad_collection_from_id(asGenerated->parameter);
@@ -557,7 +564,7 @@ Gfx *geo_movtex_draw_water_regions(s32 callContext, struct GraphNode *node, UNUS
 
         SET_GRAPH_NODE_LAYER(asGenerated->fnNode.node.flags, LAYER_TRANSPARENT_INTER);
 
-        movtex_change_texture_format(asGenerated->parameter, &gfx);
+        movtex_change_texture_format(param, &gfx);
         gMovetexLastTextureId = -1;
         for (i = 0; i < numWaterBoxes; i++) {
             waterId = gEnvironmentRegions[i * 6 + 1];
@@ -860,6 +867,12 @@ extern u8 wmotr_1_Movtex_0[];
 
 static void *GetRomhackWaterBox(u32 id)
 {
+    if (20483 == id)
+    {
+        gCurrLevelNum = LEVEL_DED;
+        gCurrCourseNum = COURSE_NONE;
+        return cotmc_1_Movtex_0;
+    }
     switch (gCurrLevelNum)
     {
         case LEVEL_BBH:
