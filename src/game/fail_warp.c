@@ -2,14 +2,13 @@
 
 #include "behavior_data.h"
 #include "game/area.h"
+#include "game/interaction.h"
 #include "game/level_update.h"
 #include "game/mario.h"
 #include "options_menu.h"
 
 extern void set_camera_mode_8_directions(struct Camera *c);
 extern s16 s8DirModeYawOffset;
-
-#define bool char
 
 static int sSafePosArea = 0;
 static int sSafePosLevel = 0;
