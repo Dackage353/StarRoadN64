@@ -16,3 +16,4 @@
 #include "geo.inc.c"
 #include "levels/sl/custom_c/custom.modelopt.inc.h"
 #include "levels/sl/custom_c/custom.geo.inc.c"
+#include "sl_platform/geo.inc.c"

@@ -12,3 +12,5 @@
 #include "levels/sl/custom_c/textureNew.inc.c"
 #include "levels/sl/custom_c/movtextNew.inc.c"
 #include "levels/sl/custom_c/custom.modelopt.inc.c"
+#include "sl_platform/collision.inc.c"
+#include "sl_platform/model.inc.c"

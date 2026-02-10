@@ -29,4 +29,6 @@ extern const struct MovtexQuadCollection sl_movtex_water[];
 extern const LevelScript level_sl_entry[];
 
 #include "header.inc.h"
+#include "sl_platform/collision_header.h"
+#include "sl_platform/geo_header.h"
 #endif
