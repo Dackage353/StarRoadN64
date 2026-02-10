@@ -111,6 +111,7 @@ void fail_warp_pre_level_trigger_warp(struct MarioState *m, s32* warpOp)
     {
         drop_and_set_mario_action(m, ACT_FREEFALL, 0);
     }
+    mario_stop_riding_and_holding(m);
 
     m->hurtCounter = damage / 0x40;
     *warpOp = WARP_OP_TELEPORT;
