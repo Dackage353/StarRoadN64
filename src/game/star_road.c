@@ -195,6 +195,7 @@ Gfx *geo_star_road_cull(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx
     return NULL;
 }
 
+extern const BehaviorScript bhvHiddenRedCoinStar[];
 void bhv_red_coin_radar_init()
 {
     if (gMarioStates->numStars >= 120)
@@ -202,7 +203,17 @@ void bhv_red_coin_radar_init()
 
     int act = o->oBehParams >> 24;
     if (0 == act)
+    {
+        f32 d;
+        struct Object* redCoinStarSpawner = cur_obj_find_nearest_object_with_behavior(bhvHiddenRedCoinStar, &d);
+        int id = redCoinStarSpawner->oBehParams >> 24;
+        if (save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrActNum - 1) & (1 << id))
+        {
+            cur_obj_hide();
+        }
+
         return;
+    }
 
     if (gCurrActNum != act)
     {
