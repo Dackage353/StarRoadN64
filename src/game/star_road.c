@@ -207,7 +207,7 @@ void bhv_red_coin_radar_init()
         f32 d;
         struct Object* redCoinStarSpawner = cur_obj_find_nearest_object_with_behavior(bhvHiddenRedCoinStar, &d);
         int id = redCoinStarSpawner->oBehParams >> 24;
-        if (save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrActNum - 1) & (1 << id))
+        if (save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1) & (1 << id))
         {
             cur_obj_hide();
         }
