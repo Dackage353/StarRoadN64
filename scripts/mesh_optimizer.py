@@ -8,7 +8,7 @@ import shapely
 from shapely.ops import triangulate
 
 VTX_FILTER = None
-TRI_FILTER = None
+TRI_FILTER = lambda timage, tri: False
 VTX_SUFFIX = 'opt'
 
 # SR filter
@@ -47,9 +47,9 @@ def sr_tri_filter(timage, tri):
 # VTX_SUFFIX = 'opt'
 # TRI_FILTER = sr_tri_filter
 
-VTX_FILTER = lambda vtx: (vtx.pos.z > 0 and vtx.pos.y > -1405) or (vtx.pos.z > -1432 and vtx.pos.y < -1405) or (vtx.pos.y < -3716)
-VTX_SUFFIX = 'opt_b'
-TRI_FILTER = sr_tri_filter
+# VTX_FILTER = lambda vtx: (vtx.pos.z > 0 and vtx.pos.y > -1405) or (vtx.pos.z > -1432 and vtx.pos.y < -1405) or (vtx.pos.y < -3716)
+# VTX_SUFFIX = 'opt_b'
+# TRI_FILTER = sr_tri_filter
 
 # CCCoral
 #VTX_FILTER = lambda vtx: vtx.pos.y < 373
@@ -65,6 +65,17 @@ TRI_FILTER = sr_tri_filter
 
 # VTX_FILTER = lambda vtx: vtx.pos.y > 2760
 # VTX_SUFFIX = 'opt_d'
+
+# OW3 
+def vtx_filter_ow3(vtx):
+    dx = vtx.pos.x + 5376
+    dz = vtx.pos.z - 3536
+
+    dr = dx * dx + dz * dz
+    return dr > 3000*3000
+
+VTX_FILTER = vtx_filter_ow3
+VTX_SUFFIX = 'opt_m'
 
 HAS_EX3_COMMANDS = True
 HAS_TRI3 = False

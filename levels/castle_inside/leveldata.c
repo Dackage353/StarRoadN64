@@ -14,4 +14,5 @@
 #include "levels/castle_inside/custom_c/textureNew.inc.c"
 #include "levels/castle_inside/custom_c/movtextNew.inc.c"
 #include "levels/castle_inside/custom_c/custom.modelopt.inc.c"
+#include "levels/castle_inside/custom_c/custom.modelopt_m.inc.c"
 

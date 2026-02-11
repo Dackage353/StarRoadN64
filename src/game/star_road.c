@@ -63,6 +63,7 @@ void bhv_star_road_yoshi_init()
     return;
 }
 
+extern void print_text_fmt_int(s16 x, s16 y, const char *str, s32 value);
 Gfx *geo_star_road_cull(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx)
 {
     if (callContext == GEO_CONTEXT_RENDER) {
@@ -167,6 +168,19 @@ Gfx *geo_star_road_cull(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx
                 active = (gMarioStates->pos[1] < 1764)
                       && (gMarioStates->pos[0] - gMarioStates->pos[2] > 8829);
                 active = !active;
+                break;
+
+            case 13:
+            case 14:
+                f32 dx = gMarioStates->pos[0] + 5376.f;
+                f32 dz = gMarioStates->pos[2] - 3536.f;
+
+                f32 dr = dx * dx + dz * dz;
+                f32 target = 800.f * 800.f;
+                if (14 == param)
+                    active = dr < target;
+                else
+                    active = dr >= target;
                 break;
         }
 
