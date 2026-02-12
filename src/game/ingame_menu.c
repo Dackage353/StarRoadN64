@@ -2073,6 +2073,7 @@ s32 render_pause_courses_and_castle(void) {
         gDialogTextAlpha = 250;
     }
     } else {
+        gDialogLineNum = 1;
         shade_screen();
         optmenu_draw();
     }
