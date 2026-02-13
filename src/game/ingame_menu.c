@@ -2074,6 +2074,8 @@ s32 render_pause_courses_and_castle(void) {
     }
     } else {
         gDialogLineNum = 1;
+        cam_select_alt_mode(CAM_SELECTION_MARIO);
+        gDialogCameraAngleIndex = CAM_SELECTION_MARIO;
         shade_screen();
         optmenu_draw();
     }
