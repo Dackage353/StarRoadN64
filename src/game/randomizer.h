@@ -46,33 +46,27 @@ enum Randomizer_Safety {
     Randomizer_SPAWN_SAFETY_HARD
 };
 
-enum StarDoorReqIDs {
-    STAR_REQ_WF,
-    STAR_REQ_PSS,
-    STAR_REQ_JRB,
-    STAR_REQ_CCM,
-    STAR_REQ_BITDW,
-    STAR_REQ_BASEMENT,
-    STAR_REQ_BBH,
-    STAR_REQ_TOTWC,
-    STAR_REQ_HMC,
-    STAR_REQ_DDD,
-    STAR_REQ_SL,
-    STAR_REQ_THI,
-    STAR_REQ_TIPPY,
-    STAR_REQ_UPSTAIRS,
-    STAR_REQ_BITS,
-    STAR_REQ_MAX
+enum Randomizer_StarDoorReqIDs {
+    Randomizer_STAR_REQ_CH,
+    Randomizer_STAR_REQ_GG,
+    Randomizer_STAR_REQ_B1,
+    Randomizer_STAR_REQ_BASEMENT,
+    Randomizer_STAR_REQ_KC,
+    Randomizer_STAR_REQ_MMM,
+    Randomizer_STAR_REQ_B2,
+    Randomizer_STAR_REQ_OW3,
+    Randomizer_STAR_REQ_B3,
+    Randomizer_STAR_REQ_MAX
 };
 
-struct nodeInfo {
+struct Randomizer_nodeInfo {
     u8 level;
     u8 area;
     u8 f0;
     u8 f1;
 };
 
-struct OptionsSettings {
+struct Randomizer_OptionsSettings {
     union {
         struct {
             u32 padding:14; // to make sure settings ids are small
@@ -103,38 +97,38 @@ struct OptionsSettings {
     } cosmetic;
 };
 
-enum StarColors {
-    STAR_COLOR_OFF,
-    STAR_COLOR_PER_STAR,
-    STAR_COLOR_PER_LEVEL,
-    STAR_COLOR_GLOBAL
+enum Randomizer_StarColors {
+    Randomizer_STAR_COLOR_OFF,
+    Randomizer_STAR_COLOR_PER_STAR,
+    Randomizer_STAR_COLOR_PER_LEVEL,
+    Randomizer_STAR_COLOR_GLOBAL
 };
 
-extern s32 curPreset;
-extern struct OptionsSettings gOptionsSettings;
-extern struct OptionsSettings gPresets[];
+extern s32 Randomizer_curPreset;
+extern struct Randomizer_OptionsSettings Randomizer_gOptionsSettings;
+extern struct Randomizer_OptionsSettings Randomizer_gPresets[];
 
-extern struct nodeInfo gLevelWarps[];
-extern u8 gRequiredStars[];
-extern u32 gRandomizerGameSeed;
-extern u8 gIsSetSeed;
-extern u8 gIgnoreCollisionDistance;
-extern u8 gWarpDestinations[];
-extern AreaParamsArray *sLevelParams[];
-extern u8 gRandomSongs[19];
-extern u8 gSkyboxIndex;
-extern u8 gStarDoorReqLUT[];
-extern struct AvoidancePoint gDynamicAvoidancePoints[50];
-extern u8 gNumDynamicAvoidancePoints;
+extern struct Randomizer_nodeInfo Randomizer_gLevelWarps[];
+extern u8 Randomizer_gRequiredStars[];
+extern u32 Randomizer_gRandomizerGameSeed;
+extern u8 Randomizer_gIsSetSeed;
+extern u8 Randomizer_gIgnoreCollisionDistance;
+extern u8 Randomizer_gWarpDestinations[];
+extern Randomizer_AreaParamsArray *Randomizer_sLevelParams[];
+extern u8 Randomizer_gRandomSongs[19];
+extern u8 Randomizer_gSkyboxIndex;
+extern u8 Randomizer_gStarDoorReqLUT[];
+extern struct Randomizer_AvoidancePoint Randomizer_gDynamicAvoidancePoints[50];
+extern u8 Randomizer_gNumDynamicAvoidancePoints;
 
-extern void create_dynamic_avoidance_point(Vec3f pos, f32 radius, f32 height, f32 downOffset);
-extern u32 raycast_wall_check(Vec3s pos);
-extern void get_safe_position(struct Object *, Vec3s, f32, f32, tinymt32_t *, u8, u32);
-extern f32 get_val_in_range_uniform(f32, f32, tinymt32_t *);
-extern void init_randomizer(s32 fileNum);
-extern u8 get_nonrandom_level();
-extern void print_seed_and_options_data(void);
-extern void set_mario_rando_colors(void);
-extern void init_star_color(struct Object *star, s32 courseID, s32 starID);
+extern void Randomizer_create_dynamic_avoidance_point(Vec3f pos, f32 radius, f32 height, f32 downOffset);
+extern u32 Randomizer_raycast_wall_check(Vec3s pos);
+extern void Randomizer_get_safe_position(struct Object *, Vec3s, f32, f32, tinymt32_t *, u8, u32);
+extern f32 Randomizer_get_val_in_range_uniform(f32, f32, tinymt32_t *);
+extern void Randomizer_init_randomizer(s32 fileNum);
+extern u8 Randomizer_get_nonrandom_level();
+extern void Randomizer_print_seed_and_options_data(void);
+extern void Randomizer_set_mario_rando_colors(void);
+extern void Randomizer_init_star_color(struct Object *star, s32 courseID, s32 starID);
 
 #endif

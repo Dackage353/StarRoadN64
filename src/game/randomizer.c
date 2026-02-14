@@ -13,7 +13,6 @@
 #include "mario.h"
 #include "object_list_processor.h"
 #include "engine/math_util.h"
-#include "text_strings.h"
 #include "ingame_menu.h"
 #include "print.h"
 #include "menu/file_select.h"
@@ -21,27 +20,27 @@
 #include "buffers/buffers.h"
 #include "segment2.h"
 
-u32 gRandomizerGameSeed;
+u32 Randomizer_gRandomizerGameSeed;
 
-u8 gIsSetSeed = FALSE;
+u8 Randomizer_gIsSetSeed = FALSE;
 
-u8 gIgnoreCollisionDistance = FALSE; // hacky
+u8 Randomizer_gIgnoreCollisionDistance = FALSE; // hacky
 
-u8 gNumDynamicAvoidancePoints = 0;
-struct AvoidancePoint gDynamicAvoidancePoints[50];
+u8 Randomizer_gNumDynamicAvoidancePoints = 0;
+struct Randomizer_AvoidancePoint Randomizer_gDynamicAvoidancePoints[50];
 
-struct OptionsSettings gOptionsSettings;
+struct Randomizer_OptionsSettings Randomizer_gOptionsSettings;
 
 #include "randomizer_data.h"
 
-u8 gRandomSongs[19] = { SEQ_MENU_TITLE_SCREEN, SEQ_LEVEL_GRASS,          SEQ_LEVEL_INSIDE_CASTLE,    SEQ_LEVEL_WATER,
+u8 Randomizer_gRandomSongs[19] = { SEQ_MENU_TITLE_SCREEN, SEQ_LEVEL_GRASS,          SEQ_LEVEL_INSIDE_CASTLE,    SEQ_LEVEL_WATER,
                       SEQ_LEVEL_HOT,         SEQ_LEVEL_BOSS_KOOPA,     SEQ_LEVEL_SNOW,             SEQ_LEVEL_SLIDE,
                       SEQ_LEVEL_SPOOKY,      SEQ_EVENT_PIRANHA_PLANT,  SEQ_LEVEL_UNDERGROUND,      SEQ_EVENT_POWERUP, 
                       SEQ_EVENT_METAL_CAP,   SEQ_LEVEL_KOOPA_ROAD,     SEQ_EVENT_MERRY_GO_ROUND,   SEQ_EVENT_BOSS,
                       SEQ_EVENT_ENDLESS_STAIRS, SEQ_LEVEL_BOSS_KOOPA_FINAL, SEQ_MENU_FILE_SELECT, 
 };
 
-struct nodeInfo gLevelWarps[] = {
+struct Randomizer_nodeInfo Randomizer_gLevelWarps[] = {
     // Level        Area  0xF0  0xF1
     { 0, 0, 0, 0, },
     { 0, 0, 0, 0, },
