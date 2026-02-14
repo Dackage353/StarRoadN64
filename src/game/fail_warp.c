@@ -198,7 +198,7 @@ void fail_warp_init_mario_after_quick_warp_reset_camera(struct Object* spawnObje
     }
     else
     {
-        gMarioState->invincTimer = 60;
+        gMarioState->invincTimer = 40;
     }
 }
 
