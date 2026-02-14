@@ -52,7 +52,7 @@ void fail_warp_mario_set_safe_pos(struct MarioState *m, struct Surface *floor)
         return;
 
     s16 type = floor->type;
-    int maxAngle = 0.87f;
+    f32 maxAngle = 0.87f;
     if (type == SURFACE_SLIPPERY || type == SURFACE_HARD_SLIPPERY || type == SURFACE_NOISE_SLIPPERY || type == SURFACE_NO_CAM_COL_SLIPPERY)
         maxAngle = 0.94f;
 
