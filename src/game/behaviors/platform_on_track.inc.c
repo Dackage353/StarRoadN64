@@ -146,7 +146,7 @@ static void platform_on_track_mario_not_on_platform(void) {
 /**
  * Init function for bhvPlatformOnTrack.
  */
-static bool sDoFasterObjects = false;
+s8 sDoFasterObjects = false;
 void bhv_platform_on_track_init(void) {
     sDoFasterObjects = configFasterObjects;
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {

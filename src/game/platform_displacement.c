@@ -93,6 +93,7 @@ void update_platform_displacement_info(struct PlatformDisplacementInfo *displace
  * Apply one frame of platform displacement to Mario or an object using the given
  * platform.
  */
+extern s8 sDoFasterObjects;
 extern const BehaviorScript bhvStarRoadCCCoralBoat[];
 extern const BehaviorScript bhvStarRoadFFFAutoscroller[];
 void apply_platform_displacement(struct PlatformDisplacementInfo *displaceInfo, Vec3f pos, s16 *yaw, struct Object *platform) {
@@ -140,6 +141,9 @@ void apply_platform_displacement(struct PlatformDisplacementInfo *displaceInfo, 
         sWasOnPlatform = platform->behavior == bhvPlatformOnTrack
                       || platform->behavior == bhvStarRoadCCCoralBoat
                       || platform->behavior == bhvStarRoadFFFAutoscroller;
+
+        if (!sDoFasterObjects)
+            sWasOnPlatform = FALSE;
     }
 }
 
