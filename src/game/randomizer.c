@@ -33,7 +33,7 @@ struct Randomizer_OptionsSettings Randomizer_gOptionsSettings;
 
 #include "randomizer_data.h"
 
-u8 Randomizer_gRandomSongs[19] = { SEQ_MENU_TITLE_SCREEN, SEQ_LEVEL_GRASS,          SEQ_LEVEL_INSIDE_CASTLE,    SEQ_LEVEL_WATER,
+u8 Randomizer_gRandomSongs[] = { SEQ_MENU_TITLE_SCREEN, SEQ_LEVEL_GRASS,          SEQ_LEVEL_INSIDE_CASTLE,    SEQ_LEVEL_WATER,
                       SEQ_LEVEL_HOT,         SEQ_LEVEL_BOSS_KOOPA,     SEQ_LEVEL_SNOW,             SEQ_LEVEL_SLIDE,
                       SEQ_LEVEL_SPOOKY,      SEQ_EVENT_PIRANHA_PLANT,  SEQ_LEVEL_UNDERGROUND,      SEQ_EVENT_POWERUP, 
                       SEQ_EVENT_METAL_CAP,   SEQ_LEVEL_KOOPA_ROAD,     SEQ_EVENT_MERRY_GO_ROUND,   SEQ_EVENT_BOSS,
@@ -46,72 +46,40 @@ struct Randomizer_nodeInfo Randomizer_gLevelWarps[] = {
     { 0, 0, 0, 0, },
     { 0, 0, 0, 0, },
     { 0, 0, 0, 0, },
-    { LEVEL_CASTLE_COURTYARD, 0x01, 0x0A, 0x0B, }, // BBH
-    { LEVEL_CASTLE, 0x01, 0x33, 0x65, }, // CCM
-    { LEVEL_CASTLE_GROUNDS, 1, 0,  3, }, // Inside Castle
-    { LEVEL_CASTLE, 0x03, 0x34, 0x66, }, // HMC
-    { LEVEL_CASTLE, 0x03, 0x33, 0x65, }, // SSL
-    { LEVEL_CASTLE, 0x01, 0x32, 0x64, }, // BoB
-    { LEVEL_CASTLE, 0x02, 0x36, 0x68, }, // SL
-    { LEVEL_CASTLE, 0x02, 0x32, 0x64, }, // WDW
-    { LEVEL_CASTLE, 0x01, 0x35, 0x67, }, // JRB
-    { LEVEL_CASTLE, 0x02, 0x37, 0x69, }, // THI
-    { LEVEL_CASTLE, 0x02, 0x35, 0x67, }, // TTC
-    { LEVEL_CASTLE, 0x02, 0x3A, 0x6C, }, // RR
-    { LEVEL_CASTLE_GROUNDS, 1, 0,  3, }, // Castle Grounds
-    { LEVEL_CASTLE, 0x01, 0x24, 0x25, }, // BitDW
-    { LEVEL_CASTLE_GROUNDS , 0x01, 0x08, 0x06, }, // VCutM
-    { LEVEL_CASTLE, 0x03, 0x36, 0x68, }, // BitFS
-    { LEVEL_CASTLE, 0x01, 0x27, 0x28, }, // SA
-    { LEVEL_CASTLE, 0x02, 0x00, 0x6B, }, // BitS
-    { LEVEL_CASTLE, 0x03, 0x32, 0x64, }, // LLL
-    { LEVEL_CASTLE, 0x03, 0x35, 0x67, }, // DDD
-    { LEVEL_CASTLE, 0x01, 0x34, 0x66, }, // WF
-    { 0, 0, 0, 0, }, // Cake
-    { LEVEL_CASTLE_GROUNDS, 1, 0,  3, }, // Castle Courtyard
-    { LEVEL_CASTLE, 0x01, 0x26, 0x23, }, // PSS
-    { LEVEL_HMC,    0x01, 0x0C, 0x0D, }, // CotMC
-    { LEVEL_CASTLE, 0x01, 0x26, 0x23, }, // TotWC
+    { LEVEL_CASTLE_GROUNDS, 1, 42, 43, }, // BBH
+    { LEVEL_CASTLE_GROUNDS, 1, 27, 28, }, // CCM
+    { LEVEL_CASTLE_GROUNDS, 1, 0, 245, }, // Inside Castle
+    { LEVEL_CASTLE_COURTYARD, 1, 21, 22, }, // HMC
+    { LEVEL_CASTLE_COURTYARD, 1, 5, 6, }, // SSL
+    { LEVEL_CASTLE_GROUNDS, 1, 21, 22, }, // BoB
+    { LEVEL_CASTLE_COURTYARD, 1, 12, 13, }, // SL
+    { LEVEL_CASTLE_COURTYARD, 1, 36, 37, }, // WDW
+    { LEVEL_CASTLE_GROUNDS, 1, 29, 30, }, // JRB
+    { LEVEL_CASTLE_COURTYARD, 1, 42, 43, }, // THI
+    { LEVEL_CASTLE, 1, 6, 7, }, // TTC
+    { LEVEL_CASTLE, 1, 9, 11, }, // RR
+    { LEVEL_CASTLE_GROUNDS, 1, 0, 201, }, // Castle Grounds
+    { LEVEL_CASTLE_GROUNDS, 1, 39, 40, }, // BitDW
+    { LEVEL_CASTLE_GROUNDS, 1, 42, 43, }, // VCutM
+    { LEVEL_CASTLE_COURTYARD, 1, 27, 28, }, // BitFS
+    { LEVEL_CASTLE_COURTYARD, 0x01, 15, 16, }, // SA
+    { LEVEL_CASTLE, 1, 3, 4, }, // BitS
+    { LEVEL_CASTLE_COURTYARD, 1, 24, 25, }, // LLL
+    { LEVEL_CASTLE_COURTYARD, 1, 18, 19, }, // DDD
+    { LEVEL_CASTLE_GROUNDS, 1, 36, 37, }, // WF
+    { LEVEL_CASTLE_GROUNDS, 1, 9, 201, }, // Cake
+    { LEVEL_CASTLE_GROUNDS, 1, 0, 201, }, // Castle Courtyard
+    { LEVEL_CASTLE_GROUNDS, 1, 45, 46, }, // PSS
+    { LEVEL_CASTLE_GROUNDS, 1, 27, 28, }, // CotMC
+    { LEVEL_CASTLE_COURTYARD, 1, 39, 40, }, // TotWC
     { 0, 0, 0, 0, },
-    { LEVEL_CASTLE, 0x02, 0x38, 0x6D, }, // WMotR
-    { 0, 0, 0, 0, },
-    { 0, 0, 0, 0, },
+    { LEVEL_CASTLE_GROUNDS, 1, 9, 201, }, // WMotR
     { 0, 0, 0, 0, },
     { 0, 0, 0, 0, },
-    { LEVEL_CASTLE, 0x02, 0x34, 0x66, }, // TTM
+    { 0, 0, 0, 0, },
+    { 0, 0, 0, 0, },
+    { LEVEL_CASTLE_COURTYARD, 1, 39, 40, }, // TTM
 };
-
-void convert_from_ascii(char *buf) {
-    int i = 0;
-    char c;
-    while (buf[i] != 0) {
-        c = buf[i];
-        buf[i] = (((c) >= '0' && (c) <= '9') ? ((c) - '0') :
-            ((c) >= 'A' && (c) <= 'Z') ? ((c) - 'A' + 0x0A) :
-            ((c) >= 'a' && (c) <= 'z') ? ((c) - 'a' + 0x24) : 
-            ((c) == ' ') ? 0x9E : ((c) == '\n' ? 0xFE : ((c) == ',' ? 0x6F : c)));
-        i++;
-    }
-    buf[i] = 0xFF;
-}
-
-// Print ascii string as a dialog string by converting it to charmap
-// (only supports letters numbers and spaces)
-void print_generic_text_ascii_buf(s16 x, s16 y, char *buf) {
-    convert_from_ascii(buf);
-    print_generic_string(x, y, (u8 *)buf);
-}
-
-// Print const string directly by strcpying into buffer (max length 30)
-void print_generic_text_ascii(s16 x, s16 y, const char *src) {
-    char buf[250];
-    char *dest = buf;
-    while (*src != 0) {
-        *dest++ = *src++;
-    }
-    *dest=0;
-    print_generic_text_ascii_buf(x, y, buf);
-}
 
 char *presetStrings[] = {
     "Default",
