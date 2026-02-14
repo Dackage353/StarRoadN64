@@ -1445,7 +1445,7 @@ static const char sQoLDesc2[] = "improve gameplay experience.";
 
 static const char sModernTitle[] = "Modern Preset";
 static const char sModernDesc1[] = "Quality of Life preset with";
-static const char sModernDesc2[] = "minimal improvement to Mario moveset.";
+static const char sModernDesc2[] = "improvements to game mechanics.";
 
 static int get_selected_adventure_mode()
 {
