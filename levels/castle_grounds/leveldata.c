@@ -11,5 +11,6 @@
 #include "levels/castle_grounds/leveldata.inc.c"
 #include "levels/castle_grounds/custom_c/textureNew.inc.c"
 #include "levels/castle_grounds/custom_c/custom.modelopt.inc.c"
+#include "levels/castle_grounds/custom_c/custom.modelopt_m.inc.c"
 
 #include "cg_water/model.inc.c"

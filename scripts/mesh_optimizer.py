@@ -74,7 +74,21 @@ def vtx_filter_ow3(vtx):
     dr = dx * dx + dz * dz
     return dr > 3000*3000
 
-VTX_FILTER = vtx_filter_ow3
+# OW31
+def vtx_filter_ow1(vtx):
+    if vtx.pos.y > 420:
+        return False
+
+    dx = vtx.pos.x - 3254
+    dz = vtx.pos.z + 1467
+
+    dr = dx * dx + dz * dz
+    return dr < 4500*4500
+
+# VTX_FILTER = vtx_filter_ow3
+# VTX_SUFFIX = 'opt_m'
+
+VTX_FILTER = vtx_filter_ow1
 VTX_SUFFIX = 'opt_m'
 
 HAS_EX3_COMMANDS = True
