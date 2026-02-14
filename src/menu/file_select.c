@@ -22,6 +22,8 @@
 #include "game/options_menu.h"
 #include "sm64.h"
 
+#define VERSION "1.01"
+
 /**
  * @file file_select.c
  * This file implements how the file select and it's menus render and function.
@@ -1428,6 +1430,7 @@ void print_main_menu_strings(void) {
     print_menu_generic_string(207, 65, LANG_ARRAY(textMarioB));
     print_menu_generic_string(92, 105, LANG_ARRAY(textMarioC));
     print_menu_generic_string(207, 105, LANG_ARRAY(textMarioD));
+    print_menu_generic_string(20, 215, "Version " VERSION);
     gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_end);
 }
 
