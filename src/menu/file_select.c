@@ -880,7 +880,7 @@ s32 check_clicked_text_width(s16 x, s16 y, UNUSED int ID, s32 xWidth) {
     s16 maxY = 8.0f;
     s16 minY = -8.0f;
 
-    if (gPlayer3Controller->buttonPressed & A_BUTTON) {
+    if (gPlayer1Controller->buttonPressed & A_BUTTON) {
         if (cursorX < maxX && minX < cursorX && cursorY < maxY && minY < cursorY) {
             play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
             return TRUE;
@@ -894,7 +894,7 @@ s32 check_clicked_text(s16 x, s16 y, int ID) {
 }
 
 // generate a random number of either 0 or 1 based on the weights
-s32 randomize_weighted_2(s32 weight1, s32 weight2) {
+static s32 randomize_weighted_2(s32 weight1, s32 weight2) {
     s32 random = random_u16() % (weight1 + weight2);
     if (random < weight1) {
         return 0;
@@ -1350,6 +1350,7 @@ void bhv_menu_button_manager_loop(void) {
 
         case MENU_BUTTON_SELECT_SEED_RETURN:  return_to_main_menu(MENU_BUTTON_SCORE, sMainMenuButtons[MENU_BUTTON_SELECT_SEED_RETURN]); break;
         case MENU_BUTTON_SELECT_SEED_RESET:   break;
+        case MENU_BUTTON_SELECT_SEED_OPTIONS: seed_menu_options_check_clicked_buttons(sMainMenuButtons[MENU_BUTTON_SELECT_SEED_OPTIONS]); break;
 
 #ifdef MULTILANG
         case MENU_BUTTON_OPTION_RETURN: return_to_main_menu(MENU_BUTTON_SOUND_MODE, sMainMenuButtons[MENU_BUTTON_OPTION_RETURN]); break;
@@ -2600,7 +2601,7 @@ void handle_info_display(const struct InfoDisplay displays[], s32 count) {
             if (prevInfoDisplay != i) {
                 infoAlpha = 0;
                 prevInfoDisplay = i;
-            } else if ((gPlayer3Controller->rawStickX != 0) || (gPlayer3Controller->rawStickY != 0)) {
+            } else if ((gPlayer1Controller->rawStickX != 0) || (gPlayer1Controller->rawStickY != 0)) {
                 infoAlpha -= 40;
                 if (infoAlpha < 0) infoAlpha = 0;
             } else if (infoAlpha < 255) {
@@ -2878,11 +2879,11 @@ static void draw_select_seed_menu_option(void) {
             Randomizer_curPreset = -1;
         }
     }
-    if (gPlayer3Controller->buttonPressed & R_TRIG) {
+    if (gPlayer1Controller->buttonPressed & R_TRIG) {
         OptionPage--;
         play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
         prevInfoDisplay = -1;
-    } else if (gPlayer3Controller->buttonPressed & (Z_TRIG | L_TRIG)) {
+    } else if (gPlayer1Controller->buttonPressed & (Z_TRIG | L_TRIG)) {
         OptionPage++;
         play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
         prevInfoDisplay = -1;
@@ -2899,13 +2900,13 @@ static void draw_select_seed_menu_option(void) {
     gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, gDialogTextAlpha);
     print_generic_string(240+1, 33-1, textReturn);
     print_generic_string(35+1,33-1,textRandomOptions);
-    sprintf(buf, "Settings ID\xE6 %d", Randomizer_gOptionsSettings.gameplay.w);
+    sprintf(buf, "Settings ID: %d", Randomizer_gOptionsSettings.gameplay.w);
     print_generic_string(10,9,buf);
     gDPSetEnvColor(gDisplayListHead++, bottomOptionColor, bottomOptionColor, bottomOptionColor, gDialogTextAlpha);
     print_generic_string(240, 33, textReturn);
     print_generic_string(35, 33, textRandomOptions);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
-    sprintf(buf, "Settings ID\xE6 %d", Randomizer_gOptionsSettings.gameplay.w);
+    sprintf(buf, "Settings ID: %d", Randomizer_gOptionsSettings.gameplay.w);
     print_generic_string(9,10,buf);
 
     switch (OptionPage) {
