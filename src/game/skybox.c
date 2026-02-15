@@ -11,6 +11,7 @@
 #include "sm64.h"
 #include "geo_commands.h"
 #include "color_presets.h"
+#include "game/randomizer.h"
 
 /**
  * @file skybox.c
@@ -219,6 +220,7 @@ Vtx *make_skybox_rect(s32 tileIndex, s8 colorIndex) {
  * The row and column are converted into an index into the skybox's tile list, which is then drawn in
  * world space so that the tiles will rotate with the camera.
  */
+extern u8 gSkyboxIndex;
 void draw_skybox_tile_grid(Gfx **dlist, s8 background, s8 player, s8 colorIndex) {
     s32 row;
     s32 col;
@@ -230,8 +232,13 @@ void draw_skybox_tile_grid(Gfx **dlist, s8 background, s8 player, s8 colorIndex)
                 continue;
             }
 
-            const Texture *const texture =
-                (*(SkyboxTexture *) segmented_to_virtual(sSkyboxTextures[background]))[tileIndex];
+            Texture* texture;
+            if (Randomizer_gOptionsSettings.cosmetic.s.skyboxOn) {
+                texture = (*(SkyboxTexture *) segmented_to_virtual(sSkyboxTextures[gSkyboxIndex]))[tileIndex];
+            } else {
+                texture = (*(SkyboxTexture *) segmented_to_virtual(sSkyboxTextures[background]))[tileIndex];
+            }
+
             Vtx *vertices = make_skybox_rect(tileIndex, colorIndex);
 
             gLoadBlockTexture((*dlist)++, 32, 32, G_IM_FMT_RGBA, texture);

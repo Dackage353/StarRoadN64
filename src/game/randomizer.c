@@ -35,12 +35,7 @@ struct Randomizer_OptionsSettings Randomizer_gOptionsSettings;
 
 #include "randomizer_data.h"
 
-u8 Randomizer_gRandomSongs[19] = { SEQ_MENU_TITLE_SCREEN, SEQ_LEVEL_GRASS,          SEQ_LEVEL_INSIDE_CASTLE,    SEQ_LEVEL_WATER,
-                      SEQ_LEVEL_HOT,         SEQ_LEVEL_BOSS_KOOPA,     SEQ_LEVEL_SNOW,             SEQ_LEVEL_SLIDE,
-                      SEQ_LEVEL_SPOOKY,      SEQ_EVENT_PIRANHA_PLANT,  SEQ_LEVEL_UNDERGROUND,      SEQ_EVENT_POWERUP, 
-                      SEQ_EVENT_METAL_CAP,   SEQ_LEVEL_KOOPA_ROAD,     SEQ_EVENT_MERRY_GO_ROUND,   SEQ_EVENT_BOSS,
-                      SEQ_EVENT_ENDLESS_STAIRS, SEQ_LEVEL_BOSS_KOOPA_FINAL, SEQ_MENU_FILE_SELECT, 
-};
+u8 Randomizer_gRandomSongs[] = { 2,3,4,5,6,7,8,9,12,13,14,15,17,19,24,25,26,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,47,49,51 };
 
 struct Randomizer_nodeInfo Randomizer_gLevelWarps[] = {
     // Level        Area  0xF0  0xF1

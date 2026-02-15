@@ -26,6 +26,7 @@
 #include "main.h"
 #include "engine/gut.h"
 #include "options_menu.h"
+#include "game/randomizer.h"
 
 #include "hacktice/main.h"
 
@@ -2084,6 +2085,9 @@ s32 render_pause_courses_and_castle(void) {
         optmenu_check_buttons();
         optmenu_draw_prompt();
     }
+    
+    Randomizer_print_seed_and_options_data();
+
 #ifdef PUPPYCAM
     } else {
         shade_screen();
@@ -2336,6 +2340,7 @@ s32 render_course_complete_screen(void) {
 
         case DIALOG_STATE_VERTICAL:
             shade_screen();
+            Randomizer_print_seed_and_options_data();
             render_course_complete_lvl_info_and_hud_str();
             render_save_confirmation(SAVE_CONFIRMATION_X, 86, &gDialogLineNum, 20);
 
@@ -2369,7 +2374,10 @@ s32 render_menus_and_dialogs(void) {
 
     create_dl_ortho_matrix();
 
-    if (gMenuMode != MENU_MODE_NONE) {
+    if (gMarioState->action == ACT_JUMBO_STAR_CUTSCENE) {
+        gDialogTextAlpha = 255;
+        Randomizer_print_seed_and_options_data();
+    } else if (gMenuMode != MENU_MODE_NONE) {
         switch (gMenuMode) {
             case MENU_MODE_UNUSED_0:
                 mode = render_pause_courses_and_castle();

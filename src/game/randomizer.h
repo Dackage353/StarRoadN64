@@ -118,7 +118,7 @@ extern u8 Randomizer_gIsSetSeed;
 extern u8 Randomizer_gIgnoreCollisionDistance;
 extern u8 Randomizer_gWarpDestinations[];
 extern Randomizer_AreaParamsArray *Randomizer_sLevelParams[];
-extern u8 Randomizer_gRandomSongs[19];
+extern u8 Randomizer_gRandomSongs[35];
 extern u8 Randomizer_gSkyboxIndex;
 extern const u8 Randomizer_gStarDoorReqLUT[];
 extern struct Randomizer_AvoidancePoint Randomizer_gDynamicAvoidancePoints[200];
