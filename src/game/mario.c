@@ -33,6 +33,7 @@
 #include "sound_init.h"
 #include "rumble_init.h"
 #include "options_menu.h"
+#include "randomizer.h"
 
 
 /**************************************************
@@ -1875,6 +1876,8 @@ void init_mario(void) {
         capObject->oForwardVel = 0;
         capObject->oMoveAngleYaw = 0;
     }
+    
+    Randomizer_set_mario_rando_colors();
 }
 
 void init_mario_from_save_file(void) {

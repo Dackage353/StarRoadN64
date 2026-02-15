@@ -6,7 +6,7 @@
 
 // YELLOW
 // 0x030056C0
-static const Vtx coin_seg3_vertex_yellow[] = {
+Vtx coin_seg3_vertex_yellow[] = {
     {{{   -32,      0,      0}, 0, {   -16,   4080}, {0xff, 0xff, 0x00, 0xff}}},
     {{{    32,      0,      0}, 0, {  4080,   4080}, {0xff, 0xff, 0x00, 0xff}}},
     {{{    32,     64,      0}, 0, {  4080,    -16}, {0xff, 0xff, 0x00, 0xff}}},
@@ -15,7 +15,7 @@ static const Vtx coin_seg3_vertex_yellow[] = {
 
 // BLUE
 // 0x03005700
-static const Vtx coin_seg3_vertex_blue[] = {
+Vtx coin_seg3_vertex_blue[] = {
     {{{   -48,      0,      0}, 0, {   -16,   4080}, {0x80, 0x80, 0xff, 0xff}}},
     {{{    48,      0,      0}, 0, {  4080,   4080}, {0x80, 0x80, 0xff, 0xff}}},
     {{{    48,     96,      0}, 0, {  4080,    -16}, {0x80, 0x80, 0xff, 0xff}}},
@@ -24,7 +24,7 @@ static const Vtx coin_seg3_vertex_blue[] = {
 
 // RED
 // 0x03005740
-static const Vtx coin_seg3_vertex_red[] = {
+Vtx coin_seg3_vertex_red[] = {
     {{{   -36,      0,      0}, 0, {   -16,   4080}, {0xff, 0x00, 0x00, 0xff}}},
     {{{    36,      0,      0}, 0, {  4080,   4080}, {0xff, 0x00, 0x00, 0xff}}},
     {{{    36,     72,      0}, 0, {  4080,    -16}, {0xff, 0x00, 0x00, 0xff}}},
@@ -33,7 +33,7 @@ static const Vtx coin_seg3_vertex_red[] = {
 
 // SECRET
 // 0x03005780
-static const Vtx coin_seg3_vertex_secret[] = {
+Vtx coin_seg3_vertex_secret[] = {
     {{{   -36,      0,      0}, 0, {   -16,   4080}, {0xff, 0xff, 0xff, 0xff}}},
     {{{    36,      0,      0}, 0, {  4080,   4080}, {0xff, 0xff, 0xff, 0xff}}},
     {{{    36,     72,      0}, 0, {  4080,    -16}, {0xff, 0xff, 0xff, 0xff}}},
@@ -42,7 +42,7 @@ static const Vtx coin_seg3_vertex_secret[] = {
 
 // YELLOW REV
 // 0x030056C0
-static const Vtx coin_seg3_vertex_yellow_r[] = {
+Vtx coin_seg3_vertex_yellow_r[] = {
     {{{   -32,      0,      0}, 0, {  4080,   4080}, {0xff, 0xff, 0x00, 0xff}}},
     {{{    32,      0,      0}, 0, {   -16,   4080}, {0xff, 0xff, 0x00, 0xff}}},
     {{{    32,     64,      0}, 0, {   -16,    -16}, {0xff, 0xff, 0x00, 0xff}}},
@@ -51,7 +51,7 @@ static const Vtx coin_seg3_vertex_yellow_r[] = {
 
 // BLUE REV
 // 0x03005700
-static const Vtx coin_seg3_vertex_blue_r[] = {
+Vtx coin_seg3_vertex_blue_r[] = {
     {{{   -48,      0,      0}, 0, {  4080,   4080}, {0x80, 0x80, 0xff, 0xff}}},
     {{{    48,      0,      0}, 0, {   -16,   4080}, {0x80, 0x80, 0xff, 0xff}}},
     {{{    48,     96,      0}, 0, {   -16,    -16}, {0x80, 0x80, 0xff, 0xff}}},
@@ -60,7 +60,7 @@ static const Vtx coin_seg3_vertex_blue_r[] = {
 
 // RED REV
 // 0x03005740
-static const Vtx coin_seg3_vertex_red_r[] = {
+Vtx coin_seg3_vertex_red_r[] = {
     {{{   -36,      0,      0}, 0, {  4080,   4080}, {0xff, 0x00, 0x00, 0xff}}},
     {{{    36,      0,      0}, 0, {   -16,   4080}, {0xff, 0x00, 0x00, 0xff}}},
     {{{    36,     72,      0}, 0, {   -16,    -16}, {0xff, 0x00, 0x00, 0xff}}},
@@ -69,7 +69,7 @@ static const Vtx coin_seg3_vertex_red_r[] = {
 
 // SECRET REV
 // 0x03005780
-static const Vtx coin_seg3_vertex_secret_r[] = {
+Vtx coin_seg3_vertex_secret_r[] = {
     {{{   -36,      0,      0}, 0, {  4080,   4080}, {0xff, 0xff, 0xff, 0xff}}},
     {{{    36,      0,      0}, 0, {   -16,   4080}, {0xff, 0xff, 0xff, 0xff}}},
     {{{    36,     72,      0}, 0, {   -16,    -16}, {0xff, 0xff, 0xff, 0xff}}},

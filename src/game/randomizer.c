@@ -910,42 +910,44 @@ void Randomizer_init_star_color(struct Object *star, s32 courseID, s32 starID) {
     star->oStarColor = (RGB[0] << 16) | (RGB[1] << 8) | RGB[2];
 }
 
-void set_mario_light(Lights1 *light, u8 r, u8 g, u8 b) {
-    light->a.l.col[0] = r / 2;
-    light->a.l.col[1] = g / 2;
-    light->a.l.col[2] = b / 2;
-    light->a.l.colc[0] = light->a.l.col[0];
-    light->a.l.colc[1] = light->a.l.col[1];
-    light->a.l.colc[2] = light->a.l.col[2];
-    light->l[0].l.col[0] = r;
-    light->l[0].l.col[1] = g;
-    light->l[0].l.col[2] = b;
-    light->l[0].l.colc[0] = light->l[0].l.col[0];
-    light->l[0].l.colc[1] = light->l[0].l.col[1];
-    light->l[0].l.colc[2] = light->l[0].l.col[2];
+static void set_mario_light(void* dl, u8 r, u8 g, u8 b) {
+    u8* walker = (u8*)dl;
+    while (*walker != G_SETPRIMCOLOR)
+    {
+        walker += 8;
+    }
+
+    walker += 4;
+    walker[0] = r;
+    walker[1] = g;
+    walker[2] = b;
 }
 
-void set_mario_light_random(Lights1 *light, tinymt32_t *randomState) {
+void set_mario_light_random(void* dl1, void* dl2, tinymt32_t *randomState) {
     u8 RGB[3];
     get_random_color(RGB, randomState);
     u8 r = RGB[0];
     u8 g = RGB[1];
     u8 b = RGB[2];
-    set_mario_light(light, r, g, b);
+    set_mario_light(dl1, r, g, b);
+    set_mario_light(dl2, r, g, b);
 }
 
-extern Lights1 mario_blue_lights_group;
-extern Lights1 mario_red_lights_group;
-extern Lights1 mario_white_lights_group;
-extern Lights1 mario_brown1_lights_group;
-extern Lights1 mario_beige_lights_group;
-extern Lights1 mario_brown2_lights_group;
+extern Gfx mat_mario_blue[];
+extern Gfx mat_mario_button_layer1[];
+
+extern Gfx mat_mario_red[];
+extern Gfx mat_mario_logo_layer1[];
+
 // 4 vertex colors each
 extern Vtx coin_seg3_vertex_yellow[];
+extern Vtx coin_seg3_vertex_yellow_r[];
 extern Vtx coin_seg3_vertex_red[];
+extern Vtx coin_seg3_vertex_red_r[];
 extern Vtx coin_seg3_vertex_blue[];
+extern Vtx coin_seg3_vertex_blue_r[];
 
-void set_coin_color(u8 r, u8 g, u8 b, Vtx *d) {
+static void set_coin_color(u8 r, u8 g, u8 b, Vtx *d) {
     Vtx *a = segmented_to_virtual(d);
     u32 i;
     for (i = 0; i < 4; i++) {
@@ -977,19 +979,11 @@ void Randomizer_set_mario_rando_colors(void) {
     tinymt32_t randomState;
 
     if (Randomizer_gOptionsSettings.cosmetic.s.marioColors) {
-        if (Randomizer_gGameSeed == 2401) {
-            set_mario_light(segmented_to_virtual(&mario_red_lights_group), 0, 255, 0);
-        } else {
+        {
             tinymt32_init(&randomState, Randomizer_gGameSeed);
 
-            set_mario_light_random(segmented_to_virtual(&mario_blue_lights_group), &randomState);
-            set_mario_light_random(segmented_to_virtual(&mario_red_lights_group), &randomState);
-            set_mario_light_random(segmented_to_virtual(&mario_white_lights_group), &randomState);
-            set_mario_light_random(segmented_to_virtual(&mario_brown1_lights_group), &randomState);
-            if (Randomizer_gOptionsSettings.cosmetic.s.marioColors == 2) {
-                set_mario_light_random(segmented_to_virtual(&mario_beige_lights_group), &randomState);
-                set_mario_light_random(segmented_to_virtual(&mario_brown2_lights_group), &randomState);
-            }
+            set_mario_light_random(segmented_to_virtual(&mat_mario_blue), segmented_to_virtual(&mat_mario_button_layer1), &randomState);
+            set_mario_light_random(segmented_to_virtual(&mat_mario_red), segmented_to_virtual(&mat_mario_logo_layer1), &randomState);
         }
     }
 
@@ -1001,12 +995,14 @@ void Randomizer_set_mario_rando_colors(void) {
 
         get_random_color(yellows, &randomState);
         set_coin_color(yellows[0], yellows[1], yellows[2], coin_seg3_vertex_yellow);
+        set_coin_color(yellows[0], yellows[1], yellows[2], coin_seg3_vertex_yellow_r);
 
         get_random_color(reds, &randomState);
         while (RMSE(yellows[0], reds[0], yellows[1], reds[1], yellows[2], reds[2]) < MINDIFF) {
             get_random_color(reds, &randomState);
         }
         set_coin_color(reds[0], reds[1], reds[2], coin_seg3_vertex_red);
+        set_coin_color(reds[0], reds[1], reds[2], coin_seg3_vertex_red_r);
 
         get_random_color(blues, &randomState);
         while ((RMSE(yellows[0], reds[0], yellows[1], reds[1], yellows[2], reds[2]) < MINDIFF)
@@ -1015,5 +1011,6 @@ void Randomizer_set_mario_rando_colors(void) {
             get_random_color(blues, &randomState);
         }
         set_coin_color(blues[0], blues[1], blues[2], coin_seg3_vertex_blue);
+        set_coin_color(blues[0], blues[1], blues[2], coin_seg3_vertex_blue_r);
     }
 }
