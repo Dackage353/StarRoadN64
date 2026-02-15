@@ -152,7 +152,7 @@ Gfx *geo_exec_flying_carpet_create(s32 callContext, struct GraphNode *node, UNUS
     return displayList;
 }
 
-Gfx *geo_rando_set_star_color(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx) {
+Gfx *Randomizer_geo_set_star_color(s32 callContext, struct GraphNode *node, UNUSED Mat4 mtx) {
     Gfx *dlStart, *dlHead;
     dlStart = NULL;
 
