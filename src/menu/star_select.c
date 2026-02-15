@@ -19,6 +19,7 @@
 #include "star_select.h"
 #include "game/main.h"
 #include "game/options_menu.h"
+#include "game/randomizer.h"
 
 /**
  * @file star_select.c
@@ -102,6 +103,7 @@ void render_100_coin_star(u8 stars) {
 
         sStarSelectorModels[6]->oStarSelectorSize = 0.8f;
         sStarSelectorModels[6]->oStarSelectorType = STAR_SELECTOR_100_COINS;
+        Randomizer_init_star_color(sStarSelectorModels[6], gCurrCourseNum, 6);
     }
 }
 
@@ -158,6 +160,7 @@ void bhv_act_selector_init(void) {
             spawn_object_abs_with_rot(o, 0, selectorModelIDs[i], bhvActSelectorStarType,
                                     (75 + (sVisibleStars * -75) + (i * 152)) * ACT_SELECT_WIDESCREEN_SCALE, 248, -300, 0, 0, 0);
         sStarSelectorModels[i]->oStarSelectorSize = 1.0f;
+        Randomizer_init_star_color(sStarSelectorModels[i], gCurrCourseNum, i);
     }
 
     render_100_coin_star(stars);

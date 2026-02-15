@@ -707,15 +707,15 @@ void save_file_set_seed_and_options(s32 fileNum) {
     if (overwriteSeed) {
         saveFile->seed = Randomizer_gGameSeed;
         // If the file is old and was originally set seed, keep it set
-        if (saveFile->flags & SAVE_FLAG_IS_SET_SEED) {
+        if (saveFile->flags & SAVE_FLAG_RANDO_IS_SET_SEED) {
             Randomizer_gIsSetSeed = TRUE;
         } else if (Randomizer_gIsSetSeed) {
-            saveFile->flags |= SAVE_FLAG_IS_SET_SEED;
+            saveFile->flags |= SAVE_FLAG_RANDO_IS_SET_SEED;
         }
     // Existing file
     } else {
         Randomizer_gGameSeed = saveFile->seed;
-        Randomizer_gIsSetSeed = (saveFile->flags & SAVE_FLAG_IS_SET_SEED) != 0;
+        Randomizer_gIsSetSeed = (saveFile->flags & SAVE_FLAG_RANDO_IS_SET_SEED) != 0;
     }
 }
 

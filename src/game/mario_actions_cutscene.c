@@ -28,6 +28,7 @@
 #include "sound_init.h"
 #include "rumble_init.h"
 #include "options_menu.h"
+#include "game/randomizer.h"
 
 static struct Object *sIntroWarpPipeObj;
 static struct Object *sEndPeachObj;
@@ -576,6 +577,7 @@ void general_star_dance_handler(struct MarioState *m, s32 isInWater) {
         switch (++m->actionTimer) {
             case 1:
                 celebStar = spawn_object(m->marioObj, MODEL_STAR, bhvCelebrationStar);
+                Randomizer_init_star_color(celebStar, gCurrCourseNum, gLastCompletedStarNum - 1);
 #ifdef STAR_DANCE_USES_STARS_MODEL
                 obj_set_model(celebStar, gStarModelLastCollected);
 #else
@@ -830,7 +832,8 @@ s32 act_unlocking_star_door(struct MarioState *m) {
             break;
         case ACT_STATE_UNLOCKING_STAR_DOOR_SUMMON_STAR:
             if (is_anim_at_end(m)) {
-                spawn_object(m->marioObj, MODEL_STAR, bhvUnlockDoorStar);
+                struct Object* star = spawn_object(m->marioObj, MODEL_STAR, bhvUnlockDoorStar);
+                Randomizer_init_star_color(star, random_u16() & 0xFF, random_u16() & 0x7);
                 m->actionState = ACT_STATE_UNLOCKING_STAR_DOOR_APPROACH_DOOR;
             }
             break;
@@ -2026,6 +2029,7 @@ static void end_peach_cutscene_mario_landing(struct MarioState *m) {
         sEndJumboStarObj = spawn_object_abs_with_rot(gCurrentObject, 0, MODEL_STAR, bhvStaticObject, 0,
                                                      2528, -1800, 0, 0, 0);
         obj_scale(sEndJumboStarObj, 3.0f);
+        Randomizer_init_star_color(sEndJumboStarObj, COURSE_CAKE_END, 0);
         advance_cutscene_step(m);
     }
 }

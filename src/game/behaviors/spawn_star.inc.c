@@ -1,4 +1,5 @@
 // spawn_star.inc.c
+#include "game/randomizer.h"
 
 static struct ObjectHitbox sCollectStarHitbox = {
     /* interactType:      */ INTERACT_STAR_OR_KEY,
@@ -34,6 +35,8 @@ void bhv_collect_star_init(void) {
         o->oFaceAngleRoll = -0x4000;
         o->oGraphYOffset = 40.0f;
     }
+    
+    Randomizer_init_star_color(o, gCurrCourseNum, starId);
 
     o->header.gfx.sharedChild = gLoadedGraphNodes[model];
     obj_set_hitbox(o, &sCollectStarHitbox);
