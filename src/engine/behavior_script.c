@@ -643,19 +643,6 @@ static s32 bhv_cmd_or_long(void) {
     return BHV_PROC_CONTINUE;
 }
 
-// Command 0x13: Performs a bit clear with the specified short. Unused.
-// Usage: BIT_CLEAR(field, value)
-static s32 bhv_cmd_bit_clear(void) {
-    u8 field = BHV_CMD_GET_2ND_U8(0);
-    s32 value = BHV_CMD_GET_2ND_S16(0);
-
-    value = (value & 0xFFFF) ^ 0xFFFF;
-    cur_obj_and_int(field, value);
-
-    gCurBhvCommand++;
-    return BHV_PROC_CONTINUE;
-}
-
 // Command 0x27: Loads the animations for the object. <field> is always set to oAnimations.
 // Usage: LOAD_ANIMATIONS(field, anims)
 static s32 bhv_cmd_load_animations(void) {
@@ -945,7 +932,6 @@ static BhvCommandProc BehaviorCmdTable[] = {
     /*BHV_CMD_SET_INT               */ bhv_cmd_set_int,
     /*BHV_CMD_OR_INT                */ bhv_cmd_or_int,
     /*BHV_CMD_OR_LONG               */ bhv_cmd_or_long,
-    /*BHV_CMD_BIT_CLEAR             */ bhv_cmd_bit_clear,
     /*BHV_CMD_SET_INT_RAND_RSHIFT   */ bhv_cmd_set_int_rand_rshift,
     /*BHV_CMD_SET_RANDOM_FLOAT      */ bhv_cmd_set_random_float,
     /*BHV_CMD_SET_RANDOM_INT        */ bhv_cmd_set_random_int,
@@ -953,6 +939,7 @@ static BhvCommandProc BehaviorCmdTable[] = {
     /*BHV_CMD_ADD_INT_RAND_RSHIFT   */ bhv_cmd_add_int_rand_rshift,
     /*BHV_CMD_NOP_1                 */ bhv_cmd_nop_1,
     /*BHV_CMD_NOP_2                 */ bhv_cmd_nop_2,
+    /*BHV_CMD_NOP_3                 */ bhv_cmd_nop_2,
     /*BHV_CMD_SET_MODEL             */ bhv_cmd_set_model,
     /*BHV_CMD_SPAWN_CHILD           */ bhv_cmd_spawn_child,
     /*BHV_CMD_DEACTIVATE            */ bhv_cmd_deactivate,

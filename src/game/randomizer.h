@@ -121,7 +121,7 @@ extern Randomizer_AreaParamsArray *Randomizer_sLevelParams[];
 extern u8 Randomizer_gRandomSongs[19];
 extern u8 Randomizer_gSkyboxIndex;
 extern const u8 Randomizer_gStarDoorReqLUT[];
-extern struct Randomizer_AvoidancePoint Randomizer_gDynamicAvoidancePoints[50];
+extern struct Randomizer_AvoidancePoint Randomizer_gDynamicAvoidancePoints[200];
 extern u8 Randomizer_gNumDynamicAvoidancePoints;
 
 extern void Randomizer_create_dynamic_avoidance_point(Vec3f pos, f32 radius, f32 height, f32 downOffset);

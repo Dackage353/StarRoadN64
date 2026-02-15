@@ -28,7 +28,7 @@ u8 Randomizer_gIsSetSeed = FALSE;
 u8 Randomizer_gIgnoreCollisionDistance = FALSE; // hacky
 
 u8 Randomizer_gNumDynamicAvoidancePoints = 0;
-struct Randomizer_AvoidancePoint Randomizer_gDynamicAvoidancePoints[50];
+struct Randomizer_AvoidancePoint Randomizer_gDynamicAvoidancePoints[200];
 
 s32 Randomizer_curPreset;
 struct Randomizer_OptionsSettings Randomizer_gOptionsSettings;

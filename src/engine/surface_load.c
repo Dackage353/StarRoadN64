@@ -14,6 +14,7 @@
 #include "surface_load.h"
 #include "game/puppyprint.h"
 #include "game/debug.h"
+#include "game/randomizer.h"
 
 #include "config.h"
 
@@ -685,7 +686,7 @@ void load_object_collision_model(void) {
     // Update if no Time Stop, in range, and in the current room.
     if (
         !(gTimeStopState & TIME_STOP_ACTIVE)
-        && inColRadius
+        && (inColRadius || Randomizer_gIgnoreCollisionDistance)
         && !(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)
     ) {
         collisionData++;

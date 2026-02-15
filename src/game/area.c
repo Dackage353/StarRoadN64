@@ -334,6 +334,10 @@ void set_vi_mode_from_config()
 
 void load_area(s32 index) {
     set_vi_mode_from_config();
+    
+    // Clear randomizer data
+    Randomizer_gIgnoreCollisionDistance = TRUE;
+    Randomizer_gNumDynamicAvoidancePoints = 0;
 
     if (gCurrentArea == NULL && gAreaData[index].graphNode != NULL) {
         gCurrentArea = &gAreaData[index];

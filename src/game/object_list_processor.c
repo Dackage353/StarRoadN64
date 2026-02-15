@@ -21,6 +21,7 @@
 #include "spawn_object.h"
 #include "puppyprint.h"
 #include "profiling.h"
+#include "game/randomizer.h"
 
 #include "hacktice/level_reset.h"
 #include "hacktice/main.h"
@@ -632,6 +633,7 @@ void update_objects(UNUSED s32 unused) {
 
     // Update spawners and objects with surfaces
     update_terrain_objects();
+    Randomizer_gIgnoreCollisionDistance = FALSE;
 
     // If Mario was touching a moving platform at the end of last frame, apply
     // displacement now
