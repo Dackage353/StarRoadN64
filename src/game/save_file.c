@@ -20,6 +20,7 @@
 #endif
 #include "puppycam2.h"
 #include "options_menu.h"
+#include "randomizer.h"
 
 #ifdef UNIQUE_SAVE_DATA
 u16 MENU_DATA_MAGIC = 0x4849;
@@ -59,8 +60,6 @@ s8 gLevelToCourseNumTable[] = {
 STATIC_ASSERT(ARRAY_COUNT(gLevelToCourseNumTable) == LEVEL_COUNT - 1,
               "change this array if you are adding levels");
 #ifdef EEP
-#include "vc_ultra.h"
-
 /**
  * Read from EEPROM to a given address.
  * The EEPROM address is computed using the offset of the destination address from gSaveBuffer.
@@ -214,7 +213,10 @@ static void add_save_block_signature(void *buffer, s32 size, u16 magic) {
     sig->chksum = calc_checksum(buffer, size);
 }
 
-static void save_main_menu_data(void) {
+void save_main_menu_data(void) {
+    gSaveBuffer.menuData.randomNum = tinymt32_generate_u32(&gGlobalRandomState);
+    gMainMenuDataModified = TRUE;
+
     if (gMainMenuDataModified) {
         // Compute checksum
         add_save_block_signature(&gSaveBuffer.menuData, sizeof(gSaveBuffer.menuData), MENU_DATA_MAGIC);
@@ -229,24 +231,15 @@ static void save_main_menu_data(void) {
 static void wipe_main_menu_data(void) {
     bzero(&gSaveBuffer.menuData, sizeof(gSaveBuffer.menuData));
 
-    // Set score ages for all courses to 3, 2, 1, and 0, respectively.
-    gSaveBuffer.menuData.coinScoreAges[0] = 0x3FFFFFFF;
-    gSaveBuffer.menuData.coinScoreAges[1] = 0x2AAAAAAA;
-    gSaveBuffer.menuData.coinScoreAges[2] = 0x15555555;
-
     gMainMenuDataModified = TRUE;
     save_main_menu_data();
 }
 
 static s32 get_coin_score_age(s32 fileIndex, s32 courseIndex) {
-    return (gSaveBuffer.menuData.coinScoreAges[fileIndex] >> (2 * courseIndex)) & 0x3;
+    return 0;
 }
 
 static void set_coin_score_age(s32 fileIndex, s32 courseIndex, s32 age) {
-    s32 mask = 0x3 << (2 * courseIndex);
-
-    gSaveBuffer.menuData.coinScoreAges[fileIndex] &= ~mask;
-    gSaveBuffer.menuData.coinScoreAges[fileIndex] |= age << (2 * courseIndex);
 }
 
 /**
@@ -396,6 +389,7 @@ void save_file_load_all(void) {
     // Failsafe in case the language in the save file isn't defined.
     multilang_set_language(get_language_index(multilang_get_language()));
 #endif
+    tinymt32_init(&gGlobalRandomState, gSaveBuffer.menuData.randomNum);
 }
 
 #ifdef PUPPYCAM
@@ -478,7 +472,6 @@ int save_file_collect_star_or_key(s16 coinScore, s16 starIndex) {
         }
 
         if (coinScore > save_file_get_course_coin_score(fileIndex, courseIndex)) {
-            gSaveBuffer.files[fileIndex][0].courseCoinScores[courseIndex] = coinScore;
             touch_coin_score_age(fileIndex, courseIndex);
 
             gGotFileCoinHiScore = TRUE;
@@ -665,7 +658,7 @@ s32 save_file_get_course_coin_score(UNUSED s32 fileIndex, UNUSED s32 courseIndex
 }
 #else
 s32 save_file_get_course_coin_score(s32 fileIndex, s32 courseIndex) {
-    return gSaveBuffer.files[fileIndex][0].courseCoinScores[courseIndex];
+    return 0;
 }
 #endif
 
@@ -689,12 +682,49 @@ void save_file_set_cannon_unlocked(void) {
     gSaveFileModified = TRUE;
 }
 
+extern u8 gOverwriteFileOptions;
+extern u8 gOverwriteFileSeed;
+
+void save_file_set_seed_and_options(s32 fileNum) {
+    struct SaveFile *saveFile = &gSaveBuffer.files[fileNum - 1][0];
+    u8 overwriteOptions = gOverwriteFileOptions;
+    u8 overwriteSeed = gOverwriteFileSeed;
+
+    // New file, set the file's seed to the one picked.
+    if (!(saveFile->flags & SAVE_FLAG_FILE_EXISTS)){
+        overwriteOptions = TRUE;
+        overwriteSeed = TRUE;
+    }
+    // If the options have been modified or if the file is new
+    if (overwriteOptions) {
+        saveFile->randomizer = Randomizer_gOptionsSettings;
+    // Existing file
+    } else {
+        Randomizer_gOptionsSettings = saveFile->randomizer;
+    }
+
+    // If the seed has been modified or if the file is new
+    if (overwriteSeed) {
+        saveFile->seed = Randomizer_gGameSeed;
+        // If the file is old and was originally set seed, keep it set
+        if (saveFile->flags & SAVE_FLAG_IS_SET_SEED) {
+            Randomizer_gIsSetSeed = TRUE;
+        } else if (Randomizer_gIsSetSeed) {
+            saveFile->flags |= SAVE_FLAG_IS_SET_SEED;
+        }
+    // Existing file
+    } else {
+        Randomizer_gGameSeed = saveFile->seed;
+        Randomizer_gIsSetSeed = (saveFile->flags & SAVE_FLAG_IS_SET_SEED) != 0;
+    }
+}
+
 void save_file_set_cap_pos(s16 x, s16 y, s16 z) {
     struct SaveFile *saveFile = &gSaveBuffer.files[gCurrSaveFileNum - 1][0];
 
     saveFile->capLevel = gCurrLevelNum;
     saveFile->capArea = gCurrAreaIndex;
-    // vec3s_set(saveFile->capPos, x, y, z);
+    (void) x; (void) y; (void) z; // Address compiler warnings for unused variables
     save_file_set_flags(SAVE_FLAG_CAP_ON_GROUND);
 }
 

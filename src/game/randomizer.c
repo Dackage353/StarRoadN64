@@ -19,8 +19,9 @@
 #include "save_file.h"
 #include "buffers/buffers.h"
 #include "segment2.h"
+#include "game/emutest.h"
 
-u32 Randomizer_gRandomizerGameSeed;
+u32 Randomizer_gGameSeed;
 
 u8 Randomizer_gIsSetSeed = FALSE;
 
@@ -93,7 +94,7 @@ char *presetStrings[] = {
 
 s32 curPreset = 0;
 
-struct OptionsSettings gPresets[] = {
+struct Randomizer_OptionsSettings gPresets[] = {
     {{{0, /* pad */ 0, 1, 0, 1, 0, 1, 1, 1, 1,  7, 0}}, {{0, 0, 0, 0, 0}}},
     {{{0, /* pad */ 0, 1, 0, 1, 0, 1, 1, 1, 1,  7, 0}}, {{1, 1, 1, 1, 1}}},
     {{{0, /* pad */ 1, 1, 1, 1, 0, 2, 1, 1, 1, 10, 0}}, {{2, 1, 1, 1, 2}}},
@@ -103,35 +104,37 @@ struct OptionsSettings gPresets[] = {
     {{{0, /* pad */ 0, 1, 0, 1, 2, 1, 1, 2, 1,  3, 0}}, {{1, 0, 1, 0, 1}}},
 };
 
-unsigned char textVersion2[] = { TEXT_CURR_VERSION };
+unsigned char textVersion2[] = { "Randomizer 0.1" };
 
-void print_seed_and_options_data(void) {
+static void print_generic_text_ascii_buf(s16 x, s16 y, const char *str) {
+    return print_text_aligned(x, y, str, TEXT_ALIGN_LEFT);
+}
+
+void Randomizer_print_seed_and_options_data(void) {
     char buf[20];
     s32 ypos = (gIsConsole ? 10 : 4);
     u32 i;
-    u32 verXPos;
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
     
-    sprintf(buf, "%s Seed", (gIsSetSeed ? "Set" : "Random"));
+    sprintf(buf, "%s Seed", (Randomizer_gIsSetSeed ? "Set" : "Random"));
     print_generic_text_ascii_buf(8, ypos + 28, buf);
-    sprintf(buf, "Seed\xE6 %05d", gRandomizerGameSeed);
+    sprintf(buf, "Seed\xE6 %05d", Randomizer_gGameSeed);
     print_generic_text_ascii_buf(8, ypos + 14, buf);
     
     for (i = 0; i < ARRAY_COUNT(gPresets); i++) {
-        if (gOptionsSettings.gameplay.w == gPresets[i].gameplay.w) {
+        if (Randomizer_gOptionsSettings.gameplay.w == gPresets[i].gameplay.w) {
             sprintf(buf, "Preset\xE6 %s", presetStrings[i]);
             print_generic_text_ascii_buf(8,ypos,buf);
             goto presetFound; // don't kill me please
         }
     }
     
-    sprintf(buf, "Settings ID\xE6 %d", gOptionsSettings.gameplay.w);
+    sprintf(buf, "Settings ID\xE6 %d", Randomizer_gOptionsSettings.gameplay.w);
     print_generic_text_ascii_buf(8,ypos,buf);
 
 presetFound:
-    verXPos = 310 - 2*(310 - get_str_x_pos_from_center(310,textVersion2,0));
-    print_generic_string(verXPos, ypos, textVersion2);
+    print_generic_string_aligned(310 / 2, ypos, buf, TEXT_ALIGN_CENTER);
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
 }
@@ -165,27 +168,139 @@ static s32 find_floor_slipperiness(struct Surface *floor) {
     return floorClass;
 }
 
+static u8 rando_floors_general(TerrainData type)
+{
+    switch (type)
+    {
+        case SURFACE_NULL:
+        case SURFACE_DEFAULT:                  // Environment default
+        case SURFACE_0004:                     // Unused, has no function and has parameters
+        case SURFACE_VERY_SLIPPERY:            // Very slippery, mostly used for slides
+        case SURFACE_SLIPPERY:                 // Slippery
+        case SURFACE_NOT_SLIPPERY:             // Non-slippery, climbable
+        case SURFACE_HARD:                     // Hard floor (Always has fall damage)
+        case SURFACE_HARD_SLIPPERY:            // Hard and slippery (Always has fall damage)
+        case SURFACE_HARD_VERY_SLIPPERY:       // Hard and very slippery (Always has fall damage)
+        case SURFACE_HARD_NOT_SLIPPERY:        // Hard and Non-slippery (Always has fall damage)
+        case SURFACE_ICE:                      // Slippery Ice, in snow levels and THI's water floor
+        case SURFACE_HORIZONTAL_WIND:          // Horizontal wind, has parameters
+        case SURFACE_FLOWING_WATER:            // Water (flowing), has parameters
+        case SURFACE_MGR_MUSIC:                // Plays the Merry go round music, see handle_merry_go_round_music in bbh_merry_go_round.inc.c for more details
+        case SURFACE_NOISE_DEFAULT:            // Default floor with noise
+        case SURFACE_NOISE_SLIPPERY:           // Slippery floor with noise
+        case SURFACE_NOISE_VERY_SLIPPERY:      // Very slippery floor with noise, used in CCM
+        case SURFACE_NOISE_VERY_SLIPPERY_73:   // Very slippery floor with noise, unused
+        case SURFACE_NOISE_VERY_SLIPPERY_74:   // Very slippery floor with noise, unused
+        case SURFACE_CLOSE_CAMERA:             // Close camera
+        case SURFACE_WATER:                    // Water, has no action, used on some waterboxes below
+        case SURFACE_SHALLOW_QUICKSAND:        // Shallow Quicksand (depth of 10 units)
+        case SURFACE_LOOK_UP_WARP:             // Look up and warp (Wing cap entrance)
+        case SURFACE_TIMER_START:              // Timer start (Peach's secret slide)
+        case SURFACE_TIMER_END:                // Timer stop (Peach's secret slide)
+        case SURFACE_BOSS_FIGHT_CAMERA:        // Wide camera for BOB and WF bosses
+        case SURFACE_CAMERA_FREE_ROAM:         // Free roam camera for THI and TTC
+        case SURFACE_THI3_WALLKICK:            // Surface where there's a wall kick section in THI 3rd area, has no action defined
+        case SURFACE_CAMERA_8_DIR:             // Surface that enables far camera for platforms, used in THI
+        case SURFACE_CAMERA_MIDDLE:            // Surface camera that returns to the middle, used on the 4 pillars of SSL
+        case SURFACE_CAMERA_ROTATE_RIGHT:      // Surface camera that rotates to the right (Bowser 1 & THI)
+        case SURFACE_CAMERA_ROTATE_LEFT:       // Surface camera that rotates to the left (BOB & TTM)
+        case SURFACE_NO_CAM_COLLISION:         // Surface with no cam collision flag
+        case SURFACE_NO_CAM_COLLISION_77:      // Surface with no cam collision flag, unused
+        case SURFACE_NO_CAM_COL_VERY_SLIPPERY: // Surface with no cam collision flag, very slippery with noise (THI)
+        case SURFACE_NO_CAM_COL_SLIPPERY:      // Surface with no cam collision flag, slippery with noise (CCM, PSS and TTM slides)
+        case SURFACE_TTM_VINES:                // TTM vines, has no action defined
+        case SURFACE_SWITCH:                   // Surface with no cam collision flag, non-slippery with noise, used by switches and Dorrie
+        case SURFACE_VANISH_CAP_WALLS:         // Vanish cap walls, pass through them with Vanish Cap
+        case SURFACE_WALL_MISC:                // Used for some walls, Cannon to adjust the camera, and some objects like Warp Pipe
+        case SURFACE_HANGABLE:                 // Ceiling that Mario can climb on
+        case SURFACE_SLOW:                     // Slow down Mario, unused
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+static u8 rando_floors_hard(TerrainData type)
+{
+    switch (type)
+    {
+        case SURFACE_NULL:
+        case SURFACE_DEFAULT:                  // Environment default
+        case SURFACE_0004:                     // Unused, has no function and has parameters
+        case SURFACE_VERY_SLIPPERY:            // Very slippery, mostly used for slides
+        case SURFACE_SLIPPERY:                 // Slippery
+        case SURFACE_NOT_SLIPPERY:             // Non-slippery, climbable
+        case SURFACE_HARD:                     // Hard floor (Always has fall damage)
+        case SURFACE_HARD_SLIPPERY:            // Hard and slippery (Always has fall damage)
+        case SURFACE_HARD_VERY_SLIPPERY:       // Hard and very slippery (Always has fall damage)
+        case SURFACE_HARD_NOT_SLIPPERY:        // Hard and Non-slippery (Always has fall damage)
+        case SURFACE_ICE:                      // Slippery Ice, in snow levels and THI's water floor
+        case SURFACE_HORIZONTAL_WIND:          // Horizontal wind, has parameters
+        case SURFACE_FLOWING_WATER:            // Water (flowing), has parameters
+        case SURFACE_MGR_MUSIC:                // Plays the Merry go round music, see handle_merry_go_round_music in bbh_merry_go_round.inc.c for more details
+        case SURFACE_NOISE_DEFAULT:            // Default floor with noise
+        case SURFACE_NOISE_SLIPPERY:           // Slippery floor with noise
+        case SURFACE_NOISE_VERY_SLIPPERY:      // Very slippery floor with noise, used in CCM
+        case SURFACE_NOISE_VERY_SLIPPERY_73:   // Very slippery floor with noise, unused
+        case SURFACE_NOISE_VERY_SLIPPERY_74:   // Very slippery floor with noise, unused
+        case SURFACE_CLOSE_CAMERA:             // Close camera
+        case SURFACE_WATER:                    // Water, has no action, used on some waterboxes below
+        case SURFACE_SHALLOW_QUICKSAND:        // Shallow Quicksand (depth of 10 units)
+        case SURFACE_LOOK_UP_WARP:             // Look up and warp (Wing cap entrance)
+        case SURFACE_TIMER_START:              // Timer start (Peach's secret slide)
+        case SURFACE_TIMER_END:                // Timer stop (Peach's secret slide)
+        case SURFACE_BOSS_FIGHT_CAMERA:        // Wide camera for BOB and WF bosses
+        case SURFACE_CAMERA_FREE_ROAM:         // Free roam camera for THI and TTC
+        case SURFACE_THI3_WALLKICK:            // Surface where there's a wall kick section in THI 3rd area, has no action defined
+        case SURFACE_CAMERA_8_DIR:             // Surface that enables far camera for platforms, used in THI
+        case SURFACE_CAMERA_MIDDLE:            // Surface camera that returns to the middle, used on the 4 pillars of SSL
+        case SURFACE_CAMERA_ROTATE_RIGHT:      // Surface camera that rotates to the right (Bowser 1 & THI)
+        case SURFACE_CAMERA_ROTATE_LEFT:       // Surface camera that rotates to the left (BOB & TTM)
+        case SURFACE_NO_CAM_COLLISION:         // Surface with no cam collision flag
+        case SURFACE_NO_CAM_COLLISION_77:      // Surface with no cam collision flag, unused
+        case SURFACE_NO_CAM_COL_VERY_SLIPPERY: // Surface with no cam collision flag, very slippery with noise (THI)
+        case SURFACE_NO_CAM_COL_SLIPPERY:      // Surface with no cam collision flag, slippery with noise (CCM, PSS and TTM slides)
+        case SURFACE_TTM_VINES:                // TTM vines, has no action defined
+        case SURFACE_SWITCH:                   // Surface with no cam collision flag, non-slippery with noise, used by switches and Dorrie
+        case SURFACE_VANISH_CAP_WALLS:         // Vanish cap walls, pass through them with Vanish Cap
+        case SURFACE_WALL_MISC:                // Used for some walls, Cannon to adjust the camera, and some objects like Warp Pipe
+        case SURFACE_HANGABLE:                 // Ceiling that Mario can climb on
+        case SURFACE_SLOW:                     // Slow down Mario, unused
+
+        case SURFACE_BURNING:                  // Lava / Frostbite (in SL), but is used mostly for Lava
+        case SURFACE_DEEP_QUICKSAND:           // Quicksand (lethal, slow, depth of 160 units)
+        case SURFACE_INSTANT_QUICKSAND:        // Quicksand (lethal, instant)
+        case SURFACE_DEEP_MOVING_QUICKSAND:    // Moving quicksand (flowing, depth of 160 units)
+        case SURFACE_SHALLOW_MOVING_QUICKSAND: // Moving quicksand (flowing, depth of 25 units)
+        case SURFACE_QUICKSAND:                // Moving quicksand (60 units)
+        case SURFACE_MOVING_QUICKSAND:         // Moving quicksand (flowing, depth of 60 units)
+        case SURFACE_INSTANT_MOVING_QUICKSAND: // Quicksand (lethal, flowing)
+            return 1;
+        default:
+            return 0;
+    }
+}
+
 static u8 is_floor_safe(struct Surface *floor, u8 floorSafeLevel,
                         u32 randPosFlags) { // Checks if floor triangle can be spawned on
     s32 slipperiness;
     f32 norm;
 
-    if (((floorSafeLevel == FLOOR_SAFETY_HIGH) || (gCurrLevelNum == LEVEL_DDD))
-        && (floor->flags & SURFACE_FLAG_DYNAMIC))
+    if (floor->flags & SURFACE_FLAG_DYNAMIC)
         return FALSE; // grounded objects / DDD objects can't spawn on platforms
 
-    switch(gOptionsSettings.gameplay.s.safeSpawns){
-        case SPAWN_SAFETY_SAFE:
+    switch(Randomizer_gOptionsSettings.gameplay.s.safeSpawns){
+        case Randomizer_SPAWN_SAFETY_SAFE:
             norm = 0.85f;
             break;
-        case SPAWN_SAFETY_HARD:
+        case Randomizer_SPAWN_SAFETY_HARD:
             norm = 0.3f;
             break;
         default:
             norm = 0.7f;
     }
 
-    if ((floorSafeLevel == FLOOR_SAFETY_HIGH) || (randPosFlags & RAND_TYPE_SAFE)) {
+    if ((floorSafeLevel == Randomizer_FLOOR_SAFETY_HIGH) || (randPosFlags & RAND_TYPE_SAFE)) {
         norm = 0.95f;
     }
 
@@ -194,7 +309,7 @@ static u8 is_floor_safe(struct Surface *floor, u8 floorSafeLevel,
     }
 
     slipperiness = find_floor_slipperiness(floor);
-    if ((randPosFlags & RAND_TYPE_SAFE) && (floorSafeLevel == FLOOR_SAFETY_HIGH)
+    if ((randPosFlags & RAND_TYPE_SAFE) && (floorSafeLevel == Randomizer_FLOOR_SAFETY_HIGH)
         && ((slipperiness == SURFACE_CLASS_SLIPPERY) || (slipperiness == SURFACE_CLASS_VERY_SLIPPERY))) {
 
         // This code kills some spawns, assuming the most slippery case. This code would
@@ -204,12 +319,12 @@ static u8 is_floor_safe(struct Surface *floor, u8 floorSafeLevel,
         }
     }
 
-    if (floor->type < SURFACE_SAFE_FLOORS_GENERAL) {
+    if (rando_floors_general(floor->type)) {
         return TRUE;
     }
 
-    if ((gOptionsSettings.gameplay.s.safeSpawns == SPAWN_SAFETY_HARD) && (floorSafeLevel == FLOOR_SAFETY_LOW) && !(randPosFlags & RAND_TYPE_SAFE)) {
-        if (floor->type < SURFACE_SAFE_FLOORS_HARD) {
+    if ((Randomizer_gOptionsSettings.gameplay.s.safeSpawns == Randomizer_SPAWN_SAFETY_HARD) && (floorSafeLevel == Randomizer_FLOOR_SAFETY_LOW) && !(randPosFlags & RAND_TYPE_SAFE)) {
+        if (rando_floors_hard(floor->type)) {
             return TRUE;
         }
     }
@@ -218,12 +333,12 @@ static u8 is_floor_safe(struct Surface *floor, u8 floorSafeLevel,
 }
 
 // Checks if near a specific avoidance point
-static u32 check_avoidance_point(Vec3s pos, struct Object *obj, struct AvoidancePoint *avoidancePoint) {
+static u32 check_avoidance_point(Vec3s pos, struct Object *obj, const struct Randomizer_AvoidancePoint *avoidancePoint) {
     void *behavior = segmented_to_virtual(avoidancePoint->behavior);
         
-    if(((avoidancePoint->safety == AVOIDANCE_SAFETY_ALL) 
-        || ((avoidancePoint->safety == AVOIDANCE_SAFETY_MED) && (gOptionsSettings.gameplay.s.safeSpawns == SPAWN_SAFETY_SAFE))
-        || ((avoidancePoint->safety == AVOIDANCE_SAFETY_HARD) && (gOptionsSettings.gameplay.s.safeSpawns != SPAWN_SAFETY_HARD)))){
+    if(((avoidancePoint->safety == Randomizer_AVOIDANCE_SAFETY_ALL) 
+    || ((avoidancePoint->safety == Randomizer_AVOIDANCE_SAFETY_MED) && (Randomizer_gOptionsSettings.gameplay.s.safeSpawns == Randomizer_SPAWN_SAFETY_SAFE))
+    || ((avoidancePoint->safety == Randomizer_AVOIDANCE_SAFETY_HARD) && (Randomizer_gOptionsSettings.gameplay.s.safeSpawns != Randomizer_SPAWN_SAFETY_HARD)))){
     } else {
         return FALSE;
     }
@@ -240,8 +355,8 @@ static u32 check_avoidance_point(Vec3s pos, struct Object *obj, struct Avoidance
 }
 
 // Checks if near any avoidance point
-static u32 is_in_avoidance_point(Vec3s pos, struct AreaParams *areaParams, struct Object *obj) {
-    struct AvoidancePoint *avoidancePoint;
+static u32 is_in_avoidance_point(Vec3s pos, const struct Randomizer_AreaParams *areaParams, struct Object *obj) {
+    const struct Randomizer_AvoidancePoint *avoidancePoint;
 
     for (u32 i = 0; i < areaParams->numAvoidancePoints; i++) {
         avoidancePoint = &(*areaParams->avoidancePoints)[i];
@@ -249,8 +364,8 @@ static u32 is_in_avoidance_point(Vec3s pos, struct AreaParams *areaParams, struc
             return TRUE;
         }
     }
-    for (u32 i = 0; i < gNumDynamicAvoidancePoints; i++) {
-        if (check_avoidance_point(pos, obj, &gDynamicAvoidancePoints[i])) {
+    for (u32 i = 0; i < Randomizer_gNumDynamicAvoidancePoints; i++) {
+        if (check_avoidance_point(pos, obj, &Randomizer_gDynamicAvoidancePoints[i])) {
             return TRUE;
         }
     }
@@ -258,7 +373,7 @@ static u32 is_in_avoidance_point(Vec3s pos, struct AreaParams *areaParams, struc
     return FALSE;
 }
 
-u32 raycast_wall_check(Vec3s pos) {
+u32 Randomizer_raycast_wall_check(Vec3s pos) {
     s16 yaw = 0;
     struct Surface *surf;
     Vec3f checkPos;
@@ -292,21 +407,21 @@ static void vec3s_resolve_wall_collisions(Vec3s pos, f32 radius) {
     vec3f_to_vec3s(pos, pos2);
 }
 
-void create_dynamic_avoidance_point(Vec3f pos, f32 radius, f32 height, f32 downOffset) {
-    struct AvoidancePoint *newPoint = &gDynamicAvoidancePoints[gNumDynamicAvoidancePoints];
+void Randomizer_create_dynamic_avoidance_point(Vec3f pos, f32 radius, f32 height, f32 downOffset) {
+    struct Randomizer_AvoidancePoint *newPoint = &Randomizer_gDynamicAvoidancePoints[Randomizer_gNumDynamicAvoidancePoints];
     newPoint->pos[0] = pos[0];
     newPoint->pos[1] = pos[1] - downOffset;
     newPoint->pos[2] = pos[2];
     newPoint->radius = radius;
     newPoint->height = height;
-    newPoint->safety = AVOIDANCE_SAFETY_ALL;
+    newPoint->safety = Randomizer_AVOIDANCE_SAFETY_ALL;
     newPoint->behavior = bhvStub;
-    gNumDynamicAvoidancePoints++;
+    Randomizer_gNumDynamicAvoidancePoints++;
 }
 
-void get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRange, f32 maxHeightRange, tinymt32_t *randomState,
+void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRange, f32 maxHeightRange, tinymt32_t *randomState,
                        u8 floorSafeLevel, u32 randPosFlags) {
-    struct AreaParams *areaParams = &(*sLevelParams[gCurrLevelNum - 4])[gCurrAreaIndex - 1];
+    const struct Randomizer_AreaParams *areaParams = &(*Randomizer_sLevelParams[gCurrLevelNum - 4])[gCurrAreaIndex - 1];
     f32 minX, maxX, minY, maxY, minZ, maxZ, minHeight, maxHeight, waterLevel, lowFloorHeight, cHeight,
         highFloorHeight;
     u32 objCanBeUnderwater;
@@ -331,41 +446,12 @@ void get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRange, f32 ma
     minZ = areaParams->minZ;
     maxZ = areaParams->maxZ;
 
-    // Handle special cases for bounds
-
-    // THI wiggler cave
-    if ((gCurrCourseNum == COURSE_THI) && (gCurrAreaIndex == 3)) {
-        if (randPosFlags & RAND_TYPE_THI_A3_ABOVE_MESH)
-            minY = 2200;
-        else
-            maxY = 1750;
-    // PSS
-    } else if ((gCurrCourseNum == COURSE_PSS)) {
-        if (randPosFlags & RAND_TYPE_SPAWN_TOP_OF_SLIDE) {
-            minY = 6100;
-            minX = 3100;
-        } else if (randPosFlags & RAND_TYPE_SPAWN_BOTTOM_OF_SLIDE) {
-            maxY = -3500;
-            minZ = 4000;
-        } else
-            minY = -1000;
-    // CCM slide
-    } else if ((gCurrCourseNum == COURSE_CCM) && (gCurrAreaIndex == 2)) {
-        if (randPosFlags & RAND_TYPE_SPAWN_TOP_OF_SLIDE) {
-            minY = 6600;
-            maxX = -4800;
-        } else if (randPosFlags & RAND_TYPE_SPAWN_BOTTOM_OF_SLIDE) {
-            maxY = -3900;
-            maxZ = -6400;
-        }
-    }
-
-    if (gOptionsSettings.gameplay.s.nonstopMode == 1) {
+    if (Randomizer_gOptionsSettings.gameplay.s.nonstopMode == 1) {
         if ((obj->behavior == segmented_to_virtual(bhvStar))
          || (obj->behavior == segmented_to_virtual(bhvStarSpawnCoordinates))
          || (obj->behavior == segmented_to_virtual(bhvHiddenRedCoinStar))
          || (obj->behavior == segmented_to_virtual(bhvHiddenStar))) {
-            floorSafeLevel = FLOOR_SAFETY_MEDIUM;
+            floorSafeLevel = Randomizer_FLOOR_SAFETY_MEDIUM;
             randPosFlags |= RAND_TYPE_SAFE;
         }
     }
@@ -374,16 +460,17 @@ void get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRange, f32 ma
         u32 dangerShiftedOverHighFloor = FALSE;
 
         // Generate random position
-        pos[0] = get_val_in_range_uniform(minX, maxX, randomState);
-        pos[1] = get_val_in_range_uniform(minY, maxY, randomState);
-        pos[2] = get_val_in_range_uniform(minZ, maxZ, randomState);
+        pos[0] = Randomizer_get_val_in_range_uniform(minX, maxX, randomState);
+        pos[1] = Randomizer_get_val_in_range_uniform(minY, maxY, randomState);
+        pos[2] = Randomizer_get_val_in_range_uniform(minZ, maxZ, randomState);
 
         lowFloorHeight = find_floor(pos[0], pos[1] + 20, pos[2], &lowFloor);
 
         if (lowFloor == NULL)
             continue;
 
-        if ((pos[1] - lowFloorHeight) > (gCurrCourseNum == COURSE_BBH ? 350 : 800))
+        int lowDiff = 800;
+        if ((pos[1] - lowFloorHeight) > lowDiff)
             continue;
 
         if (lowFloorHeight + 20 <= maxY) {
@@ -397,7 +484,7 @@ void get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRange, f32 ma
 
         lowFloorHeight = find_floor(pos[0], pos[1], pos[2], &lowFloor);
 
-        if ((pos[1] - lowFloorHeight) > (gCurrCourseNum == COURSE_BBH ? 350 : 800))
+        if ((pos[1] - lowFloorHeight) > lowDiff)
             continue;
 
         pos[1] = lowFloorHeight;
@@ -411,17 +498,15 @@ void get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRange, f32 ma
         // Snap to ground and check if safe
         objCanBeUnderwater =
             (randPosFlags
-                 & (RAND_TYPE_CAN_BE_UNDERWATER | RAND_TYPE_MUST_BE_UNDERWATER)
-             || (areaParams->areaParamFlags & AREA_PARAM_FLAG_CHANGING_WATER_LEVEL));
+                 & (RAND_TYPE_CAN_BE_UNDERWATER | RAND_TYPE_MUST_BE_UNDERWATER));
         waterLevel = find_water_level(pos[0], pos[2]);
         minHeight = pos[1] + minHeightRange;
         maxHeight = pos[1] + maxHeightRange;
 
         // Let objects spawn anywhere in water
-        if (floorSafeLevel != FLOOR_SAFETY_HIGH
+        if (floorSafeLevel != Randomizer_FLOOR_SAFETY_HIGH
             || (randPosFlags & RAND_TYPE_MUST_BE_UNDERWATER)) {
-            if ((objCanBeUnderwater && (waterLevel > maxHeight)
-                 && !(areaParams->areaParamFlags & AREA_PARAM_FLAG_CHANGING_WATER_LEVEL))
+            if ((objCanBeUnderwater && (waterLevel > maxHeight))
                 || (randPosFlags & RAND_TYPE_MUST_BE_UNDERWATER))
                 maxHeight = waterLevel;
         }
@@ -432,30 +517,25 @@ void get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRange, f32 ma
             maxHeight = waterLevel + maxHeightRange;
         }
 
+#if 0
         // Prevent objects from spawning too high above water in BBH
         if ((gCurrCourseNum == COURSE_BBH) && (pos[1] < waterLevel) && (maxHeight > waterLevel))
             maxHeight = waterLevel + 100.f;
+#endif
 
         // Check if max height has gone above the level bounds
         if (maxHeight > maxY) {
             maxHeight = maxY;
         }
 
-        // On Dangerous setting, some objects can spawn in midair in levels with wing cap
-        if ((gOptionsSettings.gameplay.s.safeSpawns == SPAWN_SAFETY_HARD) && 
-            ((gCurrCourseNum == COURSE_BOB) || ((gCurrCourseNum == COURSE_SSL) && (gCurrAreaIndex == 1))) && // Only in BoB and SSL
-            (randPosFlags & RAND_TYPE_HARD_HEIGHT) && ((tinymt32_generate_u32(randomState) & 2) == 0)){ // 1/4 chance
-            maxHeight = maxY;            
-        }
+        pos[1] = Randomizer_get_val_in_range_uniform(minHeight, maxHeight, randomState);
 
-        pos[1] = get_val_in_range_uniform(minHeight, maxHeight, randomState);
-
-        if ((gOptionsSettings.gameplay.s.safeSpawns == SPAWN_SAFETY_HARD) &&
-            (floorSafeLevel == FLOOR_SAFETY_LOW) && !(randPosFlags & RAND_TYPE_SAFE)) {
+        if ((Randomizer_gOptionsSettings.gameplay.s.safeSpawns == Randomizer_SPAWN_SAFETY_HARD) &&
+            (floorSafeLevel == Randomizer_FLOOR_SAFETY_LOW) && !(randPosFlags & RAND_TYPE_SAFE)) {
             Vec3f oldPos;
             vec3s_to_vec3f(oldPos, pos);
-            pos[0] += get_val_in_range_uniform(-200, 200, randomState);
-            pos[2] += get_val_in_range_uniform(-200, 200, randomState);
+            pos[0] += Randomizer_get_val_in_range_uniform(-200, 200, randomState);
+            pos[2] += Randomizer_get_val_in_range_uniform(-200, 200, randomState);
 
             vec3s_resolve_wall_collisions(
                 pos, wallRadius);
@@ -514,6 +594,7 @@ void get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRange, f32 ma
         if ((randPosFlags & RAND_TYPE_MUST_BE_UNDERWATER) && (waterLevel < pos[1]))
             continue;
 
+#if 0
         if (randPosFlags & RAND_TYPE_LIMITED_BBH_HMC_SPAWNS) {
             if ((gCurrCourseNum == COURSE_BBH) && (lowFloor->room == 9)) {
                 continue;
@@ -521,19 +602,20 @@ void get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRange, f32 ma
                 continue;
             }
         }
+#endif
 
         if (is_in_avoidance_point(pos, areaParams, obj))
             continue;
 
         // Wall Check
-        if (!raycast_wall_check(pos))
+        if (!Randomizer_raycast_wall_check(pos))
             continue;
 
         // Spawn avoidance point if needed
-        if ((randPosFlags & RAND_TYPE_CREATE_AVOIDANCE_POINT) && (gNumDynamicAvoidancePoints < 50)) {
+        if ((randPosFlags & RAND_TYPE_CREATE_AVOIDANCE_POINT) && (Randomizer_gNumDynamicAvoidancePoints < 50)) {
             Vec3f fpos;
             vec3_copy(fpos, pos);
-            create_dynamic_avoidance_point(fpos, 100.f, 200.f, 50.f);
+            Randomizer_create_dynamic_avoidance_point(fpos, 100.f, 200.f, 50.f);
         }
 
         return;
@@ -541,38 +623,39 @@ void get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRange, f32 ma
 }
 
 // Only uniform if used for floats. [min, max)
-f32 get_val_in_range_uniform(f32 min, f32 max, tinymt32_t *randomState) {
+f32 Randomizer_get_val_in_range_uniform(f32 min, f32 max, tinymt32_t *randomState) {
     if (min > max)
         return min;
     return (tinymt32_generate_float(randomState) * (max - min)) + min;
 }
 
-u16 calulate_star_total(u32 level) {
-    switch (gWarpDestinations[level]) {
+static u16 calulate_star_total(u32 level) {
+    switch (Randomizer_gWarpDestinations[level]) {
+        case LEVEL_SA:
         case LEVEL_PSS:
-        return 2;
+            return 2;
+        
+        case LEVEL_WMOTR:
+            return 1;
+        
+        case LEVEL_BBH:
+            return 7 + calulate_star_total(LEVEL_VCUTM);
+        case LEVEL_CCM:
+            return 7 + calulate_star_total(LEVEL_COTMC);
+        case LEVEL_TTM:
+            return 7 + calulate_star_total(LEVEL_TOTWC);
 
         case LEVEL_BITDW:
-        case LEVEL_SA:
         case LEVEL_TOTWC:
         case LEVEL_COTMC:
         case LEVEL_BITFS:
         case LEVEL_VCUTM:
-        case LEVEL_BITS: // Just to be thorough
-        return 1;
-
-        case LEVEL_HMC:
-        return calulate_star_total(LEVEL_COTMC) + 7; // Is fine since gWarpDestinations[LEVEL_COTMC] =/= LEVEL_HMC
-        break;
-
-        case LEVEL_BOB:
-        case LEVEL_SSL:
-        return 6; // tryna watch out for wing cap
-        case LEVEL_WMOTR:
-        return 0; // same
+        case LEVEL_BITS:
+        case LEVEL_ENDING:
+            return 1;
 
         default:
-        return 7;
+            return 7;
     }
 }
 
@@ -582,14 +665,14 @@ u16 calulate_star_total(u32 level) {
 // If keep structure, section (0 for lobby, 1 for basement, 2 for upstairs)
 // Min factor (usually / 2 for important doors and / 3 for most )
 // Maximum stars available at this point, if lower than regular max
-u8 get_star_requirement(u8 layer, u8 section, u8 maxAvailable, u8 factor, tinymt32_t *randomState) {
-    u8 bitsStars = gStarDoorReqLUT[gOptionsSettings.gameplay.s.starDoorRequirement];
+static u8 get_star_requirement(u8 layer, u8 section, u8 maxAvailable, u8 factor, tinymt32_t *randomState) {
+    u8 bitsStars = Randomizer_gStarDoorReqLUT[Randomizer_gOptionsSettings.gameplay.s.starDoorRequirement];
     u8 maxStars = 0;
     u8 starReq;
 
-    if (bitsStars == 0) bitsStars = 70;
+    if (bitsStars == 0) bitsStars = 80;
 
-    if (gOptionsSettings.gameplay.s.keepStructure) {
+    if (Randomizer_gOptionsSettings.gameplay.s.keepStructure) {
         switch (section) {
         case 0:
             maxStars = (u8)(bitsStars*0.2f); // lobby
@@ -607,291 +690,150 @@ u8 get_star_requirement(u8 layer, u8 section, u8 maxAvailable, u8 factor, tinymt
             maxStars = (u8)(bitsStars*0.8f); // layer 2
         }
     }
-    starReq = get_val_in_range_uniform(maxStars / factor, maxStars, randomState);
-    return MIN(starReq, get_val_in_range_uniform(MAX(maxAvailable - 5, 0), maxAvailable, randomState));
+    starReq = Randomizer_get_val_in_range_uniform(maxStars / factor, maxStars, randomState);
+    return MIN(starReq, Randomizer_get_val_in_range_uniform(MAX(maxAvailable - 5, 0), maxAvailable, randomState));
 }
 
-void randomize_star_doors() {
-    u16 starTotal = calulate_star_total(LEVEL_BOB);
-    u8 i, tmp, index;
-    u8 starLevels[15] = {LEVEL_WF, LEVEL_PSS, LEVEL_JRB /* + SA */, LEVEL_CCM, LEVEL_BITDW,
-                        /* MIPS + moat */ 8, LEVEL_BBH, LEVEL_TOTWC, LEVEL_HMC, /*BitFS*/ LEVEL_DDD, LEVEL_SL, LEVEL_THI, /*Tippy*/ 50, /*Key 2 ( TTM + WDW) */ 30, 70};
-    u8 firstFloor[7] = {STAR_REQ_WF, STAR_REQ_PSS, STAR_REQ_JRB, STAR_REQ_CCM, STAR_REQ_BITDW, STAR_REQ_BBH, STAR_REQ_TOTWC};
+static void randomize_star_doors() {
     tinymt32_t randomState;
-    tinymt32_init(&randomState, gRandomizerGameSeed);
+    tinymt32_init(&randomState, Randomizer_gGameSeed);
+
+    u16 starTotal = calulate_star_total(LEVEL_BOB) + calulate_star_total(LEVEL_JRB) + calulate_star_total(LEVEL_WF) + calulate_star_total(LEVEL_PSS);
+    Randomizer_gRequiredStars[Randomizer_STAR_REQ_CH] = get_star_requirement(0, 0, starTotal, 3, NULL);
+    Randomizer_gRequiredStars[Randomizer_STAR_REQ_GG] = get_star_requirement(0, 0, starTotal, 2, NULL);
+
+    starTotal += calulate_star_total(LEVEL_CCM);
+    starTotal += calulate_star_total(LEVEL_BBH);
+
+    Randomizer_gRequiredStars[Randomizer_STAR_REQ_B1] = get_star_requirement(1, 0, starTotal, 2, NULL);
+
+    starTotal += calulate_star_total(LEVEL_BITDW);
     
-    for (i = 0; i <= 6; i++){
-        index = get_val_in_range_uniform(i, 6, &randomState);
-        tmp = firstFloor[i];
-        firstFloor[i] = firstFloor[index];
-        firstFloor[index] = tmp;
+    Randomizer_gRequiredStars[Randomizer_STAR_REQ_K1] = get_star_requirement(1, 0, starTotal, 3, NULL);
 
-        gRequiredStars[firstFloor[i]] = get_star_requirement(0, 0, starTotal, 3, &randomState);
-        starTotal += calulate_star_total(starLevels[firstFloor[i]]);
-    }
-
-    gRequiredStars[STAR_REQ_BASEMENT] = get_star_requirement(0, 1, starTotal, 2, &randomState);
     starTotal += calulate_star_total(LEVEL_SSL);
-    starTotal += calulate_star_total(LEVEL_LLL);
-    starTotal += calulate_star_total(LEVEL_VCUTM);
+    starTotal += calulate_star_total(LEVEL_SL);
+    
+    Randomizer_gRequiredStars[Randomizer_STAR_REQ_MMM]      = get_star_requirement(0, 1, starTotal, 2, NULL);
 
-    gRequiredStars[STAR_REQ_HMC] = get_star_requirement(1, 1, starTotal, 3, &randomState);
-    starTotal += calulate_star_total(LEVEL_HMC);
-
-    gRequiredStars[STAR_REQ_DDD] = get_star_requirement(0, 1, starTotal, 3, &randomState);
     starTotal += calulate_star_total(LEVEL_DDD);
 
-    gRequiredStars[STAR_REQ_UPSTAIRS] = get_star_requirement(0, 2, starTotal, 2, &randomState);
-    starTotal += calulate_star_total(LEVEL_WDW);
+    starTotal += calulate_star_total(LEVEL_HMC);
+
+    Randomizer_gRequiredStars[Randomizer_STAR_REQ_KC] = get_star_requirement(1, 1, starTotal, 2, NULL);
+
+    starTotal += calulate_star_total(LEVEL_LLL);
+    
+    Randomizer_gRequiredStars[Randomizer_STAR_REQ_B2] = get_star_requirement(1, 1, starTotal, 2, NULL);
+
+    starTotal += calulate_star_total(LEVEL_BITFS);
+
+    Randomizer_gRequiredStars[Randomizer_STAR_REQ_K2] = get_star_requirement(1, 1, starTotal, 2, NULL);
+
     starTotal += calulate_star_total(LEVEL_TTM);
-
-    gRequiredStars[STAR_REQ_SL] = get_star_requirement(1, 2, starTotal, 3, &randomState);
-    gRequiredStars[STAR_REQ_THI] = get_star_requirement(1, 2, starTotal, 3, &randomState);
-    starTotal += calulate_star_total(LEVEL_SL);
     starTotal += calulate_star_total(LEVEL_THI);
+    starTotal += calulate_star_total(LEVEL_WDW);
+    
+    Randomizer_gRequiredStars[Randomizer_STAR_REQ_OW3] = get_star_requirement(0, 2, starTotal, 2, NULL);
 
-    gRequiredStars[STAR_REQ_TIPPY] = get_star_requirement(1, 2, starTotal, 2, &randomState);
-
-    if (gOptionsSettings.gameplay.s.keepStructure) {
-        gRequiredStars[STAR_REQ_BASEMENT] = 0;
-        gRequiredStars[STAR_REQ_UPSTAIRS] = 0;
+    if (Randomizer_gOptionsSettings.gameplay.s.keepStructure) {
+        Randomizer_gRequiredStars[Randomizer_STAR_REQ_K1] = 0;
+        Randomizer_gRequiredStars[Randomizer_STAR_REQ_K2] = 0;
     }
 }
 
 static void init_required_stars() {
     u32 i;
-    u8 defaultStar[STAR_REQ_MAX] = {
-        1, // STAR_REQ_WF
-        1, // STAR_REQ_PSS
-        3, // STAR_REQ_JRB
-        3, // STAR_REQ_CCM
-        8, // STAR_REQ_BITDW
-        8, // STAR_REQ_BASEMENT
-        12, // STAR_REQ_BBH
-        10, // STAR_REQ_TOTWC
-        0, // STAR_REQ_HMC
-        30, // STAR_REQ_DDD
-        0, // STAR_REQ_SL
-        0, // STAR_REQ_THI
-        50, // STAR_REQ_TIPPY
-        30, // STAR_REQ_UPSTAIRS
-        70 // STAR_REQ_BITS
-    }; 
-
-    switch (gOptionsSettings.gameplay.s.randomStarDoorCounts) {
+    switch (Randomizer_gOptionsSettings.gameplay.s.randomStarDoorCounts) {
         case 1:
             randomize_star_doors();
             break;
         case 0:
-            for (i = 0; i < sizeof(gRequiredStars); i++) {
-                gRequiredStars[i] = defaultStar[i];
-            }
-            if (gOptionsSettings.gameplay.s.keepStructure) {
-                gRequiredStars[STAR_REQ_BASEMENT] = 0;
-                gRequiredStars[STAR_REQ_UPSTAIRS] = 0;
+            for (i = 0; i < sizeof(Randomizer_gRequiredStars); i++) {
+                Randomizer_gRequiredStars[i] = sDefaultStarReqs[i];
             }
             break;
         case 2:
-            for (i = 0; i < sizeof(gRequiredStars); i++) {
-                gRequiredStars[i] = 0;
+            for (i = 0; i < sizeof(Randomizer_gRequiredStars); i++) {
+                Randomizer_gRequiredStars[i] = 0;
             }
             break;
     }
-    gRequiredStars[STAR_REQ_BITS] = gStarDoorReqLUT[gOptionsSettings.gameplay.s.starDoorRequirement]; // Final Bowser Door is special.
+    Randomizer_gRequiredStars[Randomizer_STAR_REQ_B3] = Randomizer_gStarDoorReqLUT[Randomizer_gOptionsSettings.gameplay.s.starDoorRequirement]; // Final Bowser Door is special.
 }
 
-static void copy_remaining_warps() { // Initialises sRemainingWarpsTemp for use with the warp scrambler
-    int i;
-    for (i = 0; i < ARRAY_COUNT(sRemainingWarpsTemp); i++) {
-        sRemainingWarpsTemp[i] = sRemainingWarpsStatic[i];
+static u8 pick_random_u8(const u8* arr, size_t arrSize, tinymt32_t *randomState)
+{
+    u8 index = Randomizer_get_val_in_range_uniform(0, arrSize, randomState);
+    return arr[index];
+}
+
+static void shuffle_warp_pool(const u8* warpPool, size_t warpPoolSize, tinymt32_t *randomState)
+{
+    for (int i = warpPoolSize - 1; i > 0; i--) {
+        u8 i1 = warpPool[i];
+        u8 i2 = pick_random_u8(warpPool, i + 1, randomState);
+
+        u8 tmp = Randomizer_gWarpDestinations[i1];
+        Randomizer_gWarpDestinations[i1] = Randomizer_gWarpDestinations[i2];
+        Randomizer_gWarpDestinations[i2] = tmp;
     }
-    for (i = 0; i < ARRAY_COUNT(sB1WarpsTemp); i++) {
-        sB1WarpsTemp[i] = sB1WarpsStatic[i];
+}
+
+u8 Randomizer_get_nonrandom_level(u8 currLevel)
+{
+    if (currLevel == LEVEL_BOWSER_1) {
+        currLevel = LEVEL_BITDW;
+    } else if (currLevel == LEVEL_BOWSER_2) {
+        currLevel = LEVEL_BITFS;
     }
-    for (i = 0; i < ARRAY_COUNT(sB2WarpsTemp); i++) {
-        sB2WarpsTemp[i] = sB2WarpsStatic[i];
-        sB3WarpsTemp[i] = sB3WarpsStatic[i];
+
+    for (int i = 0; i < ARRAY_COUNT(Randomizer_gWarpDestinations); i++) {
+        if (Randomizer_gWarpDestinations[i] == currLevel) {
+            return i;
+        }
     }
-    for (i = 0; i < ARRAY_COUNT(gWarpDestinations); i++) {
-        gWarpDestinations[i] = gWarpDestinationsStatic[i];
+
+    return 0;
+}
+
+static int arr_have(const u8* arr, size_t arrSize, u8 val)
+{
+    for (size_t i = 0; i < arrSize; i++) {
+        if (arr[i] == val) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+static void fixup_warps(u8 forLevel, const u8* restrictions, size_t restrictionsSize, tinymt32_t *randomState) {
+    u8 lvl = Randomizer_get_nonrandom_level(forLevel);
+    if (!arr_have(restrictions, restrictionsSize, lvl)) {
+        u8 newLvl = pick_random_u8(restrictions, restrictionsSize, randomState);
+        u8 tmp = Randomizer_gWarpDestinations[newLvl];
+        Randomizer_gWarpDestinations[newLvl] = Randomizer_gWarpDestinations[lvl];
+        Randomizer_gWarpDestinations[lvl] = tmp;
     }
 }
 
 static void init_warp_scramble() {
-    int currentEntrance, index = 0;
-    int warpsProcessed = 0, lobbyWarpsProcessed = 0, basementWarpsProcessed = 0, upstairsWarpsProcessed = 0;
-    u8 tmp;
     tinymt32_t randomState;
-    u16 failedScrambles = 0;
-    tinymt32_init(&randomState, gRandomizerGameSeed);
+    tinymt32_init(&randomState, Randomizer_gGameSeed);
+    for (int i = 0; i < ARRAY_COUNT(Randomizer_gWarpDestinations); i++)
+        Randomizer_gWarpDestinations[i] = gWarpDestinationsStatic[i];
 
-    copy_remaining_warps();
-
-    // Iterate backwards over every level
-    // currentEntrance: Level ID of the entrance currently being randomized
-    // gWarpDestinations[currentEntrance]: Level ID of the level the current entrance leads to.
-    //     Will be the same as currentEntrance until set, or 0 if it doesnt exist.
-    for (currentEntrance = 36; currentEntrance > 0; currentEntrance--) {
-        if (failedScrambles > 50) {
-            copy_remaining_warps();
-            failedScrambles = 0;
-            warpsProcessed = 0;
-            lobbyWarpsProcessed = 0;
-            basementWarpsProcessed = 0;
-            upstairsWarpsProcessed = 0;
-            currentEntrance = 36;
-        }
-
-        if (gWarpDestinations[currentEntrance] != 0) { // Ignore non-existant levels
-            if (!gOptionsSettings.gameplay.s.keepStructure || gOptionsSettings.gameplay.s.adjustedExits) {
-                index = (u8) get_val_in_range_uniform(warpsProcessed, 23, &randomState);
-
-                // Forbidden cases
-                // WMotR can't spawn in the BoB painting
-                if ((currentEntrance == LEVEL_BOB) && (sRemainingWarpsTemp[index] == LEVEL_WMOTR)) {
-                    currentEntrance += 1;
-                    failedScrambles += 1;
-                    continue;
-                }
-
-                // HMC and DDD can't spawn in the CotMC or BitFS entrances
-                if ((currentEntrance == LEVEL_COTMC) || (currentEntrance == LEVEL_BITFS)) {
-                    if ((sRemainingWarpsTemp[index] == LEVEL_HMC) || (sRemainingWarpsTemp[index] == LEVEL_DDD)) {
-                        currentEntrance += 1;
-                        failedScrambles += 1;
-                        continue;
-                    }
-                }
-
-                // If Keep Structure is on, additional requirements for Bowser levels
-                if (gOptionsSettings.gameplay.s.keepStructure) {
-                    // If the level is BitDW, it must spawn in the lobby
-                    if (sRemainingWarpsTemp[index] == LEVEL_BITDW) {
-                        if ((currentEntrance != LEVEL_BOB) &&
-                            (currentEntrance != LEVEL_JRB) &&
-                            (currentEntrance != LEVEL_WF) &&
-                            (currentEntrance != LEVEL_CCM) &&
-                            (currentEntrance != LEVEL_PSS) &&
-                            (currentEntrance != LEVEL_BITDW) &&
-                            (currentEntrance != LEVEL_SA) &&
-                            (currentEntrance != LEVEL_TOTWC) &&
-                            (currentEntrance != LEVEL_BBH)) {
-                            currentEntrance += 1;
-                            failedScrambles += 1;
-                            continue;
-                        }
-                    }
-                    // If the level is BitFS, it must spawn in the basement, and not in CotMC
-                    if (sRemainingWarpsTemp[index] == LEVEL_BITFS) {
-                        if ((currentEntrance != LEVEL_HMC) &&
-                            (currentEntrance != LEVEL_LLL) &&
-                            (currentEntrance != LEVEL_SSL) &&
-                            (currentEntrance != LEVEL_DDD) &&
-                            (currentEntrance != LEVEL_VCUTM)) {
-                            currentEntrance += 1;
-                            failedScrambles += 1;
-                            continue;
-                        }
-                    }
-                }
-
-                // Use simple scramble algorithm to scramble the list
-                tmp = sRemainingWarpsTemp[warpsProcessed];
-                sRemainingWarpsTemp[warpsProcessed] = sRemainingWarpsTemp[index];
-                sRemainingWarpsTemp[index] = tmp;
-
-                gWarpDestinations[currentEntrance] = sRemainingWarpsTemp[warpsProcessed];
-                warpsProcessed++;
-
-            } else { // Keep Structure ON
-                switch (currentEntrance) {
-                    // Lobby courses
-                    case LEVEL_BOB:
-                    case LEVEL_JRB:
-                    case LEVEL_WF:
-                    case LEVEL_CCM:
-                    case LEVEL_PSS:
-                    case LEVEL_BITDW:
-                    case LEVEL_SA:
-                    case LEVEL_TOTWC:
-                    case LEVEL_BBH:
-                        index = (u8) get_val_in_range_uniform(lobbyWarpsProcessed, 9, &randomState);
-
-                        // Courses can't lead to themselves
-                        if (currentEntrance == sB1WarpsTemp[index]) {
-                            currentEntrance += 1;
-                            failedScrambles += 1;
-                            continue;
-                        }
-
-                        tmp = sB1WarpsTemp[lobbyWarpsProcessed];
-                        sB1WarpsTemp[lobbyWarpsProcessed] = sB1WarpsTemp[index];
-                        sB1WarpsTemp[index] = tmp;
-
-                        gWarpDestinations[currentEntrance] = sB1WarpsTemp[lobbyWarpsProcessed];
-                        lobbyWarpsProcessed++;
-                        break;
-
-                    // Basement courses
-                    case LEVEL_SSL:
-                    case LEVEL_HMC:
-                    case LEVEL_LLL:
-                    case LEVEL_COTMC:
-                    case LEVEL_DDD:
-                    case LEVEL_BITFS:
-                    case LEVEL_VCUTM:
-                        index = (u8) get_val_in_range_uniform(basementWarpsProcessed, 7, &randomState);
-
-                        // HMC, DDD and BitFS can't spawn in the CotMC or BitFS entrances
-                        if ((currentEntrance == LEVEL_COTMC) || (currentEntrance == LEVEL_BITFS)) {
-                            if ((sB2WarpsTemp[index] == LEVEL_HMC) || (sB2WarpsTemp[index] == LEVEL_DDD) || (sB2WarpsTemp[index] == LEVEL_BITFS)) {
-                                currentEntrance += 1;
-                                failedScrambles += 1;
-                                continue;
-                            }
-                        }
-
-                        // Courses can't lead to themselves
-                        if (currentEntrance == sB2WarpsTemp[index]) {
-                            currentEntrance += 1;
-                            failedScrambles += 1;
-                            continue;
-                        }
-
-                        tmp = sB2WarpsTemp[basementWarpsProcessed];
-                        sB2WarpsTemp[basementWarpsProcessed] = sB2WarpsTemp[index];
-                        sB2WarpsTemp[index] = tmp;
-
-                        gWarpDestinations[currentEntrance] = sB2WarpsTemp[basementWarpsProcessed];
-                        basementWarpsProcessed++;
-                        break;
-
-                    // Upstairs courses
-                    default:
-                        index = (u8) get_val_in_range_uniform(upstairsWarpsProcessed, 7, &randomState);
-
-                        // Courses can't lead to themselves
-                        if (currentEntrance == sB3WarpsTemp[index]) {
-                            currentEntrance += 1;
-                            failedScrambles += 1;
-                            continue;
-                        }
-
-                        tmp = sB3WarpsTemp[upstairsWarpsProcessed];
-                        sB3WarpsTemp[upstairsWarpsProcessed] = sB3WarpsTemp[index];
-                        sB3WarpsTemp[index] = tmp;
-
-                        gWarpDestinations[currentEntrance] = sB3WarpsTemp[upstairsWarpsProcessed];
-                        upstairsWarpsProcessed++;
-                        break;
-                }
-
-            }
-        }
+    shuffle_warp_pool(sWarpPool0, ARRAY_SIZE(sWarpPool0), &randomState);
+    shuffle_warp_pool(sWarpPool1, ARRAY_SIZE(sWarpPool1), &randomState);
+    if (Randomizer_gOptionsSettings.gameplay.s.keepStructure && !Randomizer_gOptionsSettings.gameplay.s.adjustedExits)
+    {
+        fixup_warps(LEVEL_BOWSER_1, sWarpsPreB1, ARRAY_SIZE(sWarpsPreB1), &randomState);
+        fixup_warps(LEVEL_BOWSER_2, sWarpsPreB2, ARRAY_SIZE(sWarpsPreB2), &randomState);
     }
 }
 
-void init_randomizer(s32 fileNum) {
+extern void save_main_menu_data(void);
+void Randomizer_init_randomizer(s32 fileNum) {
     save_main_menu_data();
     save_file_set_seed_and_options(fileNum);
     init_warp_scramble();
@@ -943,24 +885,24 @@ void get_random_color(u8 *RGB, tinymt32_t *randomState) {
                RGB);
 }
 
-void init_star_color(struct Object *star, s32 courseID, s32 starID) {
+void Randomizer_init_star_color(struct Object *star, s32 courseID, s32 starID) {
     s32 index;
-    switch (gOptionsSettings.cosmetic.s.starColors) {
-        case STAR_COLOR_OFF:
+    switch (Randomizer_gOptionsSettings.cosmetic.s.starColors) {
+        case Randomizer_STAR_COLOR_OFF:
             star->oStarColor = 0xFFFF29;
             return;
-        case STAR_COLOR_PER_STAR:
+        case Randomizer_STAR_COLOR_PER_STAR:
             index = courseID * 8 + starID;
             break;
-        case STAR_COLOR_PER_LEVEL:
+        case Randomizer_STAR_COLOR_PER_LEVEL:
             index = courseID;
             break;
-        case STAR_COLOR_GLOBAL:
+        case Randomizer_STAR_COLOR_GLOBAL:
             index = 0;
             break;
     }
     tinymt32_t randomState;
-    tinymt32_init(&randomState, index * 0x20000 + gRandomizerGameSeed);
+    tinymt32_init(&randomState, index * 0x20000 + Randomizer_gGameSeed);
 
     u8 RGB[3];
     get_random_color(RGB, &randomState);
@@ -1029,32 +971,32 @@ f32 RMSE(u8 r1, u8 r2, u8 g1, u8 g2, u8 b1, u8 b2) {
     return sqrtf(r * r + g * g + b * b);
 }
 
-#define MINDIFF 140.f //might be infinite loop idk how this works
-void set_mario_rando_colors(void) {
+#define MINDIFF 140.f
+void Randomizer_set_mario_rando_colors(void) {
     tinymt32_t randomState;
 
-    if (gOptionsSettings.cosmetic.s.marioColors) {
-        if (gRandomizerGameSeed == 2401) {
+    if (Randomizer_gOptionsSettings.cosmetic.s.marioColors) {
+        if (Randomizer_gGameSeed == 2401) {
             set_mario_light(segmented_to_virtual(&mario_red_lights_group), 0, 255, 0);
         } else {
-            tinymt32_init(&randomState, gRandomizerGameSeed);
+            tinymt32_init(&randomState, Randomizer_gGameSeed);
 
             set_mario_light_random(segmented_to_virtual(&mario_blue_lights_group), &randomState);
             set_mario_light_random(segmented_to_virtual(&mario_red_lights_group), &randomState);
             set_mario_light_random(segmented_to_virtual(&mario_white_lights_group), &randomState);
             set_mario_light_random(segmented_to_virtual(&mario_brown1_lights_group), &randomState);
-            if (gOptionsSettings.cosmetic.s.marioColors == 2) {
+            if (Randomizer_gOptionsSettings.cosmetic.s.marioColors == 2) {
                 set_mario_light_random(segmented_to_virtual(&mario_beige_lights_group), &randomState);
                 set_mario_light_random(segmented_to_virtual(&mario_brown2_lights_group), &randomState);
             }
         }
     }
 
-    if (gOptionsSettings.cosmetic.s.coinsOn) {
+    if (Randomizer_gOptionsSettings.cosmetic.s.coinsOn) {
         u8 yellows[3];
         u8 reds[3];
         u8 blues[3];
-        tinymt32_init(&randomState, gRandomizerGameSeed + 1);
+        tinymt32_init(&randomState, Randomizer_gGameSeed + 1);
 
         get_random_color(yellows, &randomState);
         set_coin_color(yellows[0], yellows[1], yellows[2], coin_seg3_vertex_yellow);

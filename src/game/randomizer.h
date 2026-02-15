@@ -18,7 +18,7 @@ struct Randomizer_AvoidancePoint {
     u32 safety;
 };
 
-typedef struct Randomizer_AvoidancePoint Randomizer_AvoidancePointArray[];
+typedef const struct Randomizer_AvoidancePoint Randomizer_AvoidancePointArray[];
 
 struct Randomizer_AreaParams {
     f32 minX;
@@ -28,11 +28,12 @@ struct Randomizer_AreaParams {
     f32 minZ;
     f32 maxZ;
 
+    u8 stub;
     u32 numAvoidancePoints;
-    Randomizer_AvoidancePointArray *avoidancePoints;
+    const Randomizer_AvoidancePointArray *avoidancePoints;
 };
 
-typedef struct Randomizer_AreaParams Randomizer_AreaParamsArray[];
+typedef const struct Randomizer_AreaParams Randomizer_AreaParamsArray[];
 
 enum Randomizer_FloorSafeLevels {
     Randomizer_FLOOR_SAFETY_LOW, // Most hovering objects
@@ -50,10 +51,12 @@ enum Randomizer_StarDoorReqIDs {
     Randomizer_STAR_REQ_CH,
     Randomizer_STAR_REQ_GG,
     Randomizer_STAR_REQ_B1,
-    Randomizer_STAR_REQ_BASEMENT,
+    Randomizer_STAR_REQ_K1,
+    Randomizer_STAR_REQ_BASE,
     Randomizer_STAR_REQ_KC,
     Randomizer_STAR_REQ_MMM,
     Randomizer_STAR_REQ_B2,
+    Randomizer_STAR_REQ_K2,
     Randomizer_STAR_REQ_OW3,
     Randomizer_STAR_REQ_B3,
     Randomizer_STAR_REQ_MAX
@@ -110,14 +113,14 @@ extern struct Randomizer_OptionsSettings Randomizer_gPresets[];
 
 extern struct Randomizer_nodeInfo Randomizer_gLevelWarps[];
 extern u8 Randomizer_gRequiredStars[];
-extern u32 Randomizer_gRandomizerGameSeed;
+extern u32 Randomizer_gGameSeed;
 extern u8 Randomizer_gIsSetSeed;
 extern u8 Randomizer_gIgnoreCollisionDistance;
 extern u8 Randomizer_gWarpDestinations[];
 extern Randomizer_AreaParamsArray *Randomizer_sLevelParams[];
 extern u8 Randomizer_gRandomSongs[];
 extern u8 Randomizer_gSkyboxIndex;
-extern u8 Randomizer_gStarDoorReqLUT[];
+extern const u8 Randomizer_gStarDoorReqLUT[];
 extern struct Randomizer_AvoidancePoint Randomizer_gDynamicAvoidancePoints[50];
 extern u8 Randomizer_gNumDynamicAvoidancePoints;
 
@@ -126,7 +129,7 @@ extern u32 Randomizer_raycast_wall_check(Vec3s pos);
 extern void Randomizer_get_safe_position(struct Object *, Vec3s, f32, f32, tinymt32_t *, u8, u32);
 extern f32 Randomizer_get_val_in_range_uniform(f32, f32, tinymt32_t *);
 extern void Randomizer_init_randomizer(s32 fileNum);
-extern u8 Randomizer_get_nonrandom_level();
+extern u8 Randomizer_get_nonrandom_level(u8 level);
 extern void Randomizer_print_seed_and_options_data(void);
 extern void Randomizer_set_mario_rando_colors(void);
 extern void Randomizer_init_star_color(struct Object *star, s32 courseID, s32 starID);

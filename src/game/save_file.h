@@ -8,6 +8,7 @@
 #include "puppycam2.h"
 
 #include "course_table.h"
+#include "randomizer.h"
 
 #if defined(SRAM)
     #define EEPROM_SIZE 0x8000
@@ -41,7 +42,12 @@ struct SaveFile {
     // cannon is open.
     u8 courseStars[COURSE_COUNT]; // 200 bits
 
-    u8 courseCoinScores[COURSE_STAGES_COUNT]; // 120 bits
+    u8 _pad[COURSE_STAGES_COUNT - 12]; // 120 bits
+    
+    // Note: the coordinates get set, but are never actually used, since the
+    // cap can always be found in a fixed spot within the course
+    u32 seed;
+    struct Randomizer_OptionsSettings randomizer;
 
     struct SaveBlockSignature signature; // 32 bits
 };
@@ -54,10 +60,10 @@ enum SaveFileIndex {
 };
 
 struct MainMenuSaveData {
-    // Each save file has a 2 bit "age" for each course. The higher this value,
-    // the older the high score is. This is used for tie-breaking when displaying
-    // on the high score screen.
-    u32 coinScoreAges[NUM_SAVE_FILES];
+    // For backwards compatibility 0x40000000 is booked for the adventure select flag, but the rest of the bits are free for use.
+    u32 optionsFlags;
+    u32 randomNum;
+    u32 filler[2];
 
     u8 soundMode: 1;
     u8 configVIAntialiasing : 1;
@@ -127,6 +133,7 @@ enum SaveProgressFlags {
     SAVE_FLAG_CAP_ON_UKIKI           = (1 << 18), /* 0x00040000 */
     SAVE_FLAG_CAP_ON_MR_BLIZZARD     = (1 << 19), /* 0x00080000 */
     SAVE_FLAG_UNLOCKED_50_STAR_DOOR  = (1 << 20), /* 0x00100000 */
+    SAVE_FLAG_IS_SET_SEED            = (1 << 21), /* 0x00200000 */
     SAVE_FLAG_COLLECTED_TOAD_STAR_1  = (1 << 24), /* 0x01000000 */
     SAVE_FLAG_COLLECTED_TOAD_STAR_2  = (1 << 25), /* 0x02000000 */
     SAVE_FLAG_COLLECTED_TOAD_STAR_3  = (1 << 26), /* 0x04000000 */
@@ -165,6 +172,8 @@ extern struct WarpCheckpoint gWarpCheckpoint;
 extern s8 gMainMenuDataModified;
 extern s8 gSaveFileModified;
 
+void save_main_menu_data(void);
+void save_file_set_seed_and_options(s32 fileNum);
 void save_file_do_save(s32 fileIndex);
 void save_file_erase(s32 fileIndex);
 void save_file_copy(s32 srcFileIndex, s32 destFileIndex);

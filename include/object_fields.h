@@ -1011,6 +1011,10 @@
 #define /*0x0F8*/ oStarSelectorTimer OBJECT_FIELD_S32(0x1C)
 #define /*0x108*/ oStarSelectorSize  OBJECT_FIELD_F32(0x20)
 
+/* General Stars */
+#define /*0x100*/ oStarOrangeNumPointer OBJECT_FIELD_VPTR(0x1E)
+#define /*0x1B4*/ oStarColor            OBJECT_FIELD_U32(0x4B)
+
 /* Sushi Shark */
 #define /*0x0F4*/ oSushiSharkAngleFromHome OBJECT_FIELD_S32(0x1B)
 
