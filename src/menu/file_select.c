@@ -22,6 +22,8 @@
 #include "game/options_menu.h"
 #include "sm64.h"
 
+static char textEnteredNumbers[8] = "0000000";
+
 #define VERSION "1.01"
 
 /**
@@ -33,7 +35,7 @@
 
 // Amount of main menu buttons defined in the code called by spawn_object_rel_with_rot.
 // See file_select.h for the names in MenuButtonTypes.
-static struct Object *sMainMenuButtons[MENU_BUTTON_OPTION_MAX];
+static struct Object *sMainMenuButtons[MENU_BUTTON_SEED_MAX];
 
 // Used to defined yes/no fade colors after a file is selected in the erase menu.
 // sYesNoColor[0]: YES | sYesNoColor[1]: NO
@@ -105,6 +107,95 @@ static s8 sSelectedLanguageIndex = LANGUAGE_ENGLISH;
 // Whether to open the language menu when the game is booted.
 static s8 sOpenLangSettings = FALSE;
 #endif
+
+// namespace Randomizer {
+static const char textRandomOptions[] = "RANDOMIZE";
+static const char textRandom[] = "RANDOM";
+static const char textReset[] = "RESET";
+static const char textOptions[] = "OPTIONS";
+static const char textSeed[] = "SEED";
+
+static const char textObjOptions[] = "OBJECT OPTIONS";
+static const char textWarpOptions[] = "WARP OPTIONS";
+static const char textAestheticOptions[] = "AESTHETIC OPTIONS";
+static const char testPresets[] = "PRESETS";
+static const char textGPMOptions[] = "GAMEPLAY MODE OPTIONS";
+
+static const char textEnterSeed[] = "ENTER SEED";
+static const char textOptionSelect[] = "SELECT OPTIONS";
+static const char textSeedShouldBe[] = "SEED SHOULD BE BETWEEN 0 AND 9999999";
+
+static const char textPlus[] = "<";
+static const char textMinus[] = ">";
+
+static const char textNext[] = "< L - PREV";
+static const char textPrev[] = "NEXT - R >";
+
+static const char textPreset1[] = "DEFAULT";
+static const char textPreset2[] = "DEFAULT PLUS";
+static const char textPreset3[] = "EXTREME";
+static const char textPreset4[] = "EASY";
+static const char textPreset5[] = "NEW GAME";
+static const char textPreset6[] = "CALM";
+static const char textPreset7[] = "SPRINT";
+static const char textPreset1Desc[] = "The classic randomizer experience you know\nand love from earlier versions.";
+static const char textPreset2Desc[] = "The same settings as Default, but with\nwacky colors and aesthetics!";
+static const char textPreset3Desc[] = "A super challenging experience for the\nskilled players out there.";
+static const char textPreset4Desc[] = "A more peaceful and beginner-friendly\nmode for those new to the game.";
+static const char textPreset5Desc[] = "A mode designed to simulate playing a\nnew, shaken-up legit version of SM64!";
+static const char textPreset6Desc[] = "Much less randomization and vanilla warps\nfor those who don't want to be overwhelmed.";
+static const char textPreset7Desc[] = "A super quick nonstop challenge! Collect 30\nstars as fast as you can and beat the game!";
+static const char textPresetCustom[] = "CUSTOM";
+static const char textUsePreset[] = "USE PRESET";
+
+static const char *textsPresets[] = { textPreset1, textPreset2, textPreset3, textPreset4, textPreset5, textPreset6, textPreset7};
+static const char *textsPresetDescriptions[] = { textPreset1Desc, textPreset2Desc, textPreset3Desc, textPreset4Desc, textPreset5Desc, textPreset6Desc, textPreset7Desc};
+
+static u8 OptionPage = 3;
+
+#define textCountPresets (sizeof(textsPresets) / 4)
+
+static const char *pages[] = { textAestheticOptions, textObjOptions, textWarpOptions, testPresets, textGPMOptions };
+static const u32 pageCount = sizeof(pages) / 4;
+
+#define COSMETIC_VARS_SET(i, val) \
+{ \
+    switch(i) { \
+        case 2: Randomizer_gOptionsSettings.cosmetic.s.coinsOn = val; break; \
+        case 3: Randomizer_gOptionsSettings.cosmetic.s.skyboxOn = val; \
+    } \
+}
+
+#define COSMETIC_VARS_GET(i) \
+((i) == 2 ? Randomizer_gOptionsSettings.cosmetic.s.coinsOn : \
+(Randomizer_gOptionsSettings.cosmetic.s.skyboxOn))
+
+#define WARPS_VARS_SET(i, val) \
+{ \
+    switch(i) { \
+        case 1: Randomizer_gOptionsSettings.gameplay.s.randomLevelSpawn = val; break; \
+        case 2: Randomizer_gOptionsSettings.gameplay.s.randomLevelWarp = val; break; \
+        case 3: Randomizer_gOptionsSettings.gameplay.s.adjustedExits = val; break; \
+    } \
+}
+
+#define WARPS_VARS_GET(i) \
+((i) == 1 ? Randomizer_gOptionsSettings.gameplay.s.randomLevelSpawn : \
+((i) == 2 ? Randomizer_gOptionsSettings.gameplay.s.randomLevelWarp : \
+(Randomizer_gOptionsSettings.gameplay.s.adjustedExits)))
+
+#define OBJECT_VARS_SET(i, val) \
+{ \
+    switch(i) { \
+        case 1: Randomizer_gOptionsSettings.gameplay.s.objectRandomization = val; break; \
+        case 2: Randomizer_gOptionsSettings.gameplay.s.randomizeStarSpawns = val; \
+    } \
+}
+
+#define OBJECT_VARS_GET(i) \
+((i) == 1 ? Randomizer_gOptionsSettings.gameplay.s.objectRandomization : \
+(Randomizer_gOptionsSettings.gameplay.s.randomizeStarSpawns))
+// }
 
 /**
  * Yellow Background Menu Initial Action
@@ -717,6 +808,158 @@ void check_erase_menu_clicked_buttons(struct Object *eraseButton) {
 
 #undef ACTION_TIMER
 
+// namespace Randomizer
+static u32 get_entered_seed(void) {
+    return (textEnteredNumbers[0] - '0') * 1000000
+         + (textEnteredNumbers[1] - '0') * 100000
+         + (textEnteredNumbers[2] - '0') * 10000
+         + (textEnteredNumbers[3] - '0') * 1000
+         + (textEnteredNumbers[4] - '0') * 100
+         + (textEnteredNumbers[5] - '0') * 10
+         + (textEnteredNumbers[6] - '0');
+}
+
+static void seed_menu_create_buttons(struct Object *seedButton) {
+    sMainMenuButtons[MENU_BUTTON_SELECT_SEED_RETURN] =
+        spawn_object_rel_with_rot(seedButton, 6, bhvMenuButton, -690, -400, -100, 0, -0x8000, 0);
+    sMainMenuButtons[MENU_BUTTON_SELECT_SEED_RETURN]->oMenuButtonScale = 0.11111111f;
+    sMainMenuButtons[MENU_BUTTON_SELECT_SEED_RESET] =
+        spawn_object_rel_with_rot(seedButton, 12, bhvMenuButton, 690, -400, -100, 0, -0x8000, 0);
+    sMainMenuButtons[MENU_BUTTON_SELECT_SEED_RESET]->oMenuButtonScale = 0.11111111f;
+    sMainMenuButtons[MENU_BUTTON_SELECT_SEED_OPTIONS] =
+        spawn_object_rel_with_rot(seedButton, 12, bhvMenuButton, 690, 0, -100, 0, -0x8000, 0);
+    sMainMenuButtons[MENU_BUTTON_SELECT_SEED_OPTIONS]->oMenuButtonScale = 0.11111111f;
+}
+
+extern u8 Randomizer_gOverwriteFileOptions;
+extern u8 Randomizer_gOverwriteFileSeed;
+
+static void seed_menu_check_clicked_buttons(struct Object *seedButton) {
+    if (seedButton->oMenuButtonState == MENU_BUTTON_STATE_FULLSCREEN) {
+        s32 buttonId;
+        for (buttonId = MENU_BUTTON_SEED_MIN; buttonId < MENU_BUTTON_SEED_MAX; buttonId++) {
+            s16 buttonX = sMainMenuButtons[buttonId]->oPosX;
+            s16 buttonY = sMainMenuButtons[buttonId]->oPosY;
+
+            if (check_clicked_button(buttonX, buttonY, 22.0f) == TRUE) {
+                if (seedButton->oMenuButtonActionPhase == 0) {
+                    play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
+                    sMainMenuButtons[buttonId]->oMenuButtonState = MENU_BUTTON_STATE_ZOOM_IN_OUT;
+                }
+                if (buttonId == MENU_BUTTON_SELECT_SEED_RETURN) {
+                    sCurrentMenuLevel = MENU_LAYER_SUBMENU;
+                    sSelectedButtonID = buttonId;
+                    break;
+                } else if (buttonId == MENU_BUTTON_SELECT_SEED_RESET) {
+                    for (int i = 0; i < 7; i++) {
+                        textEnteredNumbers[i] = '0';
+                    }
+                    Randomizer_gOverwriteFileSeed = TRUE;
+                    Randomizer_gIsSetSeed = FALSE;
+                } else {
+                    sCurrentMenuLevel = MENU_LAYER_SUBMENU;
+                    sSelectedButtonID = MENU_BUTTON_SELECT_SEED_OPTIONS;
+                    for (buttonId = MENU_BUTTON_SELECT_SEED_RETURN;
+                         buttonId < MENU_BUTTON_SELECT_SEED_OPTIONS; buttonId++) {
+                        mark_obj_for_deletion(sMainMenuButtons[buttonId]);
+                    }
+                    sMainMenuButtons[MENU_BUTTON_SELECT_SEED_OPTIONS]->oMenuButtonState =
+                        MENU_BUTTON_STATE_GROWING;
+                    play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gGlobalSoundSource);
+                }
+            }
+        }
+    }
+}
+
+s32 check_clicked_text_width(s16 x, s16 y, UNUSED int ID, s32 xWidth) {
+    s16 cursorX = sCursorPos[0] - (x - 165.f);
+    s16 cursorY = sCursorPos[1] - (y - 110.0f);
+    s16 maxX = xWidth;
+    s16 minX = 0.f;
+    s16 maxY = 8.0f;
+    s16 minY = -8.0f;
+
+    if (gPlayer3Controller->buttonPressed & A_BUTTON) {
+        if (cursorX < maxX && minX < cursorX && cursorY < maxY && minY < cursorY) {
+            play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+s32 check_clicked_text(s16 x, s16 y, int ID) {
+    return check_clicked_text_width(x, y, ID, 30);
+}
+
+// generate a random number of either 0 or 1 based on the weights
+s32 randomize_weighted_2(s32 weight1, s32 weight2) {
+    s32 random = random_u16() % (weight1 + weight2);
+    if (random < weight1) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+// generate a random number of either 0, 1, or 2 based on the weights
+s32 randomize_weighted_3(s32 weight1, s32 weight2, s32 weight3) {
+    s32 random = random_u16() % (weight1 + weight2 + weight3);
+    if (random < weight1) {
+        return 0;
+    } else if (random < weight1 + weight2) {
+        return 1;
+    } else {
+        return 2;
+    }
+}
+
+void randomize_options() {
+    Randomizer_gOptionsSettings.gameplay.s.keepStructure = random_u16() % 2;
+
+    // Use two different rng calls to get an approximate normal distribution
+    Randomizer_gOptionsSettings.gameplay.s.starDoorRequirement = (random_u16() % 6) + (random_u16() % 6) + 1; // 1-11 - cant be 0 or 119
+
+    Randomizer_gOptionsSettings.gameplay.s.nonstopMode = randomize_weighted_3(2, 1, 1); // weight no nonstop higher
+    //Randomizer_gOptionsSettings.gameplay.s.demonOn = random_u16() % 2; // demon not an option
+    Randomizer_gOptionsSettings.gameplay.s.demonOn = 0;
+    Randomizer_gOptionsSettings.gameplay.s.randomLevelSpawn = random_u16() % 2;
+    Randomizer_gOptionsSettings.gameplay.s.randomLevelWarp = randomize_weighted_2(1, 3); // weight random warps higher
+    Randomizer_gOptionsSettings.gameplay.s.adjustedExits = random_u16() % 2;
+    Randomizer_gOptionsSettings.gameplay.s.randomStarDoorCounts = randomize_weighted_3(2, 3, 1); // weight no requirements lower
+    Randomizer_gOptionsSettings.gameplay.s.safeSpawns = random_u16() % 3;
+    Randomizer_gOptionsSettings.gameplay.s.objectRandomization = randomize_weighted_2(1, 3); // weight only key objects lower
+    Randomizer_gOptionsSettings.gameplay.s.randomizeStarSpawns = random_u16() % 2;
+
+    Randomizer_gOptionsSettings.cosmetic.s.marioColors = random_u16() % 3;
+    Randomizer_gOptionsSettings.cosmetic.s.musicOn = random_u16() % 2; // music off not option
+    Randomizer_gOptionsSettings.cosmetic.s.skyboxOn = random_u16() % 2;
+    Randomizer_gOptionsSettings.cosmetic.s.coinsOn = random_u16() % 2;
+    Randomizer_gOptionsSettings.cosmetic.s.starColors = random_u16() % 4;
+
+    if (!Randomizer_gOptionsSettings.gameplay.s.randomLevelWarp) {
+        Randomizer_gOptionsSettings.gameplay.s.adjustedExits = 0;
+    }
+
+    Randomizer_gOverwriteFileOptions = TRUE;
+    Randomizer_gOverwriteFileSeed = TRUE;
+    Randomizer_curPreset = -1;
+}
+
+static void seed_menu_options_check_clicked_buttons(UNUSED struct Object *seedButton) {
+    if (check_clicked_text_width(240, 33, 0, 45)) {
+        play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
+        sCurrentMenuLevel = MENU_LAYER_SUBMENU;
+        sSelectedButtonID = MENU_BUTTON_SELECT_SEED_RETURN;
+        mark_obj_for_deletion(sMainMenuButtons[MENU_BUTTON_SELECT_SEED_OPTIONS]);
+    }
+    if (check_clicked_text_width(35,33,0,60)) {
+        play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
+        randomize_options();
+    }
+}
+
 #ifdef MULTILANG
     #define SOUND_BUTTON_Y 388
 #else
@@ -816,6 +1059,13 @@ extern struct SaveBuffer gSaveBuffer;
 void load_main_menu_save_file(struct Object *fileButton, s32 fileNum) {
     if (fileButton->oMenuButtonState == MENU_BUTTON_STATE_FULLSCREEN) {
         sSelectedFileNum = fileNum;
+    
+        if (!Randomizer_gIsSetSeed) {
+            Randomizer_gGameSeed = (u32)(random_float() * 10000000);
+        } else {
+            Randomizer_gGameSeed = get_entered_seed();
+        }
+
         if (sSelectingAdventure == 0)
         {
             sSelectingAdventure = (gSaveBuffer.menuData.optionsFlags & 0x40000000) ? 3 : 1;
@@ -838,7 +1088,7 @@ void delete_menu_button_objects(s16 minID, s16 maxID) {
  */
 void hide_submenu_buttons(s16 prevMenuButtonID) {
     switch (prevMenuButtonID) {
-        case MENU_BUTTON_SCORE:      delete_menu_button_objects(MENU_BUTTON_SCORE_MIN,  MENU_BUTTON_SCORE_MAX ); break;
+        case MENU_BUTTON_SCORE:      delete_menu_button_objects(MENU_BUTTON_SEED_MIN,   MENU_BUTTON_SEED_MAX  ); break;
         case MENU_BUTTON_COPY:       delete_menu_button_objects(MENU_BUTTON_COPY_MIN,   MENU_BUTTON_COPY_MAX  ); break;
         case MENU_BUTTON_ERASE:      delete_menu_button_objects(MENU_BUTTON_ERASE_MIN,  MENU_BUTTON_ERASE_MAX ); break;
         case MENU_BUTTON_SOUND_MODE: delete_menu_button_objects(MENU_BUTTON_OPTION_MIN, MENU_BUTTON_OPTION_MAX); break;
@@ -938,9 +1188,8 @@ void bhv_menu_button_manager_init(void) {
     sMainMenuButtons[MENU_BUTTON_PLAY_FILE_D] = SPAWN_FILE_SELECT_FILE_BUTTON_INIT(SAVE_FILE_D);
     sMainMenuButtons[MENU_BUTTON_PLAY_FILE_D]->oMenuButtonScale = 1.0f;
     // Score menu button
-    sMainMenuButtons[MENU_BUTTON_SCORE] =
-        spawn_object_rel_with_rot(o, MODEL_MAIN_MENU_GREEN_SCORE_BUTTON,
-                                  bhvMenuButton, -6400, -3500, 0, 0x0, 0x0, 0x0);
+    sMainMenuButtons[MENU_BUTTON_SCORE] = spawn_object_rel_with_rot(
+        gCurrentObject, MODEL_MAIN_MENU_GREEN_SCORE_BUTTON, bhvMenuButton, -6400, -3500, 0, 0, 0, 0);
     sMainMenuButtons[MENU_BUTTON_SCORE]->oMenuButtonScale = 1.0f;
     // Copy menu button
     sMainMenuButtons[MENU_BUTTON_COPY] =
@@ -1012,6 +1261,9 @@ void check_main_menu_clicked_buttons(void) {
             break;
         // Play sound of the button clicked and render buttons of that menu.
         case MENU_BUTTON_SCORE:
+            play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gGlobalSoundSource);
+            seed_menu_create_buttons(sMainMenuButtons[MENU_BUTTON_SCORE]);
+            break;
         case MENU_BUTTON_COPY:
         case MENU_BUTTON_ERASE:
             play_sound(SOUND_MENU_CAMERA_ZOOM_IN, gGlobalSoundSource);
@@ -1063,7 +1315,7 @@ void bhv_menu_button_manager_loop(void) {
         case MENU_BUTTON_PLAY_FILE_C: load_main_menu_save_file(sMainMenuButtons[MENU_BUTTON_PLAY_FILE_C], 3); break;
         case MENU_BUTTON_PLAY_FILE_D: load_main_menu_save_file(sMainMenuButtons[MENU_BUTTON_PLAY_FILE_D], 4); break;
 
-        case MENU_BUTTON_SCORE: check_score_menu_clicked_buttons(sMainMenuButtons[MENU_BUTTON_SCORE]); break;
+        case MENU_BUTTON_SCORE: seed_menu_check_clicked_buttons(sMainMenuButtons[MENU_BUTTON_SCORE]); break;
         case MENU_BUTTON_COPY:  check_copy_menu_clicked_buttons (sMainMenuButtons[MENU_BUTTON_COPY ]); break;
         case MENU_BUTTON_ERASE: check_erase_menu_clicked_buttons(sMainMenuButtons[MENU_BUTTON_ERASE]); break;
 
@@ -1095,6 +1347,9 @@ void bhv_menu_button_manager_loop(void) {
         case MENU_BUTTON_ERASE_COPY_FILE:   load_copy_menu_from_submenu (MENU_BUTTON_ERASE, sMainMenuButtons[MENU_BUTTON_ERASE_COPY_FILE  ]); break;
 
         case MENU_BUTTON_SOUND_MODE: check_sound_mode_menu_clicked_buttons(sMainMenuButtons[MENU_BUTTON_SOUND_MODE]); break;
+
+        case MENU_BUTTON_SELECT_SEED_RETURN:  return_to_main_menu(MENU_BUTTON_SCORE, sMainMenuButtons[MENU_BUTTON_SELECT_SEED_RETURN]); break;
+        case MENU_BUTTON_SELECT_SEED_RESET:   break;
 
 #ifdef MULTILANG
         case MENU_BUTTON_OPTION_RETURN: return_to_main_menu(MENU_BUTTON_SOUND_MODE, sMainMenuButtons[MENU_BUTTON_OPTION_RETURN]); break;
@@ -1155,8 +1410,13 @@ void handle_controller_cursor_input(void) {
     }
 
     // Move cursor
-    sCursorPos[0] += rawStickX / 8;
-    sCursorPos[1] += rawStickY / 8;
+    if (sSelectedButtonID == MENU_BUTTON_SCORE) {
+        sCursorPos[0] += rawStickX / 12;
+        sCursorPos[1] += rawStickY / 12;
+    } else {
+        sCursorPos[0] += rawStickX / 8;
+        sCursorPos[1] += rawStickY / 8;
+    }
 
     // Stop cursor from going offscreen
     if (sCursorPos[0] > 132.0f) {
@@ -1207,7 +1467,7 @@ void print_menu_cursor(void) {
  * Takes a number between 0 and 3 and formats the corresponding file letter A to D into a buffer.
  * If the language is set to Japanese, the letter is written in full-width digits.
  */
-void string_format_file_letter(char *buf, char *str, s32 fileIndex) {
+void string_format_file_letter(char *buf, const char *str, s32 fileIndex) {
     char letterBuf[4];
 #ifdef ENABLE_JAPANESE
     if (gInGameLanguage == LANGUAGE_JAPANESE) {
@@ -1229,7 +1489,7 @@ void string_format_file_letter(char *buf, char *str, s32 fileIndex) {
 /**
  * Prints a hud string with text fade properties.
  */
-void print_hud_lut_string_fade(s16 x, s16 y, char *text, u32 alignment) {
+void print_hud_lut_string_fade(s16 x, s16 y, const char *text, u32 alignment) {
     gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
     gDialogTextAlpha -= sTextFadeAlpha;
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
@@ -1241,7 +1501,7 @@ void print_hud_lut_string_fade(s16 x, s16 y, char *text, u32 alignment) {
 /**
  * Prints a generic white string with text fade properties.
  */
-void print_generic_string_fade(s16 x, s16 y, char *text, u32 alignment) {
+void print_generic_string_fade(s16 x, s16 y, const char *text, u32 alignment) {
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
     gDialogTextAlpha -= sTextFadeAlpha;
     set_text_color(255, 255, 255);
@@ -1267,6 +1527,70 @@ s32 update_text_fade_out(void) {
     }
     return FALSE;
 }
+
+LangArray textMarioA = DEFINE_LANGUAGE_ARRAY(
+    "MARIO A",
+    "MARIO A",
+    "MARIO A",
+    "マリオＡ",
+    "MARIO A");
+
+LangArray textMarioB = DEFINE_LANGUAGE_ARRAY(
+    "MARIO B",
+    "MARIO B",
+    "MARIO B",
+    "マリオＢ",
+    "MARIO B");
+
+LangArray textMarioC = DEFINE_LANGUAGE_ARRAY(
+    "MARIO C",
+    "MARIO C",
+    "MARIO C",
+    "マリオＣ",
+    "MARIO C");
+
+LangArray textMarioD = DEFINE_LANGUAGE_ARRAY(
+    "MARIO D",
+    "MARIO D",
+    "MARIO D",
+    "マリオＤ",
+    "MARIO D");
+
+// namespace Randomizer
+#define MARIOTEXT_X1 (submenu ? 89 : 92)
+#define MARIOTEXT_X2 (submenu ? 211 : 207)
+#define MARIOTEXT_Y1 (submenu ? 62 : 65)
+#define MARIOTEXT_Y2 105
+
+#define SEEDTEXT_X1 (submenu ? 45 : 50)
+#define SEEDTEXT_X2 (submenu ? 166 : 165)
+#define SEEDTEXT_Y1 (submenu ? 52 : 56)
+#define SEEDTEXT_Y2 (submenu ? 136 : 135)
+
+extern struct SaveBuffer gSaveBuffer;
+
+static void print_file_names_and_seeds(u32 submenu) {
+    u32 i, xpos, ypos;
+    // Print file names
+    gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_begin);
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+    print_menu_generic_string(MARIOTEXT_X1, MARIOTEXT_Y1, LANG_ARRAY(textMarioA));
+    print_menu_generic_string(MARIOTEXT_X2, MARIOTEXT_Y1, LANG_ARRAY(textMarioB));
+    print_menu_generic_string(MARIOTEXT_X1, MARIOTEXT_Y2, LANG_ARRAY(textMarioC));
+    print_menu_generic_string(MARIOTEXT_X2, MARIOTEXT_Y2, LANG_ARRAY(textMarioD));
+    // For each file, if it exists, print the seed
+    for (i = 0; i < 4; i++) {
+        if (save_file_exists(i)) {
+            char seed[8];
+            sprintf(seed, "%07d", gSaveBuffer.files[i][0].seed);
+            xpos = i % 2 ? SEEDTEXT_X2 : SEEDTEXT_X1;
+            ypos = i < 2 ? SEEDTEXT_Y1 : SEEDTEXT_Y2;
+            print_menu_generic_string(xpos, ypos, seed);
+        }
+    }
+    gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_end);
+}
+// }
 
 /**
  * Prints the amount of stars of a save file.
@@ -1306,13 +1630,7 @@ LangArray textSelectFile = DEFINE_LANGUAGE_ARRAY(
     "ファイルセレクト",
     "ELIGE ARCHIVO");
 
-LangArray textScore = DEFINE_LANGUAGE_ARRAY(
-    "SCORE",
-    "SCORE",
-    "LEISTUNG",
-    "スコア",
-    "RÉCORDS");
-
+static const char textScore[] = "RANDO";
 LangArray textCopy = DEFINE_LANGUAGE_ARRAY(
     "COPY",
     "COPIER",
@@ -1326,34 +1644,6 @@ LangArray textErase = DEFINE_LANGUAGE_ARRAY(
     "LÖSCHEN",
     "けす",
     "BORRAR");
-
-LangArray textMarioA = DEFINE_LANGUAGE_ARRAY(
-    "MARIO A",
-    "MARIO A",
-    "MARIO A",
-    "マリオＡ",
-    "MARIO A");
-
-LangArray textMarioB = DEFINE_LANGUAGE_ARRAY(
-    "MARIO B",
-    "MARIO B",
-    "MARIO B",
-    "マリオＢ",
-    "MARIO B");
-
-LangArray textMarioC = DEFINE_LANGUAGE_ARRAY(
-    "MARIO C",
-    "MARIO C",
-    "MARIO C",
-    "マリオＣ",
-    "MARIO C");
-
-LangArray textMarioD = DEFINE_LANGUAGE_ARRAY(
-    "MARIO D",
-    "MARIO D",
-    "MARIO D",
-    "マリオＤ",
-    "MARIO D");
 
 LangArray textSoundModeStereo = DEFINE_LANGUAGE_ARRAY(
     "STEREO",
@@ -1430,8 +1720,10 @@ void print_main_menu_strings(void) {
     print_menu_generic_string(207, 65, LANG_ARRAY(textMarioB));
     print_menu_generic_string(92, 105, LANG_ARRAY(textMarioC));
     print_menu_generic_string(207, 105, LANG_ARRAY(textMarioD));
-    print_menu_generic_string(20, 215, "Version " VERSION);
+    print_menu_generic_string(20, 215, "RANDO v0.1, Original by ArthurTilly, port by aglab2");
     gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_end);
+    
+    print_file_names_and_seeds(FALSE);
 }
 
 static const char sChoose[] = "Choose your experience:";
@@ -1623,6 +1915,8 @@ void print_score_menu_strings(void) {
     print_menu_generic_string(89, 105, LANG_ARRAY(textMarioC));
     print_menu_generic_string(211, 105, LANG_ARRAY(textMarioD));
     gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_end);
+
+    print_file_names_and_seeds(TRUE);
 }
 
 LangArray textCopyFile = DEFINE_LANGUAGE_ARRAY(
@@ -1772,6 +2066,8 @@ void print_copy_menu_strings(void) {
     print_menu_generic_string(89, 105, LANG_ARRAY(textMarioC));
     print_menu_generic_string(211, 105, LANG_ARRAY(textMarioD));
     gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_end);
+
+    print_file_names_and_seeds(TRUE);
 }
 
 LangArray textYes = DEFINE_LANGUAGE_ARRAY(
@@ -1981,6 +2277,659 @@ void print_erase_menu_strings(void) {
     print_menu_generic_string(89, 105, LANG_ARRAY(textMarioC));
     print_menu_generic_string(211, 105, LANG_ARRAY(textMarioD));
     gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_end);
+
+    print_file_names_and_seeds(TRUE);
+}
+
+static s16 sSeedSelectCharPositions[10][2] = { { 0, -60 }, { -30, 30 }, { 0, 30 }, { 30, 30 },
+                                               { -30, 0 }, { 0, 0 },    { 30, 0 }, { -30, -30 },
+                                               { 0, -30 }, { 30, -30 } };
+
+static void seed_menu_get_clicked_numbers(void) {
+    s16 cursorX = sCursorPos[0] + 160.0f;
+    s16 cursorY = sCursorPos[1] + 115.0f;
+    int i, j;
+    if (sCursorClickingTimer == 2) {
+        for (i = 0; i < 10; i++) {
+            if ((cursorX < (175 + sSeedSelectCharPositions[i][0]))
+                && (cursorX > (145 + sSeedSelectCharPositions[i][0]))
+                && (cursorY < (105 + sSeedSelectCharPositions[i][1]))
+                && (cursorY > (75 + sSeedSelectCharPositions[i][1]))) {
+                Randomizer_gIsSetSeed = TRUE;
+                Randomizer_gOverwriteFileSeed = TRUE;
+                if ((textEnteredNumbers[0] != '0') || ((get_entered_seed() * 10 + i) > 9999999))
+                    play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource);
+                else {
+                    play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
+                    for (j = 0; j < 6; j++) {
+                        textEnteredNumbers[j] = textEnteredNumbers[j + 1];
+                    }
+                    textEnteredNumbers[6] = i + '0';
+                }
+            }
+        }
+    }
+}
+
+static void draw_select_seed_menu(void) {
+    seed_menu_get_clicked_numbers();
+    // Display "SOUND SELECT" text
+     gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
+     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+    print_hud_lut_string(97, 35, textEnterSeed);
+    // Display mode names
+    gSPDisplayList(gDisplayListHead++, dl_rgba16_text_end);
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+    print_generic_string(55, 170, textSeedShouldBe);
+
+    print_generic_string(237, 33, textReturn);
+    print_generic_string(50, 33, textReset);
+    print_generic_string(44, 87, textOptions);
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+    gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+    if (!Randomizer_gIsSetSeed)
+        print_hud_lut_string(125, 80, textRandom);
+    else {
+        print_hud_lut_string(130, 80, textEnteredNumbers);
+    }
+
+    for (u32 i = 0; i < 10; i++) {
+        char textSeedInput[] = "0";
+        textSeedInput[0] += i;
+        print_hud_lut_string(152 + sSeedSelectCharPositions[i][0],
+                             142 - sSeedSelectCharPositions[i][1], textSeedInput);
+    }
+
+    gSPDisplayList(gDisplayListHead++, dl_rgba16_text_end);
+}
+
+extern void seq_player_fade_to_target_volume(s32 player, s32 fadeDuration, u8 targetVolume);
+
+static void applyPreset() {
+    Randomizer_curPreset = (Randomizer_curPreset + textCountPresets) % textCountPresets;
+    
+    Randomizer_gOptionsSettings = Randomizer_gPresets[Randomizer_curPreset];
+    seq_player_fade_to_target_volume(SEQ_PLAYER_LEVEL, 20, 65);
+    play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
+}
+
+#define MENUHEIGHT 17
+
+#define OPTIONS_Y(line) (160 - MENUHEIGHT * (line))
+
+void options_page_print_options(u32 textCount, const char *textList[]) {
+    u32 i;
+    
+    gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, gDialogTextAlpha);
+    for (i = 0; i < textCount; i++) {
+        print_generic_string(23 + 1, OPTIONS_Y(i) - 1, textList[i]);
+    }
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+    for (i = 0; i < textCount; i++) {
+        print_generic_string(23, OPTIONS_Y(i), textList[i]);
+    }
+}
+
+void options_page_print_two(u32 currentSelected, s16 y, s16 x1, s16 x2, const char *str1, const char *str2) {
+    u8 rgbVal = (currentSelected ? 40 : 255);
+    gDPSetEnvColor(gDisplayListHead++, rgbVal, rgbVal, rgbVal, gDialogTextAlpha);
+    print_generic_string(x1, y, str1);
+    
+    rgbVal = (255+40) - rgbVal;
+    gDPSetEnvColor(gDisplayListHead++, rgbVal, rgbVal, rgbVal, gDialogTextAlpha);
+    print_generic_string(x2, y, str2);
+}
+
+void options_page_print_on_off(u32 isOn, s16 y, s16 x1, s16 x2) {
+    options_page_print_two(isOn, y, x1, x2, "OFF", "ON");
+}
+
+void options_page_print_three(u32 currentSelected, s16 y, 
+    s16 x1, s16 x2, s16 x3, const char *str1, const char *str2, const char *str3) {
+
+    u8 rgbVal = (currentSelected == 0 ? 255 : 40);
+    gDPSetEnvColor(gDisplayListHead++, rgbVal, rgbVal, rgbVal, gDialogTextAlpha);
+    print_generic_string(x1, y, str1);
+    
+    rgbVal = (currentSelected == 1 ? 255 : 40);
+    gDPSetEnvColor(gDisplayListHead++, rgbVal, rgbVal, rgbVal, gDialogTextAlpha);
+    print_generic_string(x2, y, str2);
+    
+    rgbVal = (currentSelected == 2 ? 255 : 40);
+    gDPSetEnvColor(gDisplayListHead++, rgbVal, rgbVal, rgbVal, gDialogTextAlpha);
+    print_generic_string(x3, y, str3);
+}
+
+static const char *textsCosmetic[] = {
+    "MARIO COLORS",
+    "STAR COLORS",
+    "COIN COLORS",
+    "RANDOM SKYBOXES",
+    "RANDOM MUSIC",
+};
+#define textCountCosmetics (sizeof(textsCosmetic) / 4)
+
+static void page_cosmetics() {
+    u32 i;
+    
+    if (check_clicked_text(165, OPTIONS_Y(0), 0)){
+        Randomizer_gOptionsSettings.cosmetic.s.marioColors = 0;
+    }
+    if (check_clicked_text_width(198, OPTIONS_Y(0), 0, 45)){
+        Randomizer_gOptionsSettings.cosmetic.s.marioColors = 1;
+    }
+    if (check_clicked_text(250, OPTIONS_Y(0), 0)){
+        Randomizer_gOptionsSettings.cosmetic.s.marioColors = 2;
+    }
+
+    s32 temp = Randomizer_gOptionsSettings.cosmetic.s.starColors;
+    if (check_clicked_text(236, OPTIONS_Y(1), 0)) {
+        temp++;
+    } else if (check_clicked_text(159, OPTIONS_Y(1), 0)) {
+        temp--;
+    }
+    temp = (temp + 4) % 4;
+    Randomizer_gOptionsSettings.cosmetic.s.starColors = temp;
+
+    if (check_clicked_text(171, OPTIONS_Y(4), 1)){
+        Randomizer_gOptionsSettings.cosmetic.s.musicOn = 0;
+        seq_player_fade_to_target_volume(SEQ_PLAYER_LEVEL, 20, 65);
+    }
+    if (check_clicked_text(206, OPTIONS_Y(4), 1)){
+        Randomizer_gOptionsSettings.cosmetic.s.musicOn = 1;
+        seq_player_fade_to_target_volume(SEQ_PLAYER_LEVEL, 20, 65);
+    }
+    if (check_clicked_text_width(240, OPTIONS_Y(4), 1, 45)){
+        Randomizer_gOptionsSettings.cosmetic.s.musicOn = 2;
+        seq_player_fade_to_target_volume(SEQ_PLAYER_LEVEL, 20, 0);
+    }
+    
+    for (i = 2; i < 4; i++) {
+        if (check_clicked_text(180, OPTIONS_Y(i), i)) {
+            COSMETIC_VARS_SET(i, 0)
+        } else if (check_clicked_text(222, OPTIONS_Y(i), i)) {
+            COSMETIC_VARS_SET(i, 1)
+        }
+    }
+}
+
+static const char *textsObjects[] = {
+    "SPAWN DIFFICULTY",
+    "OBJECT TYPES",
+    "RANDOMIZE STAR SPAWNS"
+};
+#define textCountObjects (sizeof(textsObjects) / 4)
+
+static void page_objects() {
+    u32 i;
+    if (check_clicked_text(156, OPTIONS_Y(0), 0)){
+        Randomizer_gOptionsSettings.gameplay.s.safeSpawns = Randomizer_SPAWN_SAFETY_SAFE;
+    }
+    if (check_clicked_text_width(191, OPTIONS_Y(0), 0, 45)){
+        Randomizer_gOptionsSettings.gameplay.s.safeSpawns = Randomizer_SPAWN_SAFETY_DEFAULT;
+    }
+    if (check_clicked_text_width(240, OPTIONS_Y(0), 0, 45)){
+        Randomizer_gOptionsSettings.gameplay.s.safeSpawns = Randomizer_SPAWN_SAFETY_HARD;
+    }
+
+    for (i = 1; i < textCountObjects; i++) {
+        if (check_clicked_text(180, OPTIONS_Y(i), i)) {
+            OBJECT_VARS_SET(i, 0);
+        } else if (check_clicked_text(222, OPTIONS_Y(i), i)) {
+            OBJECT_VARS_SET(i, 1);
+        }
+    }
+}
+
+static const char *textsModes[] = {
+    "KEEP STRUCTURE",
+    "NONSTOP MODE",
+    "GREEN DEMON MODE",
+};
+
+#define textCountModes (sizeof(textsModes) / 4)
+
+static void page_modes() {
+    if (check_clicked_text(180, OPTIONS_Y(0), 0)) {
+        Randomizer_gOptionsSettings.gameplay.s.keepStructure = 0;
+    } else if (check_clicked_text(222, OPTIONS_Y(0), 0)) {
+        Randomizer_gOptionsSettings.gameplay.s.keepStructure = 1;
+    }
+
+    if (check_clicked_text(166, OPTIONS_Y(1), 0)){
+        Randomizer_gOptionsSettings.gameplay.s.nonstopMode = 0;
+    }
+    if (check_clicked_text(197, OPTIONS_Y(1), 0)){
+        Randomizer_gOptionsSettings.gameplay.s.nonstopMode = 1;
+    }
+    if (check_clicked_text_width(231, OPTIONS_Y(1), 0, 45)){
+        Randomizer_gOptionsSettings.gameplay.s.nonstopMode = 2;
+    }
+
+    if (check_clicked_text(180, OPTIONS_Y(2), 0)) {
+        Randomizer_gOptionsSettings.gameplay.s.demonOn = 0;
+    } else if (check_clicked_text(222, OPTIONS_Y(2), 0)) {
+        Randomizer_gOptionsSettings.gameplay.s.demonOn = 1;
+    }
+}
+
+static void page_presets() {
+    if (check_clicked_text(280, OPTIONS_Y(1) + 10, 0)) {
+        Randomizer_curPreset++;
+        applyPreset();
+    } else if (check_clicked_text(170, OPTIONS_Y(1) + 10, 0)) {
+        Randomizer_curPreset--;
+        applyPreset();
+    }
+}
+
+static const char *textsWarps[] = {
+    "BitS STARS NEEDED",
+    "RANDOMIZE LEVEL SPAWN",
+    "RANDOMIZE LEVEL WARPS",
+    "ADJUST WARP EXITS",
+    "RANDOMIZE STAR DOORS"
+};
+
+#define textCountWarps (sizeof(textsWarps) / 4)
+
+static void page_warps() {
+    u32 i;
+    s32 temp = Randomizer_gOptionsSettings.gameplay.s.starDoorRequirement;
+    if (check_clicked_text(222, OPTIONS_Y(0), 0)) {
+        temp++;
+    } else if (check_clicked_text(175, OPTIONS_Y(0), 0)) {
+        temp--;
+    }
+    temp = (temp + 13) % 13;
+    Randomizer_gOptionsSettings.gameplay.s.starDoorRequirement = temp;
+    
+    if (check_clicked_text(170, OPTIONS_Y(4), 0)){
+        Randomizer_gOptionsSettings.gameplay.s.randomStarDoorCounts = 0; // ON
+    }
+    if (check_clicked_text(202, OPTIONS_Y(4), 0)){
+        Randomizer_gOptionsSettings.gameplay.s.randomStarDoorCounts = 1; // OFF
+
+    }
+    if (check_clicked_text(230, OPTIONS_Y(4), 0)){
+        Randomizer_gOptionsSettings.gameplay.s.randomStarDoorCounts = 2; // No requirements
+    }
+    for (i = 1; i < textCountWarps-1; i++) {
+        // If level warps are off, cant change adjusted exits
+        if ((i == 3) && (!Randomizer_gOptionsSettings.gameplay.s.randomLevelWarp)) continue;
+        if (check_clicked_text(180, OPTIONS_Y(i), i)) {
+            WARPS_VARS_SET(i, 0)
+            // If level warps set to off, disable adjusted exits
+            if (i == 2) {
+                Randomizer_gOptionsSettings.gameplay.s.adjustedExits = 0;
+            }
+        } else if (check_clicked_text(222, OPTIONS_Y(i), i)) {
+            WARPS_VARS_SET(i, 1)
+        }
+    }
+}
+
+struct InfoDisplay {
+    char *text;
+    u32 width;
+    u32 height;
+};
+
+s32 infoAlpha = 0;
+s32 prevInfoDisplay = -1;
+
+void display_box(u32 x, u32 y, u32 width, u32 height) {
+    gDPPipeSync(gDisplayListHead++);
+    gDPSetCombineMode(gDisplayListHead++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+    gDPSetPrimColor(gDisplayListHead++, 0, 0, 0, 0, 0, (infoAlpha / 255.f * 180));
+    gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+    gDPFillRectangle(gDisplayListHead++, x, y, x + width, y + height);
+}
+
+void handle_info_display(const struct InfoDisplay displays[], s32 count) {
+    s32 i;
+    s16 cursorX = sCursorPos[0] + 165.f;
+    s16 cursorY = sCursorPos[1] + 110.0f;
+    u32 displaying = FALSE;
+    if (gDialogTextAlpha < 250) return;
+    for (i = 0; i < count; i++) {
+        // Check if cursor is hovering over text
+        if (cursorX > 10 && cursorX < 130 && cursorY >= (152 - MENUHEIGHT * i) && cursorY <= (152 - MENUHEIGHT * i + 16)) {
+            if (prevInfoDisplay != i) {
+                infoAlpha = 0;
+                prevInfoDisplay = i;
+            } else if ((gPlayer3Controller->rawStickX != 0) || (gPlayer3Controller->rawStickY != 0)) {
+                infoAlpha -= 40;
+                if (infoAlpha < 0) infoAlpha = 0;
+            } else if (infoAlpha < 255) {
+                infoAlpha += 20;
+                if (infoAlpha > 255) infoAlpha = 255;
+            }
+
+            gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+            display_box(cursorX + 20.f, SCREEN_HEIGHT - (cursorY + 18.f), displays[i].width, displays[i].height * 16 + 5);\
+            gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
+            gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, infoAlpha);
+            print_generic_string(cursorX + 25.f, cursorY, displays[i].text);
+            displaying = TRUE;
+        }
+    }
+    if (!displaying) {
+        infoAlpha = 0;
+        prevInfoDisplay = -1;
+    }
+}
+
+
+struct InfoDisplay aestheticInfo[] = {
+    {"\
+Randomize the colors of Mario\x3Es\n\
+model\x3F Selecting CLOTHES will\n\
+keep his hair and skin their\n\
+regular color\x3F", 170, 4},
+
+    {"\
+Randomize the color of stars\x3F\n\
+Star colors can be unique for\n\
+every star, tied to the level,\n\
+or fixed for the whole game\x3F", 157, 4},
+
+    {"\
+Randomize the color of yellow,\n\
+red and blue coins\x3F Coin colors\n\
+will always be relatively\n\
+distinct from each other\x3F", 162, 4},
+
+    {"\
+Randomize the skybox displayed\n\
+in the background of each level\x3F", 168, 2},
+
+    {"\
+Randomize the music that plays\n\
+within each level, or during\n\
+events\x3F Selecting MUTED will\n\
+play no music at all\x3F", 168, 4},
+};
+
+char *textsStarSettings[] = {
+    "OFF",
+    "PER STAR",
+    "PER LEVEL",
+    "GLOBAL"
+};
+
+u8 textsStarSettingsX[] = {
+    205,
+    191,
+    189,
+    197
+};
+
+void page_cosmetics_print() {
+    u32 i;
+    
+    options_page_print_options(textCountCosmetics, textsCosmetic);
+    
+    options_page_print_three(Randomizer_gOptionsSettings.cosmetic.s.marioColors, OPTIONS_Y(0),
+        165, 198, 250, "OFF", "CLOTHES", "ALL");
+
+    options_page_print_three(Randomizer_gOptionsSettings.cosmetic.s.musicOn, OPTIONS_Y(4),
+        171, 206, 240, "OFF", "ON", "MUTED");
+
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+    print_generic_string(174, OPTIONS_Y(1), textPlus);
+    print_generic_string(textsStarSettingsX[Randomizer_gOptionsSettings.cosmetic.s.starColors], OPTIONS_Y(1),
+                             textsStarSettings[Randomizer_gOptionsSettings.cosmetic.s.starColors]);
+    print_generic_string(244, OPTIONS_Y(1), textMinus);
+
+    for (i = 2; i < 4; i++) {
+        options_page_print_on_off(COSMETIC_VARS_GET(i), OPTIONS_Y(i), 190, 222);
+    }
+
+    handle_info_display(aestheticInfo, textCountCosmetics);
+    
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+}
+
+struct InfoDisplay objectInfo[] = {
+    {"\
+Controls the average difficulty of\n\
+object placements, including factors\n\
+like height and ground steepness\x3F", 188, 3},
+    {"\
+Controls which kinds of objects are\n\
+randomized\x3F If set to KEY, only\n\
+objects that are directly required\n\
+to obtain stars are randomized\x3F", 184, 4},
+    {"\
+Whether stars that are spawned\n\
+by other objects have their\n\
+positions randomized or not\x3F", 170, 3},
+};
+
+void page_objects_print() {
+    options_page_print_options(textCountObjects, textsObjects);
+    
+    options_page_print_three(Randomizer_gOptionsSettings.gameplay.s.safeSpawns, OPTIONS_Y(0),
+        156, 191, 240, "SAFE", "NORMAL", "DANGER");
+
+    options_page_print_two(Randomizer_gOptionsSettings.gameplay.s.objectRandomization, OPTIONS_Y(1),
+        190, 222, "KEY", "ALL");
+
+    options_page_print_on_off(OBJECT_VARS_GET(2), OPTIONS_Y(2), 190, 222);
+
+    handle_info_display(objectInfo, textCountObjects);
+    
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+}
+
+static const struct InfoDisplay modeInfo[] = {
+    {"\
+Determines the main gameplay structure\n\
+of the playthrough\x3F If set to ON, keys\n\
+will be required to progress and levels\n\
+will be separated into the three main\n\
+areas\x3F Otherwise, key doors will be\n\
+disabled and levels will be fully random\x3F", 212, 6},
+
+    {"\
+With Nonstop mode, collecting a\n\
+star won\x3Et take you out of the level\x3F\n\
+If SAVE is chosen, stars will bring\n\
+up a save prompt when collected,\n\
+otherwise they will be collected\n\
+instantly\x3F", 190, 6},
+
+    {"\
+Enables Green Demon mode, where a\n\
+1\x9Fup will chase you through all\n\
+levels and will kill you on contact\x3F", 182, 3},
+};
+
+void page_modes_print() {
+    options_page_print_options(textCountModes, textsModes);
+
+    options_page_print_on_off(Randomizer_gOptionsSettings.gameplay.s.keepStructure, OPTIONS_Y(0), 190, 222);
+    options_page_print_on_off(Randomizer_gOptionsSettings.gameplay.s.demonOn, OPTIONS_Y(2), 190, 222);
+    
+    options_page_print_three(Randomizer_gOptionsSettings.gameplay.s.nonstopMode, OPTIONS_Y(1),
+        166, 197, 231, "OFF", "SAVE", "NOSAVE");
+
+    handle_info_display(modeInfo, textCountModes);
+
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+}
+
+void page_presets_print() {
+    u32 i = 0;
+    for (i = 0; i < 2; i++) {
+        u32 color = i * 255; // 0 on first run, 255 on second
+        u32 offset = 1 - i; // 1 on first run, 0 on second
+        gDPSetEnvColor(gDisplayListHead++, color, color, color, gDialogTextAlpha);
+
+        print_generic_string(28 + offset, OPTIONS_Y(1) + 10 - offset, textUsePreset);
+        if (Randomizer_curPreset >= 0) {
+            print_generic_string_aligned(230 + offset, OPTIONS_Y(1) + 10 - offset, textsPresets[Randomizer_curPreset], TEXT_ALIGN_CENTER);
+            print_generic_string(40 + offset, OPTIONS_Y(4) + 10 - offset, textsPresetDescriptions[Randomizer_curPreset]);
+        } else {
+            print_generic_string(210 + offset, OPTIONS_Y(1) + 10 - offset, textPresetCustom);
+        }
+    }
+
+    print_generic_string(170, OPTIONS_Y(1) + 10, textPlus);
+    print_generic_string(280, OPTIONS_Y(1) + 10, textMinus);
+
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+}
+
+static const struct InfoDisplay warpInfo[] = {
+    {"\
+Sets the number of stars\n\
+required to enter Bowser\n\
+in the Sky\x3F", 137, 3},
+
+    {"\
+Determines if Mario\x3Es starting\n\
+position is randomized whenever\n\
+he enters a level\x3F", 166, 3},
+
+    {"\
+Determines if the level entrances\n\
+lead to random levels, or if they\n\
+lead to their original level\x3F", 173, 3},
+
+    {"\
+Adjusted exits will return Mario\n\
+outside of the painting he just\n\
+entered, rather than the painting\n\
+of the level he was just in\x3F", 175, 4},
+
+    {"\
+Whether to randomize the star\n\
+requirements for accessing new\n\
+levels\x3F Setting to NONE will\n\
+remove all star requirements\x3F", 166, 4},
+};
+
+void page_warps_print() {
+    u32 i;
+    char strNumStars[4];
+    
+    options_page_print_options(textCountWarps, textsWarps);
+
+    sprintf(strNumStars, "%d", Randomizer_gStarDoorReqLUT[Randomizer_gOptionsSettings.gameplay.s.starDoorRequirement]);
+    print_generic_string(190, OPTIONS_Y(0), textPlus);
+    if (Randomizer_gStarDoorReqLUT[Randomizer_gOptionsSettings.gameplay.s.starDoorRequirement] < 10) {
+        print_generic_string(211, OPTIONS_Y(0), strNumStars);
+    } else if (Randomizer_gStarDoorReqLUT[Randomizer_gOptionsSettings.gameplay.s.starDoorRequirement] < 100) {
+        print_generic_string(207, OPTIONS_Y(0), strNumStars);
+    } else {
+        print_generic_string(203, OPTIONS_Y(0), strNumStars);
+    }
+    print_generic_string(230, OPTIONS_Y(0), textMinus);
+
+
+    options_page_print_three(Randomizer_gOptionsSettings.gameplay.s.randomStarDoorCounts, OPTIONS_Y(4),
+        170, 202, 230, "OFF", "ON", "NONE");
+
+    for (i = 1; i < textCountWarps-1; i++) {
+        // If level warps are off, adjusted exits is greyed out
+        if ((i == 3) && (!Randomizer_gOptionsSettings.gameplay.s.randomLevelWarp)) {
+                gDPSetEnvColor(gDisplayListHead++, 96, 96, 96, gDialogTextAlpha);
+                print_generic_string(190, OPTIONS_Y(i), "OFF");
+                gDPSetEnvColor(gDisplayListHead++, 96, 96, 96, gDialogTextAlpha);
+                print_generic_string(222, OPTIONS_Y(i), "ON");
+        } else {
+            options_page_print_on_off(WARPS_VARS_GET(i), OPTIONS_Y(i), 190, 222);
+        }
+    }
+
+    handle_info_display(warpInfo, textCountWarps);
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+}
+
+static void draw_select_seed_menu_option(void) {
+    u8 bottomOptionColor = sins((u16)(gGlobalTimer*0x800))*40 + 215;
+    char buf[30];
+    struct Randomizer_OptionsSettings oldSettings = Randomizer_gOptionsSettings;
+    switch (OptionPage) {
+        case 0:
+            page_cosmetics();
+            break;
+        case 1:
+            page_objects();
+            break;
+        case 2:
+            page_warps();
+            break;
+        case 3:
+            page_presets();
+            break;
+        case 4:
+            page_modes();
+            break;
+    }
+    // Check if options have been modified
+    if ((oldSettings.gameplay.w != Randomizer_gOptionsSettings.gameplay.w) || (oldSettings.cosmetic.w != Randomizer_gOptionsSettings.cosmetic.w)) {
+        Randomizer_gOverwriteFileOptions = TRUE;
+        if (OptionPage != 3) {
+            Randomizer_curPreset = -1;
+        }
+    }
+    if (gPlayer3Controller->buttonPressed & R_TRIG) {
+        OptionPage--;
+        play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
+        prevInfoDisplay = -1;
+    } else if (gPlayer3Controller->buttonPressed & (Z_TRIG | L_TRIG)) {
+        OptionPage++;
+        play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
+        prevInfoDisplay = -1;
+    }
+    OptionPage += pageCount;
+    OptionPage = OptionPage % pageCount;
+    gSPDisplayList(gDisplayListHead++, dl_rgba16_text_begin);
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+    print_hud_lut_string(23, 35, pages[OptionPage]);
+
+    gSPDisplayList(gDisplayListHead++, dl_rgba16_text_end);
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
+
+    gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, gDialogTextAlpha);
+    print_generic_string(240+1, 33-1, textReturn);
+    print_generic_string(35+1,33-1,textRandomOptions);
+    sprintf(buf, "Settings ID\xE6 %d", Randomizer_gOptionsSettings.gameplay.w);
+    print_generic_string(10,9,buf);
+    gDPSetEnvColor(gDisplayListHead++, bottomOptionColor, bottomOptionColor, bottomOptionColor, gDialogTextAlpha);
+    print_generic_string(240, 33, textReturn);
+    print_generic_string(35, 33, textRandomOptions);
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+    sprintf(buf, "Settings ID\xE6 %d", Randomizer_gOptionsSettings.gameplay.w);
+    print_generic_string(9,10,buf);
+
+    switch (OptionPage) {
+        case 0:
+            page_cosmetics_print();
+            break;
+        case 1:
+            page_objects_print();
+            break;
+        case 2:
+            page_warps_print();
+            break;
+        case 3:
+            page_presets_print();
+            break;
+        case 4:
+            page_modes_print();
+            break;
+    }
+
+    print_generic_string(25, 214, textNext);
+    print_generic_string(237, 214, textPrev);
+
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
 }
 
 LangArray textSoundSelect = DEFINE_LANGUAGE_ARRAY(
@@ -2250,6 +3199,7 @@ void print_save_file_scores(s8 fileIndex) {
  * Also checks if all saves exists and defines text and main menu timers.
  */
 void print_file_select_strings(void) {
+    random_float();
     create_dl_ortho_matrix();
 
     if (sSelectingAdventure == 1 || sSelectingAdventure == 2)
@@ -2257,7 +3207,7 @@ void print_file_select_strings(void) {
 
     switch (sSelectedButtonID) {
         case MENU_BUTTON_NONE:         print_main_menu_strings();                               break;
-        case MENU_BUTTON_SCORE:        print_score_menu_strings(); sScoreFileCoinScoreMode = 0; break;
+        case MENU_BUTTON_SCORE:        draw_select_seed_menu();                                 break;
         case MENU_BUTTON_COPY:         print_copy_menu_strings();                               break;
         case MENU_BUTTON_ERASE:        print_erase_menu_strings();                              break;
         case MENU_BUTTON_SCORE_FILE_A: print_save_file_scores(SAVE_FILE_A); break;
@@ -2265,6 +3215,7 @@ void print_file_select_strings(void) {
         case MENU_BUTTON_SCORE_FILE_C: print_save_file_scores(SAVE_FILE_C); break;
         case MENU_BUTTON_SCORE_FILE_D: print_save_file_scores(SAVE_FILE_D); break;
         case MENU_BUTTON_SOUND_MODE:   print_sound_mode_menu_strings();     break;
+        case MENU_BUTTON_SELECT_SEED_OPTIONS: draw_select_seed_menu_option(); break;
     }
     // If all 4 save file exists, define true to sAllFilesExist to prevent more copies in copy menu
     if (save_file_exists(SAVE_FILE_A) == TRUE && save_file_exists(SAVE_FILE_B) == TRUE &&
@@ -2324,6 +3275,10 @@ s32 lvl_init_menu_values_and_cursor_pos(UNUSED s32 arg, UNUSED s32 unused) {
     sMainMenuTimer = 0;
     sEraseYesNoHoverState = MENU_ERASE_HOVER_NONE;
     sSoundMode = save_file_get_sound_mode();
+    Randomizer_gOverwriteFileOptions = FALSE;
+    Randomizer_gOverwriteFileSeed = FALSE;
+    Randomizer_curPreset = 0;
+    applyPreset();
 #ifdef MULTILANG
     sSelectedLanguageIndex = get_language_index(gInGameLanguage);
 

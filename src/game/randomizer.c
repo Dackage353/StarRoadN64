@@ -30,6 +30,7 @@ u8 Randomizer_gIgnoreCollisionDistance = FALSE; // hacky
 u8 Randomizer_gNumDynamicAvoidancePoints = 0;
 struct Randomizer_AvoidancePoint Randomizer_gDynamicAvoidancePoints[50];
 
+s32 Randomizer_curPreset;
 struct Randomizer_OptionsSettings Randomizer_gOptionsSettings;
 
 #include "randomizer_data.h"
@@ -92,9 +93,9 @@ char *presetStrings[] = {
     "Sprint"
 };
 
-s32 curPreset = 0;
+s32 Randomizer_curPreset = 0;
 
-struct Randomizer_OptionsSettings gPresets[] = {
+struct Randomizer_OptionsSettings Randomizer_gPresets[] = {
     {{{0, /* pad */ 0, 1, 0, 1, 0, 1, 1, 1, 1,  7, 0}}, {{0, 0, 0, 0, 0}}},
     {{{0, /* pad */ 0, 1, 0, 1, 0, 1, 1, 1, 1,  7, 0}}, {{1, 1, 1, 1, 1}}},
     {{{0, /* pad */ 1, 1, 1, 1, 0, 2, 1, 1, 1, 10, 0}}, {{2, 1, 1, 1, 2}}},
@@ -122,8 +123,8 @@ void Randomizer_print_seed_and_options_data(void) {
     sprintf(buf, "Seed\xE6 %05d", Randomizer_gGameSeed);
     print_generic_text_ascii_buf(8, ypos + 14, buf);
     
-    for (i = 0; i < ARRAY_COUNT(gPresets); i++) {
-        if (Randomizer_gOptionsSettings.gameplay.w == gPresets[i].gameplay.w) {
+    for (i = 0; i < ARRAY_COUNT(Randomizer_gPresets); i++) {
+        if (Randomizer_gOptionsSettings.gameplay.w == Randomizer_gPresets[i].gameplay.w) {
             sprintf(buf, "Preset\xE6 %s", presetStrings[i]);
             print_generic_text_ascii_buf(8,ypos,buf);
             goto presetFound; // don't kill me please

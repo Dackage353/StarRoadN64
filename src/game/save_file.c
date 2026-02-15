@@ -682,13 +682,13 @@ void save_file_set_cannon_unlocked(void) {
     gSaveFileModified = TRUE;
 }
 
-extern u8 gOverwriteFileOptions;
-extern u8 gOverwriteFileSeed;
+u8 Randomizer_gOverwriteFileOptions;
+u8 Randomizer_gOverwriteFileSeed;
 
 void save_file_set_seed_and_options(s32 fileNum) {
     struct SaveFile *saveFile = &gSaveBuffer.files[fileNum - 1][0];
-    u8 overwriteOptions = gOverwriteFileOptions;
-    u8 overwriteSeed = gOverwriteFileSeed;
+    u8 overwriteOptions = Randomizer_gOverwriteFileOptions;
+    u8 overwriteSeed = Randomizer_gOverwriteFileSeed;
 
     // New file, set the file's seed to the one picked.
     if (!(saveFile->flags & SAVE_FLAG_FILE_EXISTS)){
