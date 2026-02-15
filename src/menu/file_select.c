@@ -943,7 +943,6 @@ void randomize_options() {
     }
 
     Randomizer_gOverwriteFileOptions = TRUE;
-    Randomizer_gOverwriteFileSeed = TRUE;
     Randomizer_curPreset = -1;
 }
 
@@ -1071,6 +1070,8 @@ void load_main_menu_save_file(struct Object *fileButton, s32 fileNum) {
             sSelectingAdventure = (gSaveBuffer.menuData.optionsFlags & 0x40000000) ? 3 : 1;
             gSaveBuffer.menuData.optionsFlags |= 0x40000000;
         }
+        
+        Randomizer_init_randomizer(fileNum);
     }
 }
 

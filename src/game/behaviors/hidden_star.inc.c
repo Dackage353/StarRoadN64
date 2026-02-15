@@ -31,6 +31,13 @@ void bhv_hidden_star_loop(void) {
 
 extern const BehaviorScript bhvCheckMark[];
 void bhv_hidden_star_trigger_loop(void) {
+    if (gGlobalTimer % 5 == 0) {
+        struct Object *sparkle = spawn_object(o, 149, bhvCoinSparkles);
+        sparkle->oPosX += random_float() * 100 - 50;
+        sparkle->oPosY += random_float() * 100 - 50;
+        sparkle->oPosZ += random_float() * 100 - 50;
+    }
+
     if (obj_check_if_collided_with_object(o, gMarioObject)) {
         struct Object *hiddenStar = cur_obj_nearest_object_with_behavior(bhvHiddenStar);
 
