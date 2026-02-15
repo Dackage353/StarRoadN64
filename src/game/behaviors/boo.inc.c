@@ -96,6 +96,7 @@ void bhv_courtyard_boo_triplet_init(void) {
                 o, MODEL_BOO, bhvGhostHuntBoo );
             OR_BPARAM1(boo->oBehParams, COIN_INSIDE_BOO_BP_YELLOW_COIN);
             boo->oMoveAngleYaw = random_u16();
+            boo->pointerSeed = (o->pointerSeed + i)* 4;
         }
     }
 }

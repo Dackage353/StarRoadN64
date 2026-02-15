@@ -258,6 +258,7 @@ void bhv_bully_loop(void) {
 void big_bully_spawn_minion(s32 x, s32 y, s32 z, s16 yaw) {
     struct Object *bully =
         spawn_object_abs_with_rot(o, 0, MODEL_BULLY, bhvSmallBully, x, y, z, 0, yaw, 0);
+    bully->pointerSeed = (x + y + z) * 4;
     bully->oBullySubtype = BULLY_STYPE_MINION;
     bully->oBehParams2ndByte = BULLY_BP_SIZE_SMALL;
 }

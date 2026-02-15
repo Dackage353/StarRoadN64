@@ -28,6 +28,7 @@
 #include "string.h"
 #include "game/puppycam2.h"
 #include "game/puppyprint.h"
+#include "game/randomizer.h"
 #include "game/emutest.h"
 #include "game/options_menu.h"
 
@@ -291,8 +292,46 @@ static void level_cmd_load_raw(void) {
     sCurrentCmd = CMD_NEXT;
 }
 
+// namespace Randomizer
+u8 *sSkyBoxPtrs[][2] = {
+    {_water_skybox_yay0SegmentRomStart,       _water_skybox_yay0SegmentRomEnd},
+    {_bitfs_skybox_yay0SegmentRomStart,       _bitfs_skybox_yay0SegmentRomEnd},
+    {_wdw_skybox_yay0SegmentRomStart,         _wdw_skybox_yay0SegmentRomEnd},
+    {_cloud_floor_skybox_yay0SegmentRomStart, _cloud_floor_skybox_yay0SegmentRomEnd},
+    {_ccm_skybox_yay0SegmentRomStart,         _ccm_skybox_yay0SegmentRomEnd},
+    {_ssl_skybox_yay0SegmentRomStart,         _ssl_skybox_yay0SegmentRomEnd},
+    {_bbh_skybox_yay0SegmentRomStart,         _bbh_skybox_yay0SegmentRomEnd},
+    {_bidw_skybox_yay0SegmentRomStart,        _bidw_skybox_yay0SegmentRomEnd},
+    {_clouds_skybox_yay0SegmentRomStart,      _clouds_skybox_yay0SegmentRomEnd},
+    {_bits_skybox_yay0SegmentRomStart,        _bits_skybox_yay0SegmentRomEnd},
+#define DECLARE_SEGMENT(name) {_##name##SegmentRomStart, _##name##SegmentRomEnd},
+DECLARE_SEGMENT(SkyboxCustom21462720_skybox_yay0)
+DECLARE_SEGMENT(SkyboxCustom22380224_skybox_yay0)
+DECLARE_SEGMENT(SkyboxCustom23297728_skybox_yay0)
+DECLARE_SEGMENT(SkyboxCustom26050240_skybox_yay0)
+DECLARE_SEGMENT(SkyboxCustom28802752_skybox_yay0)
+DECLARE_SEGMENT(SkyboxCustom29720256_skybox_yay0)
+DECLARE_SEGMENT(SkyboxCustom31555264_skybox_yay0)
+DECLARE_SEGMENT(SkyboxCustom33390272_skybox_yay0)
+DECLARE_SEGMENT(SkyboxCustom35225280_skybox_yay0)
+DECLARE_SEGMENT(SkyboxCustom37060288_skybox_yay0)
+DECLARE_SEGMENT(SkyboxCustom38895296_skybox_yay0)
+DECLARE_SEGMENT(SkyboxCustom39812800_skybox_yay0)
+DECLARE_SEGMENT(SkyboxCustom43482816_skybox_yay0)
+DECLARE_SEGMENT(SkyboxCustom46235328_skybox_yay0)
+#undef DECLARE_SEGMENT
+};
+
+u8 gSkyboxIndex;
+
 static void level_cmd_load_yay0(void) {
-    load_segment_decompress(CMD_GET(s16, 2), CMD_GET(void *, 4), CMD_GET(void *, 8));
+    if ((CMD_GET(s16, 2) != 0xA) | (!Randomizer_gOptionsSettings.cosmetic.s.skyboxOn)) {
+        load_segment_decompress(CMD_GET(s16, 2), CMD_GET(void *, 4), CMD_GET(void *, 8));
+    } else { // Skybox Segment
+        gSkyboxIndex = random_u16_seeded(Randomizer_gGameSeed + gCurrLevelNum) % ARRAY_COUNT(sSkyBoxPtrs);
+        load_segment_decompress(CMD_GET(s16, 2), sSkyBoxPtrs[gSkyboxIndex][0], sSkyBoxPtrs[gSkyboxIndex][1]);
+    }
+
     sCurrentCmd = CMD_NEXT;
 }
 
@@ -455,6 +494,9 @@ static void level_cmd_init_mario(void) {
     sCurrentCmd = CMD_NEXT;
 }
 
+static u8 sNonstopSpawn;
+static u8 sNonstopNotSpawn;
+
 static void level_cmd_place_object(void) {
     u8 val7 = 1 << (gCurrActNum - 1);
     u8 special = CMD_GET(u8, 3);
@@ -491,23 +533,66 @@ static void level_cmd_place_object(void) {
         spawnInfo->behaviorScript = CMD_GET(void *, 20);
         spawnInfo->model = gLoadedGraphNodes[model];
         spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
+        spawnInfo->pointerSeed = (uintptr_t)sCurrentCmd;
 
         gAreas[sCurrAreaIndex].objectSpawnInfos = spawnInfo;
     }
 
+    sNonstopSpawn = sNonstopNotSpawn = 0;
     sCurrentCmd = CMD_NEXT;
 }
 
+static void level_cmd_place_object_ns(void) {
+    if (Randomizer_gOptionsSettings.gameplay.s.nonstopMode) {
+        sNonstopSpawn = 1;
+    }
+    level_cmd_place_object();
+}
+
+static void level_cmd_place_obj_not_ns(void) {
+    if (Randomizer_gOptionsSettings.gameplay.s.nonstopMode) {
+        sNonstopNotSpawn = 1;
+    }
+    level_cmd_place_object();
+}
+
+u8 gPreviousCastleArea;
+
 static void level_cmd_create_warp_node(void) {
+    u8 destLevel;
+    u8 id;
+    u8 intendedLevel; // The level if this were not randomized
+
     if (sCurrAreaIndex != -1) {
-        struct ObjectWarpNode *warpNode =
-            main_pool_alloc(sizeof(struct ObjectWarpNode));
+        struct ObjectWarpNode *warpNode = main_pool_alloc(sizeof(struct ObjectWarpNode));
 
-        warpNode->node.id = CMD_GET(u8, 2);
-        warpNode->node.destLevel = CMD_GET(u8, 3) + CMD_GET(u8, 6);
-        warpNode->node.destArea = CMD_GET(u8, 4);
-        warpNode->node.destNode = CMD_GET(u8, 5);
+        destLevel = CMD_GET(u8, 3) + CMD_GET(u8, 6);
+        if (((gCurrCourseNum == COURSE_NONE)
+             || ((gCurrCourseNum == COURSE_HMC) || (destLevel == LEVEL_COTMC)))
+            && (Randomizer_gWarpDestinations[destLevel] != 0) && Randomizer_gOptionsSettings.gameplay.s.randomLevelWarp) {
+            warpNode->node.destLevel = Randomizer_gWarpDestinations[destLevel];
+        } else {
+            warpNode->node.destLevel = destLevel;
+        }
 
+        intendedLevel = Randomizer_get_nonrandom_level(gCurrLevelNum); // We have to find what the level is supposed to be, rather than where we are.
+
+        warpNode->node.id = id = CMD_GET(u8, 2);
+        if (!Randomizer_gOptionsSettings.gameplay.s.adjustedExits // We want to use the warp as intended in the script if we have random warps
+            || ((id != 0xF0) && (id != 0xF1)) // or if it's not a death or star warp. 
+            || (intendedLevel == 0)  // or if the level is not a randomized level
+            || ((id == 0xF1) && ((gCurrLevelNum == LEVEL_BOWSER_1) || (gCurrLevelNum == LEVEL_BOWSER_2)))) { // or if it's a Bowser death warp.
+            warpNode->node.destArea = CMD_GET(u8, 4);
+            warpNode->node.destNode = CMD_GET(u8, 5);          
+        } else{
+            warpNode->node.destArea = Randomizer_gLevelWarps[intendedLevel].area;
+            if (id == 0xF0) {
+                warpNode->node.destNode = Randomizer_gLevelWarps[intendedLevel].f0;
+            } else {
+                warpNode->node.destNode = Randomizer_gLevelWarps[intendedLevel].f1;          
+            }
+            warpNode->node.destLevel = Randomizer_gLevelWarps[intendedLevel].level;
+        }
         warpNode->next = gAreas[sCurrAreaIndex].warpNodes;
         gAreas[sCurrAreaIndex].warpNodes = warpNode;
     }
@@ -552,6 +637,7 @@ static void level_cmd_set_terrain_type(void) {
 
 static void level_cmd_create_painting_warp_node(void) {
     s32 i;
+    u8 destLevel;
     struct WarpNode *node;
 
     if (sCurrAreaIndex != -1) {
@@ -567,28 +653,15 @@ static void level_cmd_create_painting_warp_node(void) {
         node = &gAreas[sCurrAreaIndex].paintingWarpNodes[CMD_GET(u8, 2)];
 
         node->id = 1;
-        node->destLevel = CMD_GET(u8, 3) + CMD_GET(u8, 6);
-        node->destArea = CMD_GET(u8, 4);
-        node->destNode = CMD_GET(u8, 5);
-    }
-
-    sCurrentCmd = CMD_NEXT;
-}
-
-static void level_cmd_3A(void) {
-    struct UnusedArea28 *val4;
-
-    if (sCurrAreaIndex != -1) {
-        if ((val4 = gAreas[sCurrAreaIndex].unused) == NULL) {
-            val4 = gAreas[sCurrAreaIndex].unused =
-                main_pool_alloc(sizeof(struct UnusedArea28));
+        destLevel = CMD_GET(u8, 3) + CMD_GET(u8, 6);
+        if ((gCurrCourseNum == COURSE_NONE) && (Randomizer_gWarpDestinations[destLevel] != 0) && Randomizer_gOptionsSettings.gameplay.s.randomLevelWarp) {
+            node->destLevel = Randomizer_gWarpDestinations[destLevel];
+            node->destArea = 1;
+        } else {
+            node->destLevel = destLevel;
+            node->destArea = CMD_GET(u8, 4);
         }
-
-        val4->unk00 = CMD_GET(s16, 2);
-        val4->unk02 = CMD_GET(s16, 4);
-        val4->unk04 = CMD_GET(s16, 6);
-        val4->unk06 = CMD_GET(s16, 8);
-        val4->unk08 = CMD_GET(s16, 10);
+        node->destNode = CMD_GET(u8, 5);
     }
 
     sCurrentCmd = CMD_NEXT;
@@ -701,24 +774,26 @@ static void level_cmd_nop(void) {
 }
 
 static void level_cmd_show_dialog(void) {
-    if (sCurrAreaIndex != -1) {
+    /** if (sCurrAreaIndex != -1) {
         if (CMD_GET(u8, 2) < 2) {
             gAreas[sCurrAreaIndex].dialog[CMD_GET(u8, 2)] = CMD_GET(u8, 3);
         }
-    }
+    } **/
     sCurrentCmd = CMD_NEXT;
 }
 
 static void level_cmd_set_music(void) {
     if (sCurrAreaIndex != -1) {
         gAreas[sCurrAreaIndex].musicParam = CMD_GET(s16, 2);
-#ifdef BETTER_REVERB
-        if (gEmulator & EMU_CONSOLE)
-            gAreas[sCurrAreaIndex].betterReverbPreset = CMD_GET(u8, 4);
-        else
-            gAreas[sCurrAreaIndex].betterReverbPreset = CMD_GET(u8, 5);
-#endif
-        gAreas[sCurrAreaIndex].musicParam2 = CMD_GET(s16, 6);
+        
+        if (Randomizer_gOptionsSettings.cosmetic.s.musicOn == 1) {
+            s32 i = random_u16_seeded(Randomizer_gGameSeed + gCurrLevelNum * 8 + sCurrAreaIndex) % sizeof(Randomizer_gRandomSongs);
+            gAreas[sCurrAreaIndex].musicParam2 = Randomizer_gRandomSongs[i];
+        } else if (Randomizer_gOptionsSettings.cosmetic.s.musicOn == 2) {
+            gAreas[sCurrAreaIndex].musicParam2 = 0;
+        } else {            
+            gAreas[sCurrAreaIndex].musicParam2 = CMD_GET(s16, 4);
+        }
     }
     sCurrentCmd = CMD_NEXT;
 }
@@ -880,7 +955,7 @@ static void (*LevelScriptJumpTable[])(void) = {
     /*LEVEL_CMD_END_AREA                    */ level_cmd_end_area,
     /*LEVEL_CMD_LOAD_MODEL_FROM_DL          */ level_cmd_load_model_from_dl,
     /*LEVEL_CMD_LOAD_MODEL_FROM_GEO         */ level_cmd_load_model_from_geo,
-    /*LEVEL_CMD_23                          */ level_cmd_23,
+    /*LEVEL_CMD_OBJ_WITH_ACTS_NS            */ level_cmd_place_object_ns,
     /*LEVEL_CMD_PLACE_OBJECT                */ level_cmd_place_object,
     /*LEVEL_CMD_INIT_MARIO                  */ level_cmd_init_mario,
     /*LEVEL_CMD_CREATE_WARP_NODE            */ level_cmd_create_warp_node,
@@ -902,8 +977,8 @@ static void (*LevelScriptJumpTable[])(void) = {
     /*LEVEL_CMD_SET_MUSIC                   */ level_cmd_set_music,
     /*LEVEL_CMD_SET_MENU_MUSIC              */ level_cmd_set_menu_music,
     /*LEVEL_CMD_FADEOUT_MUSIC               */ level_cmd_fadeout_music,
-    /*LEVEL_CMD_39                          */ level_cmd_39, // previously level_cmd_set_macro_objects
-    /*LEVEL_CMD_3A                          */ level_cmd_3A,
+    /*LEVEL_CMD_SET_MACRO_OBJECTS           */ level_cmd_39,
+    /*LEVEL_CMD_OBJ_WITH_ACTS_NOT_NS        */ level_cmd_place_obj_not_ns,
     /*LEVEL_CMD_CREATE_WHIRLPOOL            */ level_cmd_create_whirlpool,
     /*LEVEL_CMD_GET_OR_SET_VAR              */ level_cmd_get_or_set_var,
     /*LEVEL_CMD_PUPPYVOLUME                 */ level_cmd_puppyvolume,

@@ -106,6 +106,7 @@ void bhv_treasure_chest_bottom_loop(void) {
 void spawn_treasure_chest(s8 param, s32 x, s32 y, s32 z, s16 yaw) {
     struct Object *chestBaseObj = spawn_object_abs_with_rot(o, 0, MODEL_TREASURE_CHEST_BASE,
                                                             bhvTreasureChestBottom, x, y, z, 0, yaw, 0);
+    chestBaseObj->pointerSeed = (x + y + z + yaw) * 4; // funny hack
     chestBaseObj->oBehParams2ndByte = param;
 }
 

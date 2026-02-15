@@ -42,7 +42,7 @@ enum LevelCommands {
     /*0x20*/ LEVEL_CMD_END_AREA,
     /*0x21*/ LEVEL_CMD_LOAD_MODEL_FROM_DL,
     /*0x22*/ LEVEL_CMD_LOAD_MODEL_FROM_GEO,
-    /*0x23*/ LEVEL_CMD_23,
+    /*0x23*/ LEVEL_CMD_OBJ_WITH_ACTS_NS,
     /*0x24*/ LEVEL_CMD_PLACE_OBJECT,
     /*0x25*/ LEVEL_CMD_INIT_MARIO,
     /*0x26*/ LEVEL_CMD_CREATE_WARP_NODE,
@@ -65,7 +65,7 @@ enum LevelCommands {
     /*0x37*/ LEVEL_CMD_SET_MENU_MUSIC,
     /*0x38*/ LEVEL_CMD_FADEOUT_MUSIC,
     /*0x39*/ LEVEL_CMD_39,
-    /*0x3A*/ LEVEL_CMD_3A,
+    /*0x3A*/ LEVEL_CMD_OBJ_WITH_ACTS_NOT_NS,
     /*0x3B*/ LEVEL_CMD_CREATE_WHIRLPOOL,
     /*0x3C*/ LEVEL_CMD_GET_OR_SET_VAR,
     /*0x3D*/ LEVEL_CMD_PUPPYVOLUME,
@@ -344,11 +344,21 @@ enum GoddardScene {
     CMD_BBH(LEVEL_CMD_LOAD_MODEL_FROM_GEO, 0x08, model), \
     CMD_PTR(geo)
 
-// unk8 is float, but doesn't really matter since CMD23 is unused
-#define CMD23(model, unk4, unk8) \
-    CMD_BBH(LEVEL_CMD_23, 0x08, 0), \
-    CMD_PTR(unk4), \
-    CMD_W(unk8)
+// Previously 0x23 CMD
+// Version of below but will always spawn for NS
+#define OBJ_WITH_ACTS_NS(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) \
+    CMD_BBBB(LEVEL_CMD_OBJ_WITH_ACTS_NS, 0x1C, acts, 0x00), \
+    CMD_HHHHHH(posX, posY, posZ, angleX, angleY, angleZ), \
+    CMD_W(behParam), \
+    CMD_PTR(beh), \
+    CMD_W(model)
+
+#define OBJ_WITH_ACTS_NOT_NS(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) \
+    CMD_BBBB(LEVEL_CMD_OBJ_WITH_ACTS_NOT_NS, 0x1C, acts, 0x00), \
+    CMD_HHHHHH(posX, posY, posZ, angleX, angleY, angleZ), \
+    CMD_W(behParam), \
+    CMD_PTR(beh), \
+    CMD_W(model)
 
 #define OBJECT_WITH_ACTS_SPECIAL(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts, special) \
     CMD_BBBB(LEVEL_CMD_PLACE_OBJECT, 0x1C, acts, special), \

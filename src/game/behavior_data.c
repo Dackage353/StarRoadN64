@@ -123,7 +123,7 @@ enum BehaviorCommands {
     /*0x33*/ BHV_CMD_PARENT_BIT_CLEAR,
     /*0x34*/ BHV_CMD_ANIMATE_TEXTURE,
     /*0x35*/ BHV_CMD_DISABLE_RENDERING,
-    /*0x36*/ BHV_CMD_SET_INT_UNUSED,
+    /*0x36*/ BHV_CMD_RANDOMIZE_OBJECT,
     /*0x37*/ BHV_CMD_SPAWN_WATER_DROPLET,
 };
 
@@ -379,10 +379,10 @@ enum BehaviorCommands {
 #define DISABLE_RENDERING() \
     BC_B(BHV_CMD_DISABLE_RENDERING)
 
-// Unused. Sets the specified field to an integer. Wastes 4 bytes of space for no reason at all.
-#define SET_INT_UNUSED(field, value) \
-    BC_BB(BHV_CMD_SET_INT_UNUSED, field), \
-    BC_HH(0, value)
+// Randomizes the object's position.
+#define RANDOMIZE_OBJ(flags) \
+    BC_B(BHV_CMD_RANDOMIZE_OBJECT), \
+    BC_W(flags)
 
 // Spawns a water droplet with the given parameters.
 #define SPAWN_WATER_DROPLET(dropletParams) \

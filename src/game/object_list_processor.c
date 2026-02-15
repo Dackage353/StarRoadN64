@@ -461,7 +461,7 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
             object->oBehParams2ndByte = GET_BPARAM2(spawnInfo->behaviorArg);
 
             object->behavior = script;
-            object->unused1 = 0;
+            object->pointerSeed = spawnInfo->pointerSeed;
 
             // Record death/collection in the SpawnInfo
             object->respawnInfo = spawnInfo->respawnInfo;
