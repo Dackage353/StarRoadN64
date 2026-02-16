@@ -24,6 +24,7 @@
 #include "sound_init.h"
 #include "rumble_init.h"
 #include "config.h"
+#include "randomizer.h"
 
 #include "hacktice/death_floor.h"
 
@@ -768,7 +769,13 @@ u32 interact_water_ring(struct MarioState *m, UNUSED u32 interactType, struct Ob
 extern void lvl_calc_igt();
 u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct Object *obj) {
     u32 starIndex;
-    u32 starGrabAction = ACT_STAR_DANCE_EXIT;
+    
+    u32 nonstopType = Randomizer_gOptionsSettings.gameplay.s.nonstopMode;
+    if ((gCurrLevelNum == LEVEL_BOWSER_1) || (gCurrLevelNum == LEVEL_BOWSER_2)) {
+        nonstopType = 0;
+    }
+
+    u32 starGrabAction = ACT_STAR_DANCE_EXIT || nonstopType;
 #ifdef NON_STOP_STARS
  #ifdef KEYS_EXIT_LEVEL
     u32 noExit = !obj_has_model(obj, MODEL_BOWSER_KEY);
@@ -781,7 +788,9 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
     u32 grandStar = (obj->oInteractionSubtype & INT_SUBTYPE_GRAND_STAR) != 0;
 
     if (m->health >= 0x100) {
-        mario_stop_riding_and_holding(m);
+        if (nonstopType != 2) {
+            mario_stop_riding_and_holding(m);
+        }
 #if ENABLE_RUMBLE
         queue_rumble_data(5, 80);
 #endif
@@ -857,7 +866,9 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
             return set_mario_action(m, ACT_JUMBO_STAR_CUTSCENE, 0);
         }
 
-        return set_mario_action(m, starGrabAction, noExit + 2 * grandStar);
+        if ((nonstopType != 2) || ((gCurrCourseNum == COURSE_JRB) && (gCurrAreaIndex == 2))) {
+            return set_mario_action(m, starGrabAction, noExit + 2 * grandStar);
+        }
     }
 
     return FALSE;
@@ -988,6 +999,10 @@ u32 interact_warp_door(struct MarioState *m, UNUSED u32 interactType, struct Obj
 }
 
 u32 get_door_save_file_flag(struct Object *door) {
+    if (Randomizer_gOptionsSettings.gameplay.s.randomStarDoorCounts != 0) {
+        return 0;
+    }
+
     u32 saveFileFlag = 0;
     s16 requiredNumStars = door->oBehParams >> 24;
 
