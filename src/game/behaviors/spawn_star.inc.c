@@ -175,7 +175,15 @@ struct Object *spawn_star(struct Object *starObj, f32 x, f32 y, f32 z) {
 void spawn_default_star(f32 x, f32 y, f32 z) {
     struct Object *starObj = NULL;
     starObj = spawn_star(starObj, x, y, z);
-    starObj->oBehParams2ndByte = SPAWN_STAR_ARC_CUTSCENE_BP_DEFAULT_STAR;
+    if (Randomizer_gOptionsSettings.gameplay.s.randomizeStarSpawns) {
+        Vec3s pos;
+        Randomizer_get_safe_position(starObj, pos, 400.f, 700.f, &gGlobalRandomState, Randomizer_FLOOR_SAFETY_LOW, (RAND_TYPE_MAX_VARIATION | RAND_TYPE_CAN_BE_UNDERWATER | RAND_TYPE_THI_A3_ABOVE_MESH | RAND_TYPE_SPAWN_BOTTOM_OF_SLIDE | RAND_TYPE_LIMITED_BBH_HMC_SPAWNS | RAND_TYPE_CREATE_AVOIDANCE_POINT));
+        starObj->oHomeX = pos[0];
+        starObj->oHomeY = pos[1];
+        starObj->oHomeZ = pos[2];
+    }
+
+    starObj->oBehParams2ndByte = SPAWN_STAR_ARC_CUTSCENE_BP_HIDDEN_STAR;
 }
 
 void spawn_red_coin_cutscene_star(f32 x, f32 y, f32 z) {
