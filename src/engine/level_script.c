@@ -792,7 +792,7 @@ static void level_cmd_set_music(void) {
         } else if (Randomizer_gOptionsSettings.cosmetic.s.musicOn == 2) {
             gAreas[sCurrAreaIndex].musicParam2 = 0;
         } else {            
-            gAreas[sCurrAreaIndex].musicParam2 = CMD_GET(s16, 4);
+            gAreas[sCurrAreaIndex].musicParam2 = CMD_GET(s16, 6);
         }
     }
     sCurrentCmd = CMD_NEXT;
