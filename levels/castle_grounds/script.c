@@ -6,6 +6,7 @@
 #include "dialog_ids.h"
 #include "segment_symbols.h"
 #include "level_commands.h"
+#include "game/randomizer.h"
 
 #include "game/level_update.h"
 
@@ -90,11 +91,11 @@ const LevelScript level_castle_grounds_entry[] = {
 		OBJECT_WITH_ACTS(124,-4408,-614,-3835,0,270,0,0x3e0000, bhvMessagePanel,31),
 		OBJECT_WITH_ACTS(22,-3417,-163,5073,0,180,0,0x3c0000, bhvWarpPipe,31),
 		OBJECT_WITH_ACTS(0,-6713,2451,2610,0,270,0,0x90000, bhvAirborneStarCollectWarp,31),
-		OBJECT_WITH_ACTS(35,5465,-614,-3681,0,315,0,0x8080000, bhvDoor,31),
-		OBJECT_WITH_ACTS(35,5478,-614,644,0,225,0,0x8080000, bhvDoor,31),
+		OBJECT_WITH_ACTS(35,5465,-614,-3681,0,315,0,0x8080000 + RANDO_DOOR_PARAM(Randomizer_STAR_REQ_GG), bhvDoor,31),
+		OBJECT_WITH_ACTS(35,5478,-614,644,0,225,0,0x8080000 + RANDO_DOOR_PARAM(Randomizer_STAR_REQ_CH), bhvDoor,31),
 		OBJECT_WITH_ACTS(100,-6488,546,5261,0,90,0,0x0, bhvMips,31),
-		OBJECT_WITH_ACTS(0,6395,-607,-1435,0,90,0,0x14000000, bhvStarDoor,31),
-		OBJECT_WITH_ACTS(0,6395,-607,-1593,0,270,0,0x14000000, bhvStarDoor,31),
+		OBJECT_WITH_ACTS(0,6395,-607,-1435,0,90,0,0x14000000 + RANDO_DOOR_PARAM(Randomizer_STAR_REQ_B1), bhvStarDoor,31),
+		OBJECT_WITH_ACTS(0,6395,-607,-1593,0,270,0,0x14000000 + RANDO_DOOR_PARAM(Randomizer_STAR_REQ_B1), bhvStarDoor,31),
 		OBJECT_WITH_ACTS(137,6028,-339,-3342,0,45,0,0x20000, bhvExclamationBox,31),
 		OBJECT_WITH_ACTS(0,6663,495,1821,0,315,0,0x400000, bhvWarp,31),
 		OBJECT_WITH_ACTS(85,-6710,1831,2209,0,0,0,0xa10000, bhvStarRoadYoshi,31),

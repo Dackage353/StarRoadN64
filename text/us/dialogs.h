@@ -251,29 +251,39 @@ door yet."))
 
 DEFINE_DIALOG(DIALOG_023,1,3,95,200, _("This key doesn't fit!"))
 
-DEFINE_DIALOG(DIALOG_024,1,5,95,200, _("You do not have enough\n\
-power stars to break the\n\
-seal on this door."))
+DEFINE_DIALOG(DIALOG_024, 1, 2, 95, 200, _("\
+You need [%] more Stars\n\
+to open this door."))
 
-DEFINE_DIALOG(DIALOG_025,1,4,95,200, _("You do not have enough\n\
-power stars to break the\n\
-seal on this door."))
+DEFINE_DIALOG(DIALOG_025, 1, 4, 95, 200, _("\
+It takes the power of\n\
+3 Stars to open this\n\
+door. You need [%] more\n\
+Stars."))
 
-DEFINE_DIALOG(DIALOG_026,1,4,95,200, _("You do not have enough\n\
-power stars to break the\n\
-seal on this door."))
+DEFINE_DIALOG(DIALOG_026, 1, 4, 95, 200, _("\
+It takes the power of\n\
+8 Stars to open this\n\
+door. You need [%] more\n\
+Stars."))
 
-DEFINE_DIALOG(DIALOG_027,1,4,95,200, _("You do not have enough\n\
-power stars to break the\n\
-seal on this door."))
+DEFINE_DIALOG(DIALOG_027, 1, 4, 95, 200, _("\
+It takes the power of\n\
+30 Stars to open this\n\
+door. You need [%] more\n\
+Stars."))
 
-DEFINE_DIALOG(DIALOG_028,1,4,95,200, _("You do not have enough\n\
-power stars to break the\n\
-seal on this door."))
+DEFINE_DIALOG(DIALOG_028, 1, 4, 95, 200, _("\
+It takes the power of\n\
+50 Stars to open this\n\
+door. You need [%] more\n\
+Stars."))
 
-DEFINE_DIALOG(DIALOG_029,1,5,95,200, _("You do not have enough\n\
-power stars to break the\n\
-seal on this door."))
+DEFINE_DIALOG(DIALOG_029, 1, 4, 95, 200, _("\
+It takes the power of\n\
+30 Stars to open this\n\
+door. You need [%] more\n\
+Stars."))
 
 DEFINE_DIALOG(DIALOG_030,1,6,30,200, _("Did you know that it is\n\
 possible for a plumber\n\

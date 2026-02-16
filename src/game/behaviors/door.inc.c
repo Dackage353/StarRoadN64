@@ -1,4 +1,5 @@
 // door.inc.c
+#include "game/randomizer.h"
 
 struct DoorAction {
     u32 flag;
@@ -118,6 +119,22 @@ void bhv_door_init(void) {
         gDoorAdjacentRooms[o->oDoorSelfRoom].forwardRoom  = o->oDoorForwardRoom;
         gDoorAdjacentRooms[o->oDoorSelfRoom].backwardRoom = o->oDoorBackwardRoom;
     }
+    
+    if ((((o->oBehParams >> 8) & 0xFF) != 0) && (((o->oBehParams >> 24) & 0xFF) < 0xFE)) {
+        o->oBehParams = (Randomizer_gRequiredStars[((o->oBehParams >> 24) & 0xFF) - 1] << 24) + (o->oBehParams & 0x00FFFFFF);
+    }
+
+#if 0
+    // Check model id
+    if ((!Randomizer_gOptionsSettings.gameplay.s.keepStructure) && (o->header.gfx.sharedChild == gLoadedGraphNodes[MODEL_CASTLE_KEY_DOOR])) {
+        o->header.gfx.sharedChild = gLoadedGraphNodes[MODEL_CASTLE_CASTLE_DOOR];
+    }
+
+    if ((Randomizer_gOptionsSettings.gameplay.s.randomStarDoorCounts != 0) &&
+        ((o->header.gfx.sharedChild == gLoadedGraphNodes[MODEL_CASTLE_DOOR_1_STAR]) || (o->header.gfx.sharedChild == gLoadedGraphNodes[MODEL_CASTLE_DOOR_3_STARS]))) {
+        o->header.gfx.sharedChild = gLoadedGraphNodes[MODEL_CASTLE_DOOR_0_STARS];
+    }
+#endif
 }
 
 void bhv_door_rendering_loop(void) {

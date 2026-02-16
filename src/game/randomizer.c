@@ -705,7 +705,7 @@ static void randomize_star_doors() {
 
     starTotal += calulate_star_total(LEVEL_BITDW);
     
-    Randomizer_gRequiredStars[Randomizer_STAR_REQ_K1] = get_star_requirement(1, 0, starTotal, 3, &randomState);
+    //Randomizer_gRequiredStars[Randomizer_STAR_REQ_K1] = get_star_requirement(1, 0, starTotal, 3, &randomState);
 
     starTotal += calulate_star_total(LEVEL_SSL);
     starTotal += calulate_star_total(LEVEL_SL);
@@ -724,7 +724,7 @@ static void randomize_star_doors() {
 
     starTotal += calulate_star_total(LEVEL_BITFS);
 
-    Randomizer_gRequiredStars[Randomizer_STAR_REQ_K2] = get_star_requirement(1, 1, starTotal, 2, &randomState);
+    //Randomizer_gRequiredStars[Randomizer_STAR_REQ_K2] = get_star_requirement(1, 1, starTotal, 2, &randomState);
 
     starTotal += calulate_star_total(LEVEL_TTM);
     starTotal += calulate_star_total(LEVEL_THI);
@@ -733,8 +733,8 @@ static void randomize_star_doors() {
     Randomizer_gRequiredStars[Randomizer_STAR_REQ_OW3] = get_star_requirement(0, 2, starTotal, 2, &randomState);
 
     if (Randomizer_gOptionsSettings.gameplay.s.keepStructure) {
-        Randomizer_gRequiredStars[Randomizer_STAR_REQ_K1] = 0;
-        Randomizer_gRequiredStars[Randomizer_STAR_REQ_K2] = 0;
+        //Randomizer_gRequiredStars[Randomizer_STAR_REQ_K1] = 0;
+        //Randomizer_gRequiredStars[Randomizer_STAR_REQ_K2] = 0;
     }
 }
 
