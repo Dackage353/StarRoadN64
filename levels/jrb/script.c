@@ -77,7 +77,7 @@ const LevelScript level_jrb_entry[] = {
 		SET_BACKGROUND_MUSIC(0,24),
 		TERRAIN_TYPE(0),
 
-		OBJECT_WITH_ACTS(0,2347,713,-5188,0,337,0,0x10000, bhvSpinAirborneWarp,31),
+		OBJECT_WITH_ACTS(0,2347,713,-5188,0,337,0,0xa0000, bhvSpinAirborneWarp,31),
 		OBJECT_WITH_ACTS(122,-4657,3801,-3621,0,0,0,0x0, bhvStar,63),
 		OBJECT_WITH_ACTS(22,-6159,975,-5867,0,90,0,0xe0000, bhvWarpPipe,63),
 		OBJECT_WITH_ACTS(22,6093,257,419,0,270,0,0xd0000, bhvWarpPipe,63),
@@ -160,7 +160,7 @@ const LevelScript level_jrb_entry[] = {
 		OBJECT_WITH_ACTS(32,406,-829,-2076,0,0,0,0x0, bhvKlepto,63),
 		OBJECT_WITH_ACTS(MODEL_RED_COIN_RADAR,0,0,0,0,0,0,3<<24, bhvRedCoinRadar, 31),
 
-		WARP_NODE(1,12,1,10,0),
+		WARP_NODE(0xa,12,1,10,0),
 		WARP_NODE(13,12,1,14,0),
 		WARP_NODE(14,12,1,13,0),
 		WARP_NODE(90,9,1,14,0),

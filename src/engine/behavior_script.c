@@ -522,6 +522,8 @@ static s32 bhv_cmd_randomize_object(void) {
         gCurrentObject->oBehParams2ndByte = signMessage; // randomize sign messages
     }
 
+    cur_obj_update_floor_height();
+
     gCurBhvCommand++;
     return BHV_PROC_CONTINUE;
 }
