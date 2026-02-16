@@ -38,6 +38,8 @@ extern const BehaviorScript bhvStarRoadPiranhaPlant[];
 
 extern const BehaviorScript bhvStarRoadBowserStub[];
 #define bhvBowser bhvStarRoadBowserStub
+
+extern const BehaviorScript bhvKoopaTheQuick[];
 /* Fast64 end persistent block [scripts] */
 
 const LevelScript level_lll_entry[] = {
@@ -100,7 +102,7 @@ const LevelScript level_lll_entry[] = {
 		OBJECT_WITH_ACTS_FORCE_INACTIVE(217,2826,2310,4101,0,0,327,0x0, bhvPushableMetalBox,3),
 		OBJECT_WITH_ACTS_FORCE_INACTIVE(217,2661,2055,4101,0,0,327,0x0, bhvPushableMetalBox,3),
 		OBJECT_WITH_ACTS(122,4338,4896,3941,0,0,0,0x0, bhvStar,1),
-		OBJECT_WITH_ACTS(104,-4826,-2091,-4532,0,184,0,0x1020000, bhvKoopa,2),
+		OBJECT_WITH_ACTS(104,-4826,-2091,-4532,0,184,0,0x1020000, bhvKoopaTheQuick,2),
 		OBJECT_WITH_ACTS(23,-5491,-2092,-5099,0,0,0,0x0, bhvTree,63),
 		OBJECT_WITH_ACTS(23,-5754,-1929,-6463,0,0,0,0x0, bhvTree,63),
 		OBJECT_WITH_ACTS(23,-4098,-2092,-6633,0,0,0,0x0, bhvTree,63),

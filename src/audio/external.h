@@ -11,6 +11,13 @@
 // bit which may be read by the sequence script.
 #define SEQUENCE_ARGS(priority, seqId) (((priority) << 8) | (seqId))
 
+#define SEQUENCE_ARGS_R(priority, seqId) ((priority << 8) | \
+    ((Randomizer_gOptionsSettings.cosmetic.s.musicOn == 1) ? \
+        (((seqId) & 0x80) | Randomizer_gRandomSongs[random_u16_seeded(Randomizer_gGameSeed - (seqId)) % sizeof(Randomizer_gRandomSongs)]) \
+    : (Randomizer_gOptionsSettings.cosmetic.s.musicOn == 2 ? \
+        0 \
+    : seqId)))
+
 enum SoundModes {
     SOUND_MODE_STEREO,
     SOUND_MODE_MONO,

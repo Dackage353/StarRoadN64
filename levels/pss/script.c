@@ -24,6 +24,8 @@
 
 extern const GeoLayout Geo_pss_1_0x2621700[];
 #define pss_area_1 Geo_pss_1_0x2621700
+
+extern const BehaviorScript bhvKoopaTheQuick[];
 /* Fast64 end persistent block [scripts] */
 
 const LevelScript level_pss_entry[] = {
@@ -69,7 +71,7 @@ const LevelScript level_pss_entry[] = {
 		OBJECT_WITH_ACTS(0,4943,549,-5826,0,0,0,0xa0000, bhvAirborneWarp,31),
 		OBJECT_WITH_ACTS(0,-5448,-220,-1471,0,180,0,0xb0000, bhvFadingWarp,31),
 		OBJECT_WITH_ACTS(0,5962,127,-1749,0,0,0,0xc0000, bhvFadingWarp,31),
-		OBJECT_WITH_ACTS(104,-1407,-60,-5423,0,310,0,0x30000, bhvKoopa,31),
+		OBJECT_WITH_ACTS(104,-1407,-60,-5423,0,310,0,0x30000, bhvKoopaTheQuick,31),
 		OBJECT_WITH_ACTS(0,-3415,4573,2678,0,0,0,0x0, bhvKoopaRaceEndpoint,31),
 		OBJECT_WITH_ACTS(55,-4025,845,5880,0,90,0,0x30000, bhvSeesawPlatform,31),
 		OBJECT_WITH_ACTS(215,3285,-102,2310,0,0,0,0x0, bhvRedCoin,31),

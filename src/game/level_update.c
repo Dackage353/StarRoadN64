@@ -431,15 +431,15 @@ void init_mario_after_warp(void) {
         set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
 
         if (gMarioState->flags & MARIO_METAL_CAP) {
-            play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_METAL_CAP));
+            play_cap_music(SEQUENCE_ARGS_R(4, SEQ_EVENT_METAL_CAP));
         }
 
         if (gMarioState->flags & (MARIO_WING_CAP)) {
-            play_cap_music(SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP));
+            play_cap_music(SEQUENCE_ARGS_R(4, SEQ_EVENT_POWERUP));
         }
         
         if (gMarioState->flags & (MARIO_VANISH_CAP)) {
-            play_cap_music(SEQUENCE_ARGS(4, 0x32));
+            play_cap_music(SEQUENCE_ARGS_R(4, 0x32));
         }
 
 #ifdef ENABLE_VANILLA_LEVEL_SPECIFIC_CHECKS
