@@ -220,7 +220,7 @@ Vtx *make_skybox_rect(s32 tileIndex, s8 colorIndex) {
  * The row and column are converted into an index into the skybox's tile list, which is then drawn in
  * world space so that the tiles will rotate with the camera.
  */
-extern u8 gSkyboxIndex;
+extern u8 Randomizer_gSkyboxIndex;
 void draw_skybox_tile_grid(Gfx **dlist, s8 background, s8 player, s8 colorIndex) {
     s32 row;
     s32 col;
@@ -234,7 +234,7 @@ void draw_skybox_tile_grid(Gfx **dlist, s8 background, s8 player, s8 colorIndex)
 
             Texture* texture;
             if (Randomizer_gOptionsSettings.cosmetic.s.skyboxOn) {
-                texture = (*(SkyboxTexture *) segmented_to_virtual(sSkyboxTextures[gSkyboxIndex]))[tileIndex];
+                texture = (*(SkyboxTexture *) segmented_to_virtual(sSkyboxTextures[Randomizer_gSkyboxIndex]))[tileIndex];
             } else {
                 texture = (*(SkyboxTexture *) segmented_to_virtual(sSkyboxTextures[background]))[tileIndex];
             }

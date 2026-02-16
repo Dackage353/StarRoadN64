@@ -322,14 +322,14 @@ DECLARE_SEGMENT(SkyboxCustom46235328_skybox_yay0)
 #undef DECLARE_SEGMENT
 };
 
-u8 gSkyboxIndex;
+u8 Randomizer_gSkyboxIndex;
 
 static void level_cmd_load_yay0(void) {
     if ((CMD_GET(s16, 2) != 0xA) | (!Randomizer_gOptionsSettings.cosmetic.s.skyboxOn)) {
         load_segment_decompress(CMD_GET(s16, 2), CMD_GET(void *, 4), CMD_GET(void *, 8));
     } else { // Skybox Segment
-        gSkyboxIndex = random_u16_seeded(Randomizer_gGameSeed + gCurrLevelNum) % ARRAY_COUNT(sSkyBoxPtrs);
-        load_segment_decompress(CMD_GET(s16, 2), sSkyBoxPtrs[gSkyboxIndex][0], sSkyBoxPtrs[gSkyboxIndex][1]);
+        Randomizer_gSkyboxIndex = random_u16_seeded(Randomizer_gGameSeed + gCurrLevelNum) % ARRAY_COUNT(sSkyBoxPtrs);
+        load_segment_decompress(CMD_GET(s16, 2), sSkyBoxPtrs[Randomizer_gSkyboxIndex][0], sSkyBoxPtrs[Randomizer_gSkyboxIndex][1]);
     }
 
     sCurrentCmd = CMD_NEXT;
