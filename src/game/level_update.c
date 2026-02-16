@@ -908,7 +908,10 @@ void initiate_delayed_warp(void) {
         } else {
             switch (sDelayedWarpOp) {
                 case WARP_OP_GAME_OVER:
-                    save_file_reload();
+                    // If nosave nonstop mode, save the game
+                    if (Randomizer_gOptionsSettings.gameplay.s.nonstopMode == 2) {
+                        save_file_do_save(gCurrSaveFileNum - 1);
+                    }
                     gMarioState->health = 0x880;
                     warp_special(WARP_SPECIAL_MARIO_HEAD_DIZZY);
                     break;
@@ -1120,6 +1123,11 @@ s32 play_mode_paused(void) {
         } else {
             if (gMenuOptSelectIndex == MENU_OPT_EXIT_COURSE)
             {
+                if (gMarioState->numLives == 0) {
+                    if (Randomizer_gOptionsSettings.gameplay.s.nonstopMode == 2) {
+                        save_file_do_save(gCurrSaveFileNum - 1);
+                    }
+                } 
                 struct ObjectWarpNode *warpNode = area_get_warp_node(WARP_NODE_DEATH);
                 assert(warpNode != NULL, "No death warp node could be found!");
 
