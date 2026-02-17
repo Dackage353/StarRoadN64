@@ -32,6 +32,8 @@ static const u8 sWarpPool1[] = {
     LEVEL_COTMC,
     LEVEL_TOTWC,
     LEVEL_VCUTM,
+    LEVEL_BOWSER_1,
+    LEVEL_BOWSER_2,
 };
 
 static const u8 sWarpsPreB1[] = {
@@ -77,6 +79,8 @@ static const u8 gWarpDestinationsStatic[] = {
     [LEVEL_BITDW] = LEVEL_BITDW,
     [LEVEL_VCUTM] = LEVEL_VCUTM,
     [LEVEL_BITFS] = LEVEL_BITFS,
+    [LEVEL_BOWSER_1] = LEVEL_BOWSER_1,
+    [LEVEL_BOWSER_2] = LEVEL_BOWSER_2,
     [LEVEL_SA] = LEVEL_SA,
     [LEVEL_LLL] = LEVEL_LLL,
     [LEVEL_DDD] = LEVEL_DDD,
@@ -88,6 +92,7 @@ static const u8 gWarpDestinationsStatic[] = {
     [LEVEL_TTM] = LEVEL_TTM,
 };
 
+// translates dest level to randomized dest level.
 u8 Randomizer_gWarpDestinations[sizeof(gWarpDestinationsStatic)];
 
 static const u8 sDefaultStarReqs[] = {
@@ -208,6 +213,14 @@ static const struct Randomizer_AreaParams icParams[] = {
     {-6292, 4951, -436, 1800, -7893, 8192, 0, 0, NULL}
 };
 
+static const struct Randomizer_AreaParams b1fParams[] = {
+    {-5149, 5180, -1006, 434, -5619, 5745, 0, 0, NULL}
+};
+static const struct Randomizer_AreaParams b2fParams[] = {
+    {-5149, 5180, -1006, 434, -5619, 5745, 0, 0, NULL}
+};
+
+
 const Randomizer_AreaParamsArray *Randomizer_sLevelParams[] = {
     &bbhParams,
     &ccmParams,
@@ -235,10 +248,10 @@ const Randomizer_AreaParamsArray *Randomizer_sLevelParams[] = {
     &pssParams,
     &cotmcParams,
     &totwcParams,
-    NULL,
+    &b1fParams,
     &wmotrParams,
     NULL,
-    NULL,
+    &b2fParams, //b2
     NULL,
     NULL,
     &ttmParams

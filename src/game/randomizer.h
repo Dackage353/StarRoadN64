@@ -69,6 +69,7 @@ struct Randomizer_nodeInfo {
     u8 area;
     u8 f0;
     u8 f1;
+    u8 f1levelOverride;
 };
 
 struct Randomizer_OptionsSettings {

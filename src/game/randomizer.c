@@ -39,43 +39,36 @@ u8 Randomizer_gRandomSongs[] = { 2,3,4,5,6,7,8,9,12,13,14,15,17,19,24,25,26,30,3
 
 struct Randomizer_nodeInfo Randomizer_gLevelWarps[] = {
     // Level        Area  0xF0  0xF1
-    { 0, 0, 0, 0, },
-    { 0, 0, 0, 0, },
-    { 0, 0, 0, 0, },
-    { 0, 0, 0, 0, },
-    { LEVEL_CASTLE_GROUNDS, 1, 42, 43, }, // BBH
-    { LEVEL_CASTLE_GROUNDS, 1, 27, 28, }, // CCM
-    { LEVEL_CASTLE_GROUNDS, 1, 0, 245, }, // Inside Castle
-    { LEVEL_CASTLE_COURTYARD, 1, 21, 22, }, // HMC
-    { LEVEL_CASTLE_COURTYARD, 1, 5, 6, }, // SSL
-    { LEVEL_CASTLE_GROUNDS, 1, 21, 22, }, // BoB
-    { LEVEL_CASTLE_COURTYARD, 1, 12, 13, }, // SL
-    { LEVEL_CASTLE_COURTYARD, 1, 36, 37, }, // WDW
-    { LEVEL_CASTLE_GROUNDS, 1, 29, 30, }, // JRB
-    { LEVEL_CASTLE_COURTYARD, 1, 42, 43, }, // THI
-    { LEVEL_CASTLE, 1, 6, 7, }, // TTC
-    { LEVEL_CASTLE, 1, 9, 11, }, // RR
-    { LEVEL_CASTLE_GROUNDS, 1, 0, 201, }, // Castle Grounds
-    { LEVEL_CASTLE_GROUNDS, 1, 39, 40, }, // BitDW
-    { LEVEL_CASTLE_GROUNDS, 1, 42, 43, }, // VCutM
-    { LEVEL_CASTLE_COURTYARD, 1, 27, 28, }, // BitFS
-    { LEVEL_CASTLE_COURTYARD, 0x01, 15, 16, }, // SA
-    { LEVEL_CASTLE, 1, 3, 4, }, // BitS
-    { LEVEL_CASTLE_COURTYARD, 1, 24, 25, }, // LLL
-    { LEVEL_CASTLE_COURTYARD, 1, 18, 19, }, // DDD
-    { LEVEL_CASTLE_GROUNDS, 1, 36, 37, }, // WF
-    { LEVEL_CASTLE_GROUNDS, 1, 9, 201, }, // Cake
-    { LEVEL_CASTLE_GROUNDS, 1, 0, 201, }, // Castle Courtyard
-    { LEVEL_CASTLE_GROUNDS, 1, 45, 46, }, // PSS
-    { LEVEL_CASTLE_GROUNDS, 1, 27, 28, }, // CotMC
-    { LEVEL_CASTLE_COURTYARD, 1, 39, 40, }, // TotWC
-    { 0, 0, 0, 0, },
-    { LEVEL_CASTLE_GROUNDS, 1, 9, 201, }, // WMotR
-    { 0, 0, 0, 0, },
-    { 0, 0, 0, 0, },
-    { 0, 0, 0, 0, },
-    { 0, 0, 0, 0, },
-    { LEVEL_CASTLE_COURTYARD, 1, 39, 40, }, // TTM
+    [ LEVEL_BBH ] = { LEVEL_CASTLE_GROUNDS, 1, 42, 43, }, // BBH
+    [ LEVEL_CCM ] = { LEVEL_CASTLE_GROUNDS, 1, 27, 28, }, // CCM
+    [ LEVEL_CASTLE ] = { LEVEL_CASTLE_GROUNDS, 1, 0, 245, }, // Inside Castle
+    [ LEVEL_HMC ] = { LEVEL_CASTLE_COURTYARD, 1, 21, 22, }, // HMC
+    [ LEVEL_SSL ] = { LEVEL_CASTLE_COURTYARD, 1, 5, 6, }, // SSL
+    [ LEVEL_BOB ] = { LEVEL_CASTLE_GROUNDS, 1, 21, 22, }, // BoB
+    [ LEVEL_SL ] = { LEVEL_CASTLE_COURTYARD, 1, 12, 13, }, // SL
+    [ LEVEL_WDW ] = { LEVEL_CASTLE_COURTYARD, 1, 36, 37, }, // WDW
+    [ LEVEL_JRB ] = { LEVEL_CASTLE_GROUNDS, 1, 29, 30, }, // JRB
+    [ LEVEL_THI ] = { LEVEL_CASTLE_COURTYARD, 1, 42, 43, }, // THI
+    [ LEVEL_TTC ] = { LEVEL_CASTLE, 1, 6, 7, }, // TTC
+    [ LEVEL_RR ] = { LEVEL_CASTLE, 1, 9, 11, }, // RR
+    [ LEVEL_CASTLE_GROUNDS ] = { LEVEL_CASTLE_GROUNDS, 1, 0, 201, }, // Castle Grounds
+    [ LEVEL_BITDW ] = { LEVEL_CASTLE_GROUNDS, 1, 39, 40, }, // BitDW
+    [ LEVEL_VCUTM ] = { LEVEL_CASTLE_GROUNDS, 1, 42, 43, }, // VCutM
+    [ LEVEL_BITFS ] = { LEVEL_CASTLE_COURTYARD, 1, 27, 28, }, // BitFS
+    [ LEVEL_SA ] = { LEVEL_CASTLE_COURTYARD, 0x01, 15, 16, }, // SA
+    [ LEVEL_BITS ] = { LEVEL_CASTLE, 1, 3, 4, }, // BitS
+    [ LEVEL_LLL ] = { LEVEL_CASTLE_COURTYARD, 1, 24, 25, }, // LLL
+    [ LEVEL_DDD ] = { LEVEL_CASTLE_COURTYARD, 1, 18, 19, }, // DDD
+    [ LEVEL_WF ] = { LEVEL_CASTLE_GROUNDS, 1, 36, 37, }, // WF
+    [ LEVEL_ENDING ] = { LEVEL_CASTLE_GROUNDS, 1, 9, 201, }, // Cake
+    [ LEVEL_CASTLE_COURTYARD ] = { LEVEL_CASTLE_GROUNDS, 1, 0, 201, }, // Castle Courtyard
+    [ LEVEL_PSS ] = { LEVEL_CASTLE_GROUNDS, 1, 45, 46, }, // PSS
+    [ LEVEL_COTMC ] = { LEVEL_CASTLE_GROUNDS, 1, 27, 28, }, // CotMC
+    [ LEVEL_TOTWC ] = { LEVEL_CASTLE_COURTYARD, 1, 39, 40, }, // TotWC
+    [ LEVEL_WMOTR ] = { LEVEL_CASTLE_GROUNDS, 1, 9, 201, }, // WMotR
+    [ LEVEL_TTM ] = { LEVEL_CASTLE_COURTYARD, 1, 39, 40, }, // TTM
+    [ LEVEL_BOWSER_1 ] = { LEVEL_CASTLE_GROUNDS, 1, 39, 12, LEVEL_BITDW }, // Bowser 1
+    [ LEVEL_BOWSER_2 ] = { LEVEL_CASTLE_COURTYARD, 1, 27, 12, LEVEL_BITFS }, // Bowser 2
 };
 
 char *presetStrings[] = {
@@ -778,12 +771,6 @@ static void shuffle_warp_pool(const u8* warpPool, size_t warpPoolSize, tinymt32_
 
 u8 Randomizer_get_nonrandom_level(u8 currLevel)
 {
-    if (currLevel == LEVEL_BOWSER_1) {
-        currLevel = LEVEL_BITDW;
-    } else if (currLevel == LEVEL_BOWSER_2) {
-        currLevel = LEVEL_BITFS;
-    }
-
     for (int i = 0; i < ARRAY_COUNT(Randomizer_gWarpDestinations); i++) {
         if (Randomizer_gWarpDestinations[i] == currLevel) {
             return i;
@@ -791,6 +778,22 @@ u8 Randomizer_get_nonrandom_level(u8 currLevel)
     }
 
     return 0;
+}
+
+static u8 expected_mini_level_target(u8 currLevel)
+{
+    if (currLevel == LEVEL_BOWSER_1)
+        return LEVEL_BITDW;
+    if (currLevel == LEVEL_BOWSER_2)
+        return LEVEL_BITFS;
+    if (currLevel == LEVEL_VCUTM)
+        return LEVEL_BBH;
+    if (currLevel == LEVEL_COTMC)
+        return LEVEL_CCM;
+    if (currLevel == LEVEL_TOTWC)
+        return LEVEL_TTM;
+
+    return currLevel;
 }
 
 static int arr_have(const u8* arr, size_t arrSize, u8 val)
@@ -803,8 +806,11 @@ static int arr_have(const u8* arr, size_t arrSize, u8 val)
     return 0;
 }
 
-static void fixup_warps(u8 forLevel, const u8* restrictions, size_t restrictionsSize, tinymt32_t *randomState) {
-    u8 lvl = Randomizer_get_nonrandom_level(forLevel);
+static void fixup_warps(u8 lvl, const u8* restrictions, size_t restrictionsSize, tinymt32_t *randomState) {
+    lvl = Randomizer_get_nonrandom_level(lvl);
+    lvl = expected_mini_level_target(lvl);
+    lvl = Randomizer_get_nonrandom_level(lvl);
+
     if (!arr_have(restrictions, restrictionsSize, lvl)) {
         u8 newLvl = pick_random_u8(restrictions, restrictionsSize, randomState);
         u8 tmp = Randomizer_gWarpDestinations[newLvl];
@@ -821,7 +827,7 @@ static void init_warp_scramble() {
 
     shuffle_warp_pool(sWarpPool0, ARRAY_SIZE(sWarpPool0), &randomState);
     shuffle_warp_pool(sWarpPool1, ARRAY_SIZE(sWarpPool1), &randomState);
-    if (Randomizer_gOptionsSettings.gameplay.s.keepStructure && !Randomizer_gOptionsSettings.gameplay.s.adjustedExits)
+    if (Randomizer_gOptionsSettings.gameplay.s.keepStructure)
     {
         fixup_warps(LEVEL_BOWSER_1, sWarpsPreB1, ARRAY_SIZE(sWarpsPreB1), &randomState);
         fixup_warps(LEVEL_BOWSER_2, sWarpsPreB2, ARRAY_SIZE(sWarpsPreB2), &randomState);

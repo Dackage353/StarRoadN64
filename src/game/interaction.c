@@ -769,23 +769,16 @@ u32 interact_water_ring(struct MarioState *m, UNUSED u32 interactType, struct Ob
 extern void lvl_calc_igt();
 u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct Object *obj) {
     u32 starIndex;
-    
+    u32 starGrabAction = ACT_STAR_DANCE_EXIT;
+
     u32 nonstopType = Randomizer_gOptionsSettings.gameplay.s.nonstopMode;
     if ((gCurrLevelNum == LEVEL_BOWSER_1) || (gCurrLevelNum == LEVEL_BOWSER_2)) {
         nonstopType = 0;
     }
 
-    u32 starGrabAction = ACT_STAR_DANCE_EXIT || nonstopType;
-#ifdef NON_STOP_STARS
- #ifdef KEYS_EXIT_LEVEL
-    u32 noExit = !obj_has_model(obj, MODEL_BOWSER_KEY);
- #else
-    u32 noExit = TRUE;
- #endif
-#else // !NON_STOP_STARS
-    u32 noExit = (obj->oInteractionSubtype & INT_SUBTYPE_NO_EXIT) != 0;
-#endif // !NON_STOP_STARS
+    u32 noExit = (obj->oInteractionSubtype & INT_SUBTYPE_NO_EXIT) || nonstopType;
     u32 grandStar = (obj->oInteractionSubtype & INT_SUBTYPE_GRAND_STAR) != 0;
+
 
     if (m->health >= 0x100) {
         if (nonstopType != 2) {
@@ -862,6 +855,10 @@ u32 interact_star_or_key(struct MarioState *m, UNUSED u32 interactType, struct O
         play_sound(SOUND_MENU_STAR_SOUND, m->marioObj->header.gfx.cameraToObject);
         update_mario_sound_and_camera(m);
 
+        if (((struct Object *)obj->oStarOrangeNumPointer) != NULL) {
+            obj_mark_for_deletion((struct Object *)obj->oStarOrangeNumPointer);
+        }
+        
         if (grandStar) {
             return set_mario_action(m, ACT_JUMBO_STAR_CUTSCENE, 0);
         }

@@ -54,7 +54,7 @@ void bhv_hidden_star_trigger_loop(void) {
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
         if (configFasterObjects)
         {
-            if (gCurrLevelNum == LEVEL_VCUTM || gCurrLevelNum == LEVEL_RR || gCurrLevelNum == LEVEL_WDW)
+            if (0)
             {
                 struct Object* checkmark = spawn_object(o, MODEL_CHECKMARK, bhvCheckMark);
                 checkmark->oPosY += 150.f;

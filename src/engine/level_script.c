@@ -568,9 +568,11 @@ static void level_cmd_create_warp_node(void) {
 
         destLevel = CMD_GET(u8, 3) + CMD_GET(u8, 6);
         if (((gCurrCourseNum == COURSE_NONE)
-         || ((gCurrCourseNum == COURSE_BBH) || (destLevel == LEVEL_VCUTM))
-         || ((gCurrCourseNum == COURSE_CCM) || (destLevel == LEVEL_COTMC))
-         || ((gCurrCourseNum == COURSE_TTM) || (destLevel == LEVEL_TOTWC)))
+         || ((gCurrCourseNum == COURSE_BBH)   && (destLevel == LEVEL_VCUTM))
+         || ((gCurrCourseNum == COURSE_CCM)   && (destLevel == LEVEL_COTMC))
+         || ((gCurrCourseNum == COURSE_TTM)   && (destLevel == LEVEL_TOTWC))
+         || ((gCurrCourseNum == COURSE_BITDW) && (destLevel == LEVEL_BOWSER_1))
+         || ((gCurrCourseNum == COURSE_BITFS) && (destLevel == LEVEL_BOWSER_2)))
             && (Randomizer_gWarpDestinations[destLevel] != 0) && Randomizer_gOptionsSettings.gameplay.s.randomLevelWarp) {
             warpNode->node.destLevel = Randomizer_gWarpDestinations[destLevel];
         } else {
@@ -583,17 +585,20 @@ static void level_cmd_create_warp_node(void) {
         if (!Randomizer_gOptionsSettings.gameplay.s.adjustedExits // We want to use the warp as intended in the script if we have random warps
             || ((id != 0xF0) && (id != 0xF1)) // or if it's not a death or star warp. 
             || (intendedLevel == 0)  // or if the level is not a randomized level
-            || ((id == 0xF1) && ((gCurrLevelNum == LEVEL_BOWSER_1) || (gCurrLevelNum == LEVEL_BOWSER_2)))) { // or if it's a Bowser death warp.
+            || ((id == 0xF1) && ((0) || (0)))) { // or if it's a Bowser death warp.
             warpNode->node.destArea = CMD_GET(u8, 4);
             warpNode->node.destNode = CMD_GET(u8, 5);          
         } else{
             warpNode->node.destArea = Randomizer_gLevelWarps[intendedLevel].area;
             if (id == 0xF0) {
                 warpNode->node.destNode = Randomizer_gLevelWarps[intendedLevel].f0;
+                warpNode->node.destLevel = Randomizer_gLevelWarps[intendedLevel].level;
             } else {
-                warpNode->node.destNode = Randomizer_gLevelWarps[intendedLevel].f1;          
+                warpNode->node.destNode = Randomizer_gLevelWarps[intendedLevel].f1;    
+                warpNode->node.destLevel = Randomizer_gLevelWarps[intendedLevel].f1levelOverride
+                                         ? Randomizer_gLevelWarps[intendedLevel].f1levelOverride
+                                         : Randomizer_gLevelWarps[intendedLevel].level;  
             }
-            warpNode->node.destLevel = Randomizer_gLevelWarps[intendedLevel].level;
         }
         warpNode->next = gAreas[sCurrAreaIndex].warpNodes;
         gAreas[sCurrAreaIndex].warpNodes = warpNode;
