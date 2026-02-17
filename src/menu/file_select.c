@@ -123,11 +123,11 @@ static const char textEnterSeed[] = "ENTER SEED";
 static const char textOptionSelect[] = "SELECT OPTIONS";
 static const char textSeedShouldBe[] = "SEED SHOULD BE BETWEEN 0 AND 9999999";
 
-static const char textPlus[] = "<";
-static const char textMinus[] = ">";
+static const char textPlus[] = "◀";
+static const char textMinus[] = "▶";
 
-static const char textNext[] = "< L - PREV";
-static const char textPrev[] = "NEXT - R >";
+static const char textNext[] = "◀ L - PREV";
+static const char textPrev[] = "NEXT - R ▶";
 
 static const char textPreset1[] = "DEFAULT";
 static const char textPreset2[] = "DEFAULT PLUS";
