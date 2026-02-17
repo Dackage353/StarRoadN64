@@ -780,7 +780,7 @@ u8 Randomizer_get_nonrandom_level(u8 currLevel)
     return 0;
 }
 
-static u8 expected_mini_level_target(u8 currLevel)
+u8 Randomizer_expected_mini_level_target(u8 currLevel)
 {
     if (currLevel == LEVEL_BOWSER_1)
         return LEVEL_BITDW;
@@ -808,7 +808,7 @@ static int arr_have(const u8* arr, size_t arrSize, u8 val)
 
 static void fixup_warps(u8 lvl, const u8* restrictions, size_t restrictionsSize, tinymt32_t *randomState) {
     lvl = Randomizer_get_nonrandom_level(lvl);
-    lvl = expected_mini_level_target(lvl);
+    lvl = Randomizer_expected_mini_level_target(lvl);
     lvl = Randomizer_get_nonrandom_level(lvl);
 
     if (!arr_have(restrictions, restrictionsSize, lvl)) {

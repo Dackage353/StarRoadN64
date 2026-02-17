@@ -134,6 +134,7 @@ extern void Randomizer_get_safe_position(struct Object *, Vec3s, f32, f32, tinym
 extern f32 Randomizer_get_val_in_range_uniform(f32, f32, tinymt32_t *);
 extern void Randomizer_init_randomizer(s32 fileNum);
 extern u8 Randomizer_get_nonrandom_level(u8 level);
+extern u8 Randomizer_expected_mini_level_target(u8 currLevel);
 extern void Randomizer_print_seed_and_options_data(void);
 extern void Randomizer_set_mario_rando_colors(void);
 extern void Randomizer_init_star_color(struct Object *star, s32 courseID, s32 starID);

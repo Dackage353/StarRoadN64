@@ -22,7 +22,7 @@ static const u8 sWarpPool0[] = {
     LEVEL_DDD,
     LEVEL_WF,
     LEVEL_PSS,
-    LEVEL_WMOTR,
+    // LEVEL_WMOTR,
     LEVEL_TTM,
     LEVEL_BITDW,
     LEVEL_BITFS,
@@ -88,7 +88,7 @@ static const u8 gWarpDestinationsStatic[] = {
     [LEVEL_PSS] = LEVEL_PSS,
     [LEVEL_COTMC] = LEVEL_COTMC,
     [LEVEL_TOTWC] = LEVEL_TOTWC,
-    [LEVEL_WMOTR] = LEVEL_WMOTR,
+    // [LEVEL_WMOTR] = LEVEL_WMOTR,
     [LEVEL_TTM] = LEVEL_TTM,
 };
 

@@ -579,7 +579,13 @@ static void level_cmd_create_warp_node(void) {
             warpNode->node.destLevel = destLevel;
         }
 
+        // c6 -> c12 -> warp outside of c12
+        // b1 -> wc -> c12 -> c1 -> warp outside of c1
         intendedLevel = Randomizer_get_nonrandom_level(gCurrLevelNum); // We have to find what the level is supposed to be, rather than where we are.
+        u8 miniLevelTarget = Randomizer_expected_mini_level_target(intendedLevel);
+        if (miniLevelTarget != intendedLevel) {
+            intendedLevel = Randomizer_get_nonrandom_level(miniLevelTarget);
+        }
 
         warpNode->node.id = id = CMD_GET(u8, 2);
         if (!Randomizer_gOptionsSettings.gameplay.s.adjustedExits // We want to use the warp as intended in the script if we have random warps
