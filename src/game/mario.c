@@ -1461,7 +1461,7 @@ void update_mario_health(struct MarioState *m) {
         if (m->hurtCounter > 0) {
             m->health -= 0x40;
             m->hurtCounter--;
-            if (configHardMode)
+            if (configHardMode || Randomizer_gOptionsSettings.gameplay.s.ironMode)
             {
                 m->health = 0xff;
             }

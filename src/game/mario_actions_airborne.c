@@ -15,6 +15,7 @@
 #include "save_file.h"
 #include "rumble_init.h"
 #include "options_menu.h"
+#include "game/randomizer.h"
 
 #include "config.h"
 
@@ -983,7 +984,7 @@ s32 act_burning_jump(struct MarioState *m) {
     m->marioObj->oMarioBurnTimer += 3;
 
     m->health -= 10;
-    if (configHardMode)
+    if (configHardMode || Randomizer_gOptionsSettings.gameplay.s.ironMode)
     {
         m->health = 0xff;
     }
@@ -1010,7 +1011,7 @@ s32 act_burning_fall(struct MarioState *m) {
     m->marioObj->oMarioBurnTimer += 3;
 
     m->health -= 10;
-    if (configHardMode)
+    if (configHardMode || Randomizer_gOptionsSettings.gameplay.s.ironMode)
     {
         m->health = 0xff;
     }

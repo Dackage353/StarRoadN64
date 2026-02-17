@@ -15,6 +15,7 @@
 #include "behavior_data.h"
 #include "rumble_init.h"
 #include "options_menu.h"
+#include "game/randomizer.h"
 
 #include "config.h"
 
@@ -1339,7 +1340,7 @@ s32 act_burning_ground(struct MarioState *m) {
     play_sound(SOUND_MOVING_LAVA_BURN, m->marioObj->header.gfx.cameraToObject);
 
     m->health -= 10;
-    if (configHardMode)
+    if (configHardMode || Randomizer_gOptionsSettings.gameplay.s.ironMode)
     {
         m->health = 0xff;
     }

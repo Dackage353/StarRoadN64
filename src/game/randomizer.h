@@ -74,8 +74,9 @@ struct Randomizer_nodeInfo {
 struct Randomizer_OptionsSettings {
     union {
         struct {
-            u32 padding:14; // to make sure settings ids are small
+            u32 padding:13; // to make sure settings ids are small
 
+            u32 ironMode:1;
             u32 keepStructure:1;
             u32 randomLevelWarp:1;
             u32 adjustedExits:2;
