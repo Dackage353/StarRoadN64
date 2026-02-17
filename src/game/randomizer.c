@@ -99,6 +99,18 @@ static void print_generic_text_ascii_buf(s16 x, s16 y, const char *str) {
     return print_text_aligned(x, y, str, TEXT_ALIGN_LEFT);
 }
 
+void Randomizer_refreshPreset()
+{
+    for (size_t i = 0; i < ARRAY_COUNT(Randomizer_gPresets); i++) {
+        if (Randomizer_gOptionsSettings.gameplay.w == Randomizer_gPresets[i].gameplay.w) {
+            Randomizer_curPreset = i;
+            return;
+        }
+    }
+
+    Randomizer_curPreset = -1;
+}
+
 void Randomizer_print_seed_and_options_data(void) {
     char buf[20];
     s32 ypos = (gIsConsole ? 10 : 4);

@@ -846,7 +846,8 @@ static void seed_menu_check_clicked_buttons(struct Object *seedButton) {
                 }
                 if (buttonId == MENU_BUTTON_SELECT_SEED_RETURN) {
                     sCurrentMenuLevel = MENU_LAYER_SUBMENU;
-                    sSelectedButtonID = buttonId;
+                    sSelectedButtonID = buttonId;        
+                    save_main_menu_data();
                     break;
                 } else if (buttonId == MENU_BUTTON_SELECT_SEED_RESET) {
                     for (int i = 0; i < 7; i++) {
@@ -949,6 +950,7 @@ static void seed_menu_options_check_clicked_buttons(UNUSED struct Object *seedBu
         play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
         sCurrentMenuLevel = MENU_LAYER_SUBMENU;
         sSelectedButtonID = MENU_BUTTON_SELECT_SEED_RETURN;
+        save_main_menu_data();
         mark_obj_for_deletion(sMainMenuButtons[MENU_BUTTON_SELECT_SEED_OPTIONS]);
     }
     if (check_clicked_text_width(35,33,0,60)) {
@@ -1287,6 +1289,7 @@ void check_main_menu_clicked_buttons(void) {
  * sSelectedButtonID is MENU_BUTTON_NONE when the file select
  * is loaded, and that checks what buttonID is clicked in the main menu.
  */
+extern void save_main_menu_data(void);
 extern void seq_player_play_sequence(u8 player, u8 seqId, u16 arg2);
 void bhv_menu_button_manager_loop(void) {
 #if 0
@@ -3277,8 +3280,8 @@ s32 lvl_init_menu_values_and_cursor_pos(UNUSED s32 arg, UNUSED s32 unused) {
     sSoundMode = save_file_get_sound_mode();
     Randomizer_gOverwriteFileOptions = FALSE;
     Randomizer_gOverwriteFileSeed = FALSE;
-    Randomizer_curPreset = 0;
-    applyPreset();
+    // Randomizer_curPreset = 0;
+    // applyPreset();
 #ifdef MULTILANG
     sSelectedLanguageIndex = get_language_index(gInGameLanguage);
 

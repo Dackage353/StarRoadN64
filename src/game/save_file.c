@@ -215,6 +215,7 @@ static void add_save_block_signature(void *buffer, s32 size, u16 magic) {
 
 void save_main_menu_data(void) {
     gSaveBuffer.menuData.randomNum = tinymt32_generate_u32(&gGlobalRandomState);
+    gSaveBuffer.menuData.randomizerDefaults = Randomizer_gOptionsSettings;
     gMainMenuDataModified = TRUE;
 
     if (gMainMenuDataModified) {
@@ -232,6 +233,7 @@ static void wipe_main_menu_data(void) {
     bzero(&gSaveBuffer.menuData, sizeof(gSaveBuffer.menuData));
 
     gMainMenuDataModified = TRUE;
+    Randomizer_gOptionsSettings = Randomizer_gPresets[0];
     save_main_menu_data();
 }
 
@@ -390,6 +392,8 @@ void save_file_load_all(void) {
     multilang_set_language(get_language_index(multilang_get_language()));
 #endif
     tinymt32_init(&gGlobalRandomState, gSaveBuffer.menuData.randomNum);
+    Randomizer_gOptionsSettings = gSaveBuffer.menuData.randomizerDefaults;
+    Randomizer_refreshPreset();
 }
 
 #ifdef PUPPYCAM

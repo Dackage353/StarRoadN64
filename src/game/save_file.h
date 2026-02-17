@@ -63,7 +63,7 @@ struct MainMenuSaveData {
     // For backwards compatibility 0x40000000 is booked for the adventure select flag, but the rest of the bits are free for use.
     u32 optionsFlags;
     u32 randomNum;
-    u32 filler[2];
+    struct Randomizer_OptionsSettings randomizerDefaults;
 
     u8 soundMode: 1;
     u8 configVIAntialiasing : 1;
