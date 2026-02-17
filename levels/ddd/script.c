@@ -36,6 +36,8 @@ extern const BehaviorScript bhvStarRoadMMMDrumstick[]; // 54 = 0x36
 
 extern const GeoLayout star_road_mmm_tambourine_geo[];
 extern const GeoLayout star_road_mmm_drumstick_geo[];
+
+extern const BehaviorScript bhvThwompNonRandomized[];
 /* Fast64 end persistent block [scripts] */
 
 const LevelScript level_ddd_entry[] = {
@@ -88,8 +90,8 @@ const LevelScript level_ddd_entry[] = {
 		TERRAIN_TYPE(0),
 
 		OBJECT_WITH_ACTS(0,598,2857,-3389,0,0,0,0xa0000, bhvAirborneWarp,255),
-		OBJECT_WITH_ACTS(88,6072,-102,-3269,0,0,0,0x0, bhvThwomp,63),
-		OBJECT_WITH_ACTS(88,4948,820,-5498,0,90,0,0x0, bhvThwomp,63),
+		OBJECT_WITH_ACTS(88,6072,-102,-3269,0,0,0,0x0, bhvThwompNonRandomized,63),
+		OBJECT_WITH_ACTS(88,4948,820,-5498,0,90,0,0x0, bhvThwompNonRandomized,63),
 		OBJECT_WITH_ACTS(84,-231,-1102,5263,0,180,0,0x0, bhvBulletBill,127),
 		OBJECT_WITH_ACTS(84,287,-163,5069,0,180,0,0x0, bhvBulletBill,63),
 		OBJECT_WITH_ACTS(84,-606,-1762,5361,0,180,0,0x0, bhvBulletBill,63),
