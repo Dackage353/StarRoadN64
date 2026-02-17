@@ -22,7 +22,7 @@
 #include "game/options_menu.h"
 #include "sm64.h"
 
-#define VERSION "1.01"
+#define VERSION "1.02"
 
 /**
  * @file file_select.c
