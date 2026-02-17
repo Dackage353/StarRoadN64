@@ -24,8 +24,6 @@
 
 static char textEnteredNumbers[8] = "0000000";
 
-#define VERSION "1.01"
-
 /**
  * @file file_select.c
  * This file implements how the file select and it's menus render and function.

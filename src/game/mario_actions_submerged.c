@@ -169,11 +169,12 @@ static u32 perform_water_step(struct MarioState *m) {
 
     Vec3f qvel;
     vec3f_copy(qvel, m->vel);
-    qvel[0] /= 4.f;
-    qvel[1] /= 4.f;
-    qvel[2] /= 4.f;
+    int numQSteps = gCurrCourseNum == COURSE_CCM ? 1 : 4;
+    qvel[0] /= numQSteps;
+    qvel[1] /= numQSteps;
+    qvel[2] /= numQSteps;
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < numQSteps; i++)
     {
         Vec3f step;
         vec3f_copy(step, qvel);
@@ -198,7 +199,7 @@ static u32 perform_water_step(struct MarioState *m) {
     vec3f_copy(marioObj->header.gfx.pos, m->pos);
     vec3s_set(marioObj->header.gfx.angle, -m->faceAngle[0], m->faceAngle[1], m->faceAngle[2]);
 
-    if (gCurrCourseNum == COURSE_HMC)
+    if (gCurrCourseNum == COURSE_HMC || gCurrCourseNum == COURSE_SSL)
     {
         f32 ceil = find_ceil(m->pos[0], m->floorHeight, m->pos[2], &m->ceil);
         if (m->pos[1] > ceil)

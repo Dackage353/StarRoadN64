@@ -333,6 +333,7 @@ void set_vi_mode_from_config()
 }
 
 void load_area(s32 index) {
+    fail_warp_drop_last_safe_pos();
     set_vi_mode_from_config();
     
     // Clear randomizer data
