@@ -568,7 +568,9 @@ static void level_cmd_create_warp_node(void) {
 
         destLevel = CMD_GET(u8, 3) + CMD_GET(u8, 6);
         if (((gCurrCourseNum == COURSE_NONE)
-             || ((gCurrCourseNum == COURSE_HMC) || (destLevel == LEVEL_COTMC)))
+         || ((gCurrCourseNum == COURSE_BBH) || (destLevel == LEVEL_VCUTM))
+         || ((gCurrCourseNum == COURSE_CCM) || (destLevel == LEVEL_COTMC))
+         || ((gCurrCourseNum == COURSE_TTM) || (destLevel == LEVEL_TOTWC)))
             && (Randomizer_gWarpDestinations[destLevel] != 0) && Randomizer_gOptionsSettings.gameplay.s.randomLevelWarp) {
             warpNode->node.destLevel = Randomizer_gWarpDestinations[destLevel];
         } else {
