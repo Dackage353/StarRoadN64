@@ -7012,7 +7012,6 @@ const BehaviorScript bhvStarRoadBOFBarrel[] = {
     LOAD_COLLISION_DATA(col_hmc_geo_000548_0xeb0097),
     ADD_FLOAT(oPosY,65486),
     SET_HOME(),
-    RANDOMIZE_OBJ(RAND_TYPE_GROUNDED),
     BEGIN_LOOP(),
         CALL_NATIVE( bhv_lll_sinking_rock_block_loop),
         CALL_NATIVE( load_object_collision_model),
