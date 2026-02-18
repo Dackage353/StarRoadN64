@@ -6995,7 +6995,6 @@ const BehaviorScript bhvStarRoadFFFSink[] = {
     LOAD_COLLISION_DATA(col_geo_bbh_000640_0xa71f04),
     ADD_FLOAT(oPosY,5),
     SET_FLOAT(oCollisionDistance,2000),
-    RANDOMIZE_OBJ(RAND_TYPE_GROUNDED),
     SET_HOME(),
     BEGIN_LOOP(),
         CALL_NATIVE( bhv_lll_sinking_square_platforms_loop),
