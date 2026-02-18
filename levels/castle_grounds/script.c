@@ -187,7 +187,7 @@ const LevelScript level_castle_grounds_entry[] = {
 		WARP_NODE(255,6,1,10,0),
 		WARP_NODE(255,6,1,10,0),
 		WARP_NODE(255,6,1,10,0),
-		WARP_NODE(64,5,1,2,0),
+		WARP_NODE(64,5,1,10,0),
 		WARP_NODE(10,9,1,10,0),
 		WARP_NODE(9,16,1,9,0),
 		WARP_NODE(31,16,1,31,0),
