@@ -15,6 +15,14 @@ static struct ObjectHitbox sCollectStarHitbox = {
 
 void bhv_collect_star_init(void) {
     u8 starId = GET_BPARAM1(o->oBehParams);
+
+    if ((gCurrCourseNum <= COURSE_RR) && (gCurrCourseNum >= COURSE_BOB)) {
+        struct Object *num = spawn_orange_number(starId + 1, 0, 0, 0);
+        num->oOrangeNumType = 1;
+        num->oOrangeNumPointer = o;
+        o->oStarOrangeNumPointer = num;
+    }
+
     int model;
 #ifdef GLOBAL_STAR_IDS
     u8 currentLevelStarFlags = save_file_get_star_flags((gCurrSaveFileNum - 1), COURSE_NUM_TO_INDEX(starId / 7));

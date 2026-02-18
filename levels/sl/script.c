@@ -26,7 +26,7 @@ extern const GeoLayout Geo_sl_1_0x1741700[];
 #define sl_area_1 Geo_sl_1_0x1741700
 
 extern const GeoLayout shyguy_geo[];
-extern const BehaviorScript bhvMoneybagHidden[];
+extern const BehaviorScript bhvMoneybagHiddenRando[];
 /* Fast64 end persistent block [scripts] */
 
 const LevelScript level_sl_entry[] = {

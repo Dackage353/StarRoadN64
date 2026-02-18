@@ -13,16 +13,21 @@ struct ObjectHitbox sSparkleSpawnStarHitbox = {
     /* hurtboxHeight:     */ 0,
 };
 
+extern struct Object* spawn_orange_number(s8 behParam, s16 relX, s16 relY, s16 relZ);
 void bhv_spawned_star_init(void) {
     if (!(o->oInteractionSubtype & INT_SUBTYPE_NO_EXIT)) {
         o->oBehParams = o->parentObj->oBehParams;
     }
-    u8 param = GET_BPARAM1(o->oBehParams);
-#ifdef GLOBAL_STAR_IDS
-    if ((1 << (param % 7)) & save_file_get_star_flags((gCurrSaveFileNum - 1), COURSE_NUM_TO_INDEX(param / 7))) {
-#else
+    s32 param = GET_BPARAM1(o->oBehParams);
+
+    if (gCurrCourseNum <= COURSE_RR && gCurrCourseNum >= COURSE_BOB) {
+        struct Object *num = spawn_orange_number(param + 1, 0, 0, 0);
+        num->oOrangeNumType = 1;
+        num->oOrangeNumPointer = o;
+        o->oStarOrangeNumPointer = num;
+    }
+
     if ((1 << param) & save_file_get_star_flags((gCurrSaveFileNum - 1), COURSE_NUM_TO_INDEX(gCurrCourseNum))) {
-#endif
         cur_obj_set_model(MODEL_TRANSPARENT_STAR);
     }
 

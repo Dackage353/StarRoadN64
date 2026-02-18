@@ -670,11 +670,11 @@ s32 obj_lava_death(void) {
 /**
  * Spawns an orange number object relatively, such as those that count up for secrets.
  */
-void spawn_orange_number(s8 behParam, s16 relX, s16 relY, s16 relZ) {
+struct Object* spawn_orange_number(s8 behParam, s16 relX, s16 relY, s16 relZ) {
 #ifdef DIALOG_INDICATOR
-    if (behParam > ORANGE_NUMBER_F) return;
+    if (behParam > ORANGE_NUMBER_F) return NULL;
 #else
-    if (behParam > ORANGE_NUMBER_9) return;
+    if (behParam > ORANGE_NUMBER_9) return NULL;
 #endif
 
     struct Object *orangeNumber = spawn_object_relative(behParam, relX, relY, relZ, o, MODEL_NUMBER, bhvOrangeNumber);
@@ -682,6 +682,8 @@ void spawn_orange_number(s8 behParam, s16 relX, s16 relY, s16 relZ) {
     orangeNumber->oOrangeNumberOffset = relX;
     orangeNumber->oHomeX = o->oPosX;
     orangeNumber->oHomeZ = o->oPosZ;
+
+    return orangeNumber;
 }
 
 /**
