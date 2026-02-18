@@ -1412,14 +1412,14 @@ void handle_controller_cursor_input(void) {
         rawStickX = 0;
     }
 
-    // Move cursor
-    if (sSelectedButtonID == MENU_BUTTON_SCORE) {
-        sCursorPos[0] += rawStickX / 12;
-        sCursorPos[1] += rawStickY / 12;
-    } else {
+//    // Move cursor
+//    if (sSelectedButtonID == MENU_BUTTON_SCORE) {
+//        sCursorPos[0] += rawStickX / 12;
+//        sCursorPos[1] += rawStickY / 12;
+//    } else {
         sCursorPos[0] += rawStickX / 8;
         sCursorPos[1] += rawStickY / 8;
-    }
+//    }
 
     // Stop cursor from going offscreen
     if (sCursorPos[0] > 132.0f) {
