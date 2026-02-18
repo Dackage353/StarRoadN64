@@ -86,6 +86,7 @@ const LevelScript level_cotmc_entry[] = {
 		OBJECT_WITH_ACTS(0,656,5620,-1202,0,225,0,0x0, bhvCoinFormation,31),
 		OBJECT_WITH_ACTS(206,-771,5248,-3631,0,0,0,0x0, bhvSnufit,31),
 		OBJECT_WITH_ACTS(212,-5094,6916,-506,0,0,0,0x0, bhv1Up,31),
+		OBJECT_WITH_ACTS(MODEL_RED_COIN_RADAR,0,0,0,0,0,0,0<<24, bhvRedCoinRadar, 31),
 
 		WARP_NODE(0x20,16,1,128,0),
 		WARP_NODE(10,9,1,10,0),
