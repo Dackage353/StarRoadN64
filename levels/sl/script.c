@@ -26,6 +26,7 @@ extern const GeoLayout Geo_sl_1_0x1741700[];
 #define sl_area_1 Geo_sl_1_0x1741700
 
 extern const GeoLayout shyguy_geo[];
+extern const BehaviorScript bhvMoneybagHidden[];
 /* Fast64 end persistent block [scripts] */
 
 const LevelScript level_sl_entry[] = {
@@ -83,7 +84,7 @@ const LevelScript level_sl_entry[] = {
 		OBJECT_WITH_ACTS(101,4481,3752,3339,0,0,0,0x0, bhvBigChillBully,1),
 		OBJECT_WITH_ACTS(100,-1258,1150,-4642,0,-153,0,0x0, bhvSmallChillBully,63),
 		OBJECT_WITH_ACTS(18,-1176,1204,725,0,107,0,0x0, bhvTree,63),
-		OBJECT_WITH_ACTS(116,4301,3725,3787,0,-151,0,0xe0000, bhvMoneybagHidden,62),
+		OBJECT_WITH_ACTS(116,4301,3725,3787,0,-151,0,0xe0000, bhvMoneybagHiddenRando,62),
 		OBJECT_WITH_ACTS(18,-3742,1204,-2823,0,0,0,0x0, bhvTree,63),
 		OBJECT_WITH_ACTS(0,4516,3725,3300,90,0,0,0x20000, bhvCoinFormation,62),
 		OBJECT_WITH_ACTS_FORCE_ACTIVE(87,5503,2275,-5422,0,0,0,0x3000000, bhvTuxiesMother,62),
@@ -181,7 +182,7 @@ const LevelScript level_sl_entry[] = {
 		OBJECT_WITH_ACTS(212,-1257,320,-5264,0,0,0,0x0, bhv1Up,63),
 		OBJECT_WITH_ACTS(18,-805,-609,3003,0,0,0,0x0, bhvTree,63),
 		OBJECT_WITH_ACTS(18,-1457,-609,2198,0,0,0,0x0, bhvTree,63),
-		OBJECT_WITH_ACTS(116,-1175,-609,2591,0,0,0,0x0, bhvMoneybagHidden,63),
+		OBJECT_WITH_ACTS(116,-1175,-609,2591,0,0,0,0x0, bhvMoneybagHiddenRando,63),
 		OBJECT_WITH_ACTS(85,-752,-684,3750,0,0,0,0x0, bhvMrBlizzard,63),
 		OBJECT_WITH_ACTS(0,3025,1586,-5441,0,0,0,0x0, bhvCoinFormation,63),
 		OBJECT_WITH_ACTS(MODEL_RED_COIN_RADAR,0,0,0,0,0,0,5<<24, bhvRedCoinRadar, 31),
