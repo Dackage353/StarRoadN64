@@ -193,6 +193,7 @@ Gfx *geo_switch_peach_eyes(s32 callContext, struct GraphNode *node, UNUSED s32 c
  * numStars has reached a milestone and prevNumStarsForDialog has not reached it.
  */
 s32 get_star_collection_dialog(struct MarioState *m) {
+    return 0;
     s32 i;
     s32 dialogID = 0;
     s32 numStarsRequired;
