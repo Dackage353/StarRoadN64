@@ -1588,7 +1588,7 @@ static void print_file_names_and_seeds(u32 submenu) {
             sprintf(seed, "%07d", gSaveBuffer.files[i][0].seed);
             xpos = i % 2 ? SEEDTEXT_X2 : SEEDTEXT_X1;
             ypos = i < 2 ? SEEDTEXT_Y1 : SEEDTEXT_Y2;
-            print_menu_generic_string(xpos, ypos, seed);
+            print_menu_generic_string(xpos - 7, ypos, seed);
         }
     }
     gSPDisplayList(gDisplayListHead++, dl_menu_ia8_text_end);
@@ -2335,7 +2335,7 @@ static void draw_select_seed_menu(void) {
     if (!Randomizer_gIsSetSeed)
         print_hud_lut_string(125, 80, textRandom);
     else {
-        print_hud_lut_string(130, 80, textEnteredNumbers);
+        print_hud_lut_string(130 - 10, 80, textEnteredNumbers);
     }
 
     for (u32 i = 0; i < 10; i++) {
