@@ -611,21 +611,21 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
         if (gCurrLevelNum == LEVEL_HMC)
         {
             f32 df = lowFloorHeight - 2073.f;
-            if (absf(df) < 1.f)
+            if (absf(df) < 10.f)
             {
                 // is covered by ground?
                 {
                     struct Surface* t = NULL;
-                    f32 height = find_floor(pos[0], pos[1] + 20, pos[2], &t);
-                    if (height - 2073.f > 1.f)
+                    f32 height = find_floor(pos[0], 8000.f, pos[2], &t);
+                    if (height - 2073.f > 10.f)
                         continue;
                 }
 
                 // raycast to the left to check if covered by wall - first find the rock location...
                 Vec3f leftPos;
-                Vec3f loc = { pos[0] , pos[1] + 1.f, pos[2] };
+                Vec3f loc = { pos[0] , pos[1] + 10.f, pos[2] };
                 {
-                    Vec3f r1 = { -8000.f, pos[1] + 1.f, pos[2] };
+                    Vec3f r1 = { -8000.f, pos[1] + 10.f, pos[2] };
                     Vec3f dir;
                     vec3_diff(dir, r1, loc);
                     struct Surface* surf = NULL;
