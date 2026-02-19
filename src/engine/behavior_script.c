@@ -345,6 +345,11 @@ static s32 bhv_cmd_set_int(void) {
 }
 
 static s32 bhv_cmd_randomize_object(void) {
+    if (gCurrLevelNum == LEVEL_BOWSER_2)
+    {
+        goto end;
+    }
+
     u32 randType = BHV_CMD_GET_U32(1);
     u8 randomize = FALSE;
     Vec3s pos;
@@ -524,6 +529,7 @@ static s32 bhv_cmd_randomize_object(void) {
 
     cur_obj_update_floor_height();
 
+end:
     gCurBhvCommand++;
     return BHV_PROC_CONTINUE;
 }

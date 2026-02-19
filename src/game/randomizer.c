@@ -433,6 +433,12 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
         wallRadius = 300.f;
     }
 
+    if (gCurrLevelNum == LEVEL_BOWSER_2) {
+        pos[0] = 0;
+        pos[1] = 2310;
+        pos[2] = 1935;
+        return;
+    }
     if (areaParams == NULL) {
         pos[0] = 0;
         pos[1] = 5000;
@@ -604,6 +610,45 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
             }
         }
 #endif
+        if (gCurrLevelNum == LEVEL_HMC)
+        {
+            f32 df = lowFloorHeight - 2073.f;
+            if (absf(df) < 1.f)
+            {
+                // is covered by ground?
+                {
+                    struct Surface* t = NULL;
+                    f32 height = find_floor(pos[0], pos[1] + 20, pos[2], &t);
+                    if (height - 2073.f > 1.f)
+                        continue;
+                }
+
+                // raycast to the left to check if covered by wall - first find the rock location...
+                Vec3f leftPos;
+                Vec3f loc = { pos[0] , pos[1] + 1.f, pos[2] };
+                {
+                    Vec3f r1 = { -8000.f, pos[1] + 1.f, pos[2] };
+                    Vec3f dir;
+                    vec3_diff(dir, r1, loc);
+                    struct Surface* surf = NULL;
+                    find_surface_on_ray(loc, dir, &surf, leftPos, (RAYCAST_FIND_FLOOR | RAYCAST_FIND_WALL | RAYCAST_FIND_CEIL));
+                }
+
+                // ... and then raycast down from there to check if it's a wall we are hitting
+                Vec3f hitPos;
+                {
+                    leftPos[0]++;
+                    Vec3f dir;
+                    vec3_diff(dir, loc, leftPos);
+                    struct Surface* surf = NULL;
+                    find_surface_on_ray(leftPos, dir, &surf, hitPos, (RAYCAST_FIND_FLOOR | RAYCAST_FIND_WALL | RAYCAST_FIND_CEIL));
+                }
+
+                f32 dx = hitPos[0] - loc[0];
+                if (dx < -10.f)
+                    continue;
+            }
+        }
 
         if (is_in_avoidance_point(pos, areaParams, obj))
             continue;
