@@ -96,7 +96,7 @@ struct Randomizer_OptionsSettings Randomizer_gPresets[] = {
 unsigned char textVersion2[] = { "Randomizer 0.1" };
 
 static void print_generic_text_ascii_buf(s16 x, s16 y, const char *str) {
-    return print_text_aligned(x, y, str, TEXT_ALIGN_LEFT);
+    print_generic_string_aligned(x, y+10, str, TEXT_ALIGN_LEFT);
 }
 
 void Randomizer_refreshPreset()
@@ -113,30 +113,28 @@ void Randomizer_refreshPreset()
 
 void Randomizer_print_seed_and_options_data(void) {
     char buf[20];
-    s32 ypos = (gIsConsole ? 10 : 4);
+    s32 ypos = 4;
     u32 i;
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
     
     sprintf(buf, "%s Seed", (Randomizer_gIsSetSeed ? "Set" : "Random"));
-    print_generic_text_ascii_buf(8, ypos + 28, buf);
-    sprintf(buf, "Seed\xE6 %05d", Randomizer_gGameSeed);
-    print_generic_text_ascii_buf(8, ypos + 14, buf);
+    print_generic_text_ascii_buf(20, ypos + 28, buf);
+    sprintf(buf, "Seed: %07d", Randomizer_gGameSeed);
+    print_generic_text_ascii_buf(20, ypos + 14, buf);
     
     for (i = 0; i < ARRAY_COUNT(Randomizer_gPresets); i++) {
         if (Randomizer_gOptionsSettings.gameplay.w == Randomizer_gPresets[i].gameplay.w) {
-            sprintf(buf, "Preset\xE6 %s", presetStrings[i]);
-            print_generic_text_ascii_buf(8,ypos,buf);
+            sprintf(buf, "Preset: %s", presetStrings[i]);
+            print_generic_text_ascii_buf(20,ypos,buf);
             goto presetFound; // don't kill me please
         }
     }
     
-    sprintf(buf, "Settings ID\xE6 %d", Randomizer_gOptionsSettings.gameplay.w);
-    print_generic_text_ascii_buf(8,ypos,buf);
+    sprintf(buf, "Settings ID: %d", Randomizer_gOptionsSettings.gameplay.w);
+    print_generic_text_ascii_buf(20,ypos,buf);
 
 presetFound:
-    print_generic_string_aligned(310 / 2, ypos, buf, TEXT_ALIGN_CENTER);
-
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
 }
 
