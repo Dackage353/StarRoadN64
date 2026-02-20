@@ -79,7 +79,9 @@ def vtx_filter_ow1(vtx):
     if vtx.pos.y > 420:
         return False
 
-    dx = vtx.pos.x - 3254
+    #dx = vtx.pos.x - 3254
+    #dz = vtx.pos.z + 1467
+    dx = vtx.pos.x - 2787
     dz = vtx.pos.z + 1467
 
     dr = dx * dx + dz * dz
