@@ -95,19 +95,9 @@ static void spoof_warp(struct MarioState *m)
     gFailWarpSpoofedWarpObject.oBehParams2ndByte = WARP_NODE_FAIL_WARP;
 }
 
-void fail_warp_drop_last_safe_pos()
-{
-    sSafePosArea = 0;
-    sSafePosLevel = 0;
-}
-
 void fail_warp_pre_level_trigger_warp(struct MarioState *m, s32* warpOp)
 {
     if (!configFailWarp)
-    {
-        return;
-    }
-    if (!sSafePosLevel)
     {
         return;
     }
