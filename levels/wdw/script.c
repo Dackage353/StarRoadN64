@@ -16,7 +16,7 @@
 #include "levels/wdw/header.h"
 
 /* Fast64 begin persistent block [scripts] */
-#include "levels/wdw/custom_c/custom.collision.inc.c"
+#include "levels/wdw/custom_c/custom.collision_noinviwalls.inc.c"
 #define wdw_area_1_collision col_wdw_1_0xe090ee8
 extern const GeoLayout Geo_wdw_1_0x1821700[];
 #define wdw_area_1 Geo_wdw_1_0x1821700

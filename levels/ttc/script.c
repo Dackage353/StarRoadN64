@@ -16,7 +16,7 @@
 #include "levels/ttc/header.h"
 
 /* Fast64 begin persistent block [scripts] */
-#include "levels/ttc/custom_c/custom.collision.inc.c"
+#include "levels/ttc/custom_c/custom.collision_noinviwalls.inc.c"
 #define ttc_area_1_collision col_ttc_1_0xe03dd58
 extern const GeoLayout Geo_ttc_1_0x1ac1700[];
 #define ttc_area_1 Geo_ttc_1_0x1ac1700
