@@ -800,7 +800,7 @@ static void level_cmd_set_music(void) {
         gAreas[sCurrAreaIndex].musicParam = CMD_GET(s16, 2);
         
         if (Randomizer_gOptionsSettings.cosmetic.s.musicOn == 1) {
-            s32 i = random_u16_seeded(Randomizer_gGameSeed + gCurrLevelNum * 8 + sCurrAreaIndex) % sizeof(Randomizer_gRandomSongs);
+            s32 i = random_u16_seeded(Randomizer_gGameSeed + gCurrLevelNum * 8 + sCurrAreaIndex) % Randomizer_gRandomSongsCount;
             gAreas[sCurrAreaIndex].musicParam2 = Randomizer_gRandomSongs[i];
         } else if (Randomizer_gOptionsSettings.cosmetic.s.musicOn == 2) {
             gAreas[sCurrAreaIndex].musicParam2 = 0;

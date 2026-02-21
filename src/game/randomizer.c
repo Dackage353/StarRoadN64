@@ -35,7 +35,37 @@ struct Randomizer_OptionsSettings Randomizer_gOptionsSettings;
 
 #include "randomizer_data.h"
 
-u8 Randomizer_gRandomSongs[] = { 2,3,4,5,6,7,8,9,12,13,14,15,17,19,24,25,26,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,47,49,51 };
+u8 Randomizer_gRandomSongs[] = { 2,3,4,5,6,7,8,9,12,13,14,17,19,24,25,26,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,47,49,51
+    , 52 // sa dilapidated
+    , 53 // bm64 blue resort
+    , 54 // bm hero radical
+    , 55 // kirby yogurt yard
+    , 56 // waluigi pinball
+    , 57 // e101
+    , 58 // tikal
+    , 59 // kirby above the clouds
+    , 60 // beach bowl galaxy
+    , 61 // pit thwomp
+    , 62 // pit holly jolly
+    // , 63 free
+    , 64 // smrpg ship
+    , 65 // pm Forever Forest
+    , 66 // mp Full of Danger
+    , 67 // stickerbrush symphony
+    , 68 // rayman
+    , 69 // xnaut
+    // , 70 free
+    // , 71 free
+    , 72 // galaxy rolling
+    , 73 // good egg
+    , 74 // mp ending
+    , 75 // pit star hill
+    // , 76 free
+    // , 77 free
+    , 78 // galaxy honey
+};
+
+const u8 Randomizer_gRandomSongsCount = sizeof(Randomizer_gRandomSongs) / sizeof(Randomizer_gRandomSongs[0]);
 
 struct Randomizer_nodeInfo Randomizer_gLevelWarps[] = {
     // Level        Area  0xF0  0xF1
