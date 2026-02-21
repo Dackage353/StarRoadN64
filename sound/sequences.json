@@ -78,5 +78,6 @@
     "4b_starhill_ninst12": ["0C_extended_bank"],
 	"4c_wf": ["0C_extended_bank"],
 	"4d_rr": ["0C_extended_bank"],
-	"4e_honey": ["0C_extended_bank"]
+	"4e_honey": ["0C_extended_bank"],
+	"4f_battlerock": ["0C_extended_bank"]
 }
