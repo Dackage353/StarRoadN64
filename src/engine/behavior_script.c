@@ -381,8 +381,7 @@ static s32 bhv_cmd_randomize_object(void) {
             star->oBehParams = bparam << 24;
             star->pointerSeed = gCurrentObject->pointerSeed;
 
-            gCurBhvCommand++;
-            return BHV_PROC_CONTINUE;
+            goto end;
         }
     }
 

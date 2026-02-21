@@ -66,6 +66,7 @@ static u8 sGoombaAttackHandlers[][6] = {
 /**
  * Update function for goomba triplet spawner.
  */
+extern const BehaviorScript bhvGoombaTriplet[];
 void bhv_goomba_triplet_spawner_update(void) {
     s16 goombaFlag;
     s32 angle;
@@ -85,13 +86,8 @@ void bhv_goomba_triplet_spawner_update(void) {
                 if (!(o->respawnInfo & goombaFlag)) {
                     s16 dx = 500.0f * coss(angle);
                     s16 dz = 500.0f * sins(angle);
-#ifdef FLOOMBAS
-                    const void *goombaBhv = (o->oIsFloomba ? bhvFloomba : bhvGoomba);
-#else
-                    const void *goombaBhv = bhvGoomba;
-#endif
                     spawn_object_relative((o->oBehParams2ndByte & GOOMBA_TRIPLET_SPAWNER_BP_SIZE_MASK) | (goombaFlag << 2),
-                                          dx, 0, dz, o, MODEL_GOOMBA, goombaBhv);
+                                          dx, 0, dz, o, MODEL_GOOMBA, bhvGoombaTriplet);
                 }
             }
 
