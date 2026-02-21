@@ -344,6 +344,10 @@ static s32 bhv_cmd_set_int(void) {
     return BHV_PROC_CONTINUE;
 }
 
+extern const BehaviorScript bhvStarRoadGGBoo[];
+extern const BehaviorScript bhvStarRoadYoshi[];
+extern const BehaviorScript bhvStarRoadHPYoshi[];
+extern const BehaviorScript bhvStarRoadPeach[];
 static s32 bhv_cmd_randomize_object(void) {
     if (gCurrLevelNum == LEVEL_BOWSER_2)
     {
@@ -501,6 +505,11 @@ static s32 bhv_cmd_randomize_object(void) {
         if (randomize) {
             gCurrentObject->oPosX = pos[0];
             gCurrentObject->oPosY = pos[1];
+            if (gCurrentObject->behavior == segmented_to_virtual(bhvStarRoadGGBoo))
+            {
+                gCurrentObject->oPosY += 50.f;
+            }
+
             gCurrentObject->oPosZ = pos[2];
             if (gCurrentObject->behavior != segmented_to_virtual(bhvPushableMetalBox))
             {
@@ -515,7 +524,12 @@ static s32 bhv_cmd_randomize_object(void) {
         gCurrentObject->oMoveAngleYaw = gCurrentObject->oFaceAngleYaw;
     }
 
-    if (gCurrentObject->behavior == segmented_to_virtual(bhvMessagePanel)) {
+    if (gCurrentObject->behavior == segmented_to_virtual(bhvMessagePanel)
+     || gCurrentObject->behavior == segmented_to_virtual(bhvBobombBuddy)
+     || gCurrentObject->behavior == segmented_to_virtual(bhvStarRoadYoshi)
+     || gCurrentObject->behavior == segmented_to_virtual(bhvStarRoadHPYoshi)
+     || gCurrentObject->behavior == segmented_to_virtual(bhvStarRoadGGBoo)
+     || gCurrentObject->behavior == segmented_to_virtual(bhvStarRoadPeach)) {
         signMessage = Randomizer_get_val_in_range_uniform(0, 169, &randomState);
 
         // 20 is peach's letter, this crashes the game.
