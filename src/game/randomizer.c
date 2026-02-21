@@ -125,8 +125,11 @@ void Randomizer_print_seed_and_options_data(void) {
     
     for (i = 0; i < ARRAY_COUNT(Randomizer_gPresets); i++) {
         if (Randomizer_gOptionsSettings.gameplay.w == Randomizer_gPresets[i].gameplay.w) {
-            sprintf(buf, "Preset: %s", presetStrings[i]);
-            print_generic_text_ascii_buf(20,ypos,buf);
+            if ('\0' != *presetStrings[i])
+            {
+                sprintf(buf, "Preset: %s", presetStrings[i]);
+                print_generic_text_ascii_buf(20,ypos,buf);
+            }
             goto presetFound; // don't kill me please
         }
     }
