@@ -61,8 +61,9 @@ u8 Randomizer_gRandomSongs[] = { 2,3,4,5,6,7,8,9,12,13,14,17,19,24,25,26,30,31,3
     , 74 // mp ending
     , 75 // pit star hill
     // , 76 free
-    // , 77 free
+    , 77 // galaxy spacejunk
     , 78 // galaxy honey
+    , 79 // galaxy battlerock
 };
 
 const u8 Randomizer_gRandomSongsCount = sizeof(Randomizer_gRandomSongs) / sizeof(Randomizer_gRandomSongs[0]);
