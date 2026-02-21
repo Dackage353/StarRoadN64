@@ -161,7 +161,6 @@ static struct Option optsAudio[] = {
     DEF_OPT_TOGGLE("Extra level exit options"       , sAllowExitLevelExplanation      , &configAllowExitLevel),
     DEF_OPT_TOGGLE("Better objects"               , sFasterObjectsExplanation       , &configFasterObjects),
     DEF_OPT_TOGGLE("Red coin radar"               , sRedCoinRadarExplanation        , &configRedCoinRadar),
-    DEF_OPT_TOGGLE("Reduced act specific objects" , sNoActSpecificObjectsExplanation, &configNoActSpecificObjects),
     DEF_OPT_TOGGLE("16:9 Widescreen"              , sWideScreenExplanation          , &configWideScreen),
     DEF_OPT_TOGGLE("Hard Mode"                    , sHardModeExplanation            , &configHardMode),
 };
@@ -270,7 +269,7 @@ static const struct PresetConfig sPresetConfigs[] = {
     { &configNoLives,              { false, true,  true  } },
     { &configAllowExitLevel,       { false, true,  true  } },
     { &configFasterObjects,        { false, false, true  } },
-    { &configNoActSpecificObjects, { false, true,  true  } },
+    { &configStub,                 { false, true,  true  } },
     { &configRedCoinRadar,         { false, true,  true  } },
     { &configHardMode,             { false, false, false } },
 };

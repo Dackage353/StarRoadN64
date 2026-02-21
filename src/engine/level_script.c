@@ -501,7 +501,7 @@ static void level_cmd_place_object(void) {
     u8 val7 = 1 << (gCurrActNum - 1);
     u8 special = CMD_GET(u8, 3);
     u8 mode = CMD_GET(u8, 2);
-    if (configNoActSpecificObjects && special)
+    if (1 && special)
     {
         if (special & 0x80)
         {
