@@ -79,5 +79,22 @@
 	"4c_wf": ["0C_extended_bank"],
 	"4d_rr": ["0C_extended_bank"],
 	"4e_honey": ["0C_extended_bank"],
-	"4f_battlerock": ["0C_extended_bank"]
+	"4f_battlerock": ["0C_extended_bank"],
+	"50_dkc2_hhb": ["0C_extended_bank"],
+	"51_glitz_pit": ["0C_extended_bank"],
+	"52_mkdd_ddd": ["0C_extended_bank"],
+	"53_pm64_crystal": ["0C_extended_bank"],
+	"54_pm64_gg": ["0C_extended_bank"],
+	"55_ttyd_battle": ["0C_extended_bank"],
+	"56_pm64_lavalava": ["0C_extended_bank"],
+	"57_pm64_freeze": ["0C_extended_bank"],
+	"58_rayman_deepforest": ["0C_extended_bank"],
+	"59_rayman_dream": ["0C_extended_bank"],
+	"5a_rayman_dare": ["0C_extended_bank"],
+	"5b_smg_freezeflame": ["0C_extended_bank"],
+	"5c_smrpg_marrymore": ["0C_extended_bank"],
+	"5d_spm_lineroad_ninst37": ["25"],
+	"5e_yi_title": ["0C_extended_bank"],
+	"5f_sa_ec2": ["0C_extended_bank"],
+	"60_sa_tornado": ["0C_extended_bank"]
 }

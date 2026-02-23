@@ -41,7 +41,7 @@ u8 Randomizer_gRandomSongs[] = { 2,3,4,5,6,7,8,9,12,13,14,17,19,24,25,26,30,31,3
     , 54 // bm hero radical
     , 55 // kirby yogurt yard
     , 56 // waluigi pinball
-    , 57 // e101
+    // , 57 // e101
     , 58 // tikal
     , 59 // kirby above the clouds
     , 60 // beach bowl galaxy
@@ -64,6 +64,23 @@ u8 Randomizer_gRandomSongs[] = { 2,3,4,5,6,7,8,9,12,13,14,17,19,24,25,26,30,31,3
     , 77 // galaxy spacejunk
     , 78 // galaxy honey
     , 79 // galaxy battlerock
+    , 80 // dkc2 hot head
+    , 81 // tty glitz pit
+    , 82 // mkdd dry dry desert
+    , 83 // pm64 crystal palace
+    // , 84 pm64 gusty gulch
+    , 85 // ttyd battle theme
+    , 86 // pm64 lavalava
+    , 87 // pm64 freeze
+    // , 88 rayman deep forest
+    , 89 // rayman dream forest
+    // , 90 rayman dark dare
+    , 91 // smg freezeflame
+    , 92 // smrpg marrymore
+    , 93 // spm lineroad
+    , 94 // yi title screen
+    , 95 // sa ec2
+    , 96 // sa tornado
 };
 
 const u8 Randomizer_gRandomSongsCount = sizeof(Randomizer_gRandomSongs) / sizeof(Randomizer_gRandomSongs[0]);
