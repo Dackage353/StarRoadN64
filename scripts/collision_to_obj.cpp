@@ -41,9 +41,9 @@ enum TerrainLoadCmd {
 #define Collision int16_t
 
 #define OUTPUT_DIR "./obj"
-#define OUTPUT_NAME "hmc"
-#include "../levels/hmc/custom_c/custom.collision.inc.c"
-#define sCollision col_hmc_1_0xe048a28
+#define OUTPUT_NAME "ow2"
+#include "../levels/castle_courtyard/custom_c/custom.collision.inc.c"
+#define sCollision col_castle_courtyard_1_0xe084408
 
 struct Vtx
 {
