@@ -431,6 +431,27 @@ void unload_objects_from_area(UNUSED s32 unused, s32 areaIndex) {
 /**
  * Spawn objects given a list of SpawnInfos. Called when loading an area.
  */
+
+static const BehaviorScript* sWarpBehaviors[] = {
+    bhvSpinAirborneWarp,
+    bhvAirborneWarp,
+    bhvSpinAirborneCircleWarp,
+    bhvFlyingWarp,
+};
+
+static bool Randomizer_is_warp_behavior(const BehaviorScript* bhv)
+{
+    for (size_t i = 0; i < sizeof(sWarpBehaviors) / sizeof(*sWarpBehaviors); i++)
+    {
+        if (sWarpBehaviors[i] == bhv)
+        {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
     gObjectLists = gObjectListArray;
     gTimeStopState = 0;
@@ -465,7 +486,7 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
             object->pointerSeed = spawnInfo->pointerSeed;
             
             // Warps are done here so that they randomize before Mario is spawned
-            if ((script == segmented_to_virtual(bhvSpinAirborneWarp)) && (gCurrCourseNum != COURSE_NONE) && (Randomizer_gOptionsSettings.gameplay.s.randomLevelSpawn)) {
+            if ((Randomizer_is_warp_behavior(script)) && (gCurrCourseNum != COURSE_NONE) && (Randomizer_gOptionsSettings.gameplay.s.randomLevelSpawn)) {
                 Randomizer_get_safe_position(object, spawnInfo->startPos, 700.f, 900.f, &gGlobalRandomState, Randomizer_FLOOR_SAFETY_HIGH, RAND_TYPE_MAX_VARIATION | RAND_TYPE_CAN_BE_UNDERWATER | RAND_TYPE_SPAWN_TOP_OF_SLIDE | RAND_TYPE_LIMITED_BBH_HMC_SPAWNS | RAND_TYPE_SAFE);
             }
 
