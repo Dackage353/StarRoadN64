@@ -123,7 +123,7 @@ void bhv_door_init(void) {
     int bparam1 = ((o->oBehParams >> 24) & 0xFF);
     int bparam3 = ((o->oBehParams >> 8) & 0xFF);
     if ((bparam3 != 0) && (bparam1 < 0xFE)) {
-        o->oBehParams = (Randomizer_gRequiredStars[bparam3] << 24) + (o->oBehParams & 0x00FFFFFF);
+        o->oBehParams = (Randomizer_gRequiredStars[bparam3 - 1] << 24) + (o->oBehParams & 0x00FFFFFF);
     }
 
 #if 0

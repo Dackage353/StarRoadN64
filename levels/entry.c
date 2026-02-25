@@ -9,7 +9,9 @@
 
 #include "config.h"
 
-// #define TEST_LEVEL LEVEL_HMC
+#define TEST_LEVEL LEVEL_BOB
+
+extern s32 Randomizer_init_randomizer_test(s32, s32);
 
 extern const LevelScript level_main_scripts_entry[];
 const LevelScript level_script_entry[] = {
@@ -17,6 +19,7 @@ const LevelScript level_script_entry[] = {
     SLEEP(/*frames*/ 2),
     BLACKOUT(/*active*/ FALSE),
 #ifdef TEST_LEVEL
+    CALL(0, Randomizer_init_randomizer_test),
     SET_REG(/*value*/ TEST_LEVEL),
     EXECUTE(/*seg*/ SEGMENT_GLOBAL_LEVEL_SCRIPT, /*script*/ _scriptsSegmentRomStart, /*scriptEnd*/ _scriptsSegmentRomEnd, /*entry*/ level_main_scripts_entry),
 #else

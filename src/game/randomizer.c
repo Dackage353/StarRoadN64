@@ -21,7 +21,7 @@
 #include "segment2.h"
 #include "game/emutest.h"
 
-u32 Randomizer_gGameSeed = 9566700;
+u32 Randomizer_gGameSeed = 6444083;
 
 u8 Randomizer_gIsSetSeed = FALSE;
 
@@ -31,7 +31,9 @@ u8 Randomizer_gNumDynamicAvoidancePoints = 0;
 struct Randomizer_AvoidancePoint Randomizer_gDynamicAvoidancePoints[200];
 
 s32 Randomizer_curPreset;
-struct Randomizer_OptionsSettings Randomizer_gOptionsSettings;
+struct Randomizer_OptionsSettings Randomizer_gOptionsSettings = {
+    .gameplay.w = 0x780,
+};
 
 #include "randomizer_data.h"
 
@@ -800,7 +802,7 @@ static void randomize_star_doors() {
     starTotal += calulate_star_total(LEVEL_CCM);
     starTotal += calulate_star_total(LEVEL_BBH);
 
-    Randomizer_gRequiredStars[Randomizer_STAR_REQ_B1] = get_star_requirement(1, 0, starTotal, 2, &randomState);
+    Randomizer_gRequiredStars[Randomizer_STAR_REQ_B1] = get_star_requirement(0, 0, starTotal, 2, &randomState);
 
     starTotal += calulate_star_total(LEVEL_BITDW);
     
@@ -946,6 +948,17 @@ void Randomizer_init_randomizer(s32 fileNum) {
     save_file_set_seed_and_options(fileNum);
     init_warp_scramble();
     init_required_stars();
+}
+
+extern u8 Randomizer_gOverwriteFileOptions;
+extern u8 Randomizer_gOverwriteFileSeed;
+
+s32 Randomizer_init_randomizer_test(s32, s32 v)
+{
+    Randomizer_gOverwriteFileOptions = 1;
+    Randomizer_gOverwriteFileSeed = 1;
+    Randomizer_init_randomizer(v);
+    return v;
 }
 
 // stolen from stackoverflow
