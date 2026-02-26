@@ -289,7 +289,7 @@ void profiler_print_times() {
             "RSP\t\t%d (%d%%)\n"
             " Gfx\t\t\t%d\n"
             " Audio\t\t\t%d\n"
-            " Mario %d %d %d\n",
+            " Mario %d %d %d %f\n",
             1000000.0f / microseconds[PROFILER_TIME_FPS],
             total_cpu, total_cpu / 333, 
             microseconds[PROFILER_TIME_CONTROLLERS],
@@ -312,7 +312,7 @@ void profiler_print_times() {
             total_rsp, total_rsp / 333,
             microseconds[PROFILER_TIME_RSP_GFX],
             microseconds[PROFILER_TIME_RSP_AUDIO] * 2,
-            (int) gMarioStates->pos[0], (int) gMarioStates->pos[1], (int) gMarioStates->pos[2]
+            (int) gMarioStates->pos[0], (int) gMarioStates->pos[1], (int) gMarioStates->pos[2], gMarioStates->floor ? gMarioStates->floor->normal.y : 0
         );
 
         Gfx* dlHead = gDisplayListHead;

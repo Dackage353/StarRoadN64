@@ -349,7 +349,18 @@ static u8 is_floor_safe(struct Surface *floor, u8 floorSafeLevel,
             norm = 0.3f;
             break;
         default:
-            norm = 0.7f;
+            switch (gCurrLevelNum)
+            {
+                case LEVEL_LLL:
+                    norm = 0.83f;
+                    break;
+                case LEVEL_SL:
+                    norm = 0.78f;
+                    break;
+                default:
+                    norm = 0.7f;
+                    break;
+            }
     }
 
     if ((floorSafeLevel == Randomizer_FLOOR_SAFETY_HIGH) || (randPosFlags & RAND_TYPE_SAFE)) {
