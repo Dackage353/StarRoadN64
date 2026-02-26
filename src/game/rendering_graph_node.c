@@ -19,6 +19,7 @@
 #include "color_presets.h"
 #include "emutest.h"
 #include "options_menu.h"
+#include "randomizer.h"
 
 #include "config.h"
 #include "config/config_world.h"
@@ -1152,6 +1153,33 @@ void visualise_object_hitbox(struct Object *node) {
         debug_box(bnds1, bnds2, (DEBUG_SHAPE_BOX));
     }
 }
+
+static void visualise_avoidance_point(struct Randomizer_AvoidancePoint *point) {
+    Vec3f bnds1, bnds2;
+    vec3f_set(bnds1, point->pos[0], point->pos[1], point->pos[2]);
+    vec3f_set(bnds2, point->radius, point->height, point->radius);
+    if (point->behavior != bhvStub) {
+        debug_box_color(COLOR_RGBA32_DEBUG_AVOIDANCE_POINT_SPECIFIC);
+    } else if (point->safety == Randomizer_AVOIDANCE_SAFETY_ALL) {
+        debug_box_color(COLOR_RGBA32_DEBUG_AVOIDANCE_POINT_ALL);
+    } else {
+        debug_box_color(COLOR_RGBA32_DEBUG_AVOIDANCE_POINT_SAFETY);
+    }
+    debug_box(bnds1, bnds2, (DEBUG_SHAPE_CYLINDER));
+}
+
+extern struct Object *gMarioObject;
+static void visualise_all_avoidance_points(void) {
+    if (gMarioObject == NULL) return;
+    const struct Randomizer_AreaParams *areaParams = &(*Randomizer_sLevelParams[gCurrLevelNum - 4])[gCurrAreaIndex - 1];
+    for (u32 i = 0; i < areaParams->numAvoidancePoints; i++) {
+        const struct Randomizer_AvoidancePoint *avoidancePoint = &(*areaParams->avoidancePoints)[i];
+        visualise_avoidance_point(avoidancePoint);
+    }
+    for (u32 i = 0; i < Randomizer_gNumDynamicAvoidancePoints; i++) {
+        visualise_avoidance_point(&Randomizer_gDynamicAvoidancePoints[i]);
+    }
+}
 #endif
 
 /**
@@ -1197,6 +1225,7 @@ void geo_process_object(struct Object *node) {
             if (node->header.gfx.sharedChild != NULL) {
 #ifdef VISUAL_DEBUG
                 if (hitboxView) visualise_object_hitbox(node);
+                if (hitboxView) visualise_all_avoidance_points();
 #endif
                 gCurGraphNodeObject = (struct GraphNodeObject *) node;
                 node->header.gfx.sharedChild->parent = &node->header.gfx.node;
