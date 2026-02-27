@@ -134,7 +134,7 @@ static void chain_chomp_sub_act_turn(void) {
     chain_chomp_restore_normal_chain_lengths();
     obj_move_pitch_approach(0, 0x100);
 
-    if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
+    if ((o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) || (o->oPosY < o->oHomeY)) {
         cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x400);
         if (abs_angle_diff(o->oAngleToMario, o->oMoveAngleYaw) < 0x800) {
             if (o->oTimer > 30) {
