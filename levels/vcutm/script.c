@@ -130,7 +130,7 @@ const LevelScript level_vcutm_entry[] = {
 		OBJECT_WITH_ACTS(192,-636,-77,-2680,0,0,0,0x0, bhvGoomba,31),
 		OBJECT_WITH_ACTS(101,-713,27,1718,0,180,0,0x0, bhvBoo,31),
 		OBJECT_WITH_ACTS(101,6733,526,1978,0,270,0,0x0, bhvBoo,31),
-		OBJECT_WITH_ACTS(0,0,0,0,0,0,0,0x0, bhvThiTinyIslandTop,31),
+		// OBJECT_WITH_ACTS(0,0,0,0,0,0,0,0x0, bhvThiTinyIslandTop,31),
 		WARP_NODE(10,9,1,10,0),
 		WARP_NODE(11,9,1,12,0),
 		WARP_NODE(12,9,1,11,0),

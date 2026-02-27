@@ -35,6 +35,7 @@ uintptr_t set_segment_base_addr(s32 segment, void *addr);
 void *get_segment_base_addr(s32 segment)  __attribute__ ((pure));
 void *segmented_to_virtual(const void *addr) __attribute__ ((pure));
 void *virtual_to_segmented(u32 segment, const void *addr);
+uintptr_t virtual_to_segmented2(const void *addr);
 void move_segment_table_to_dmem(void);
 
 struct MainPoolRegion {

@@ -87,6 +87,27 @@ void *segmented_to_virtual(const void *addr) {
     return (void *) ((sSegmentTable[segment] + offset));
 }
 
+uintptr_t virtual_to_segmented2(const void *addr)
+{
+    uintptr_t loc = (uintptr_t) addr;
+
+    uintptr_t minIdx = 0;
+    uintptr_t min = 0x80000000U;
+    for (int i = 0; i < sizeof(sSegmentTable); i++)
+    {
+        uintptr_t seg = sSegmentTable[i];
+        if (seg > loc)
+            continue;
+        if (min > seg)
+            continue;
+
+        min = seg;
+        minIdx = i;
+    }
+
+    return (minIdx << 24) | ((uintptr_t) addr - min);
+}
+
 void move_segment_table_to_dmem(void) {
     Gfx *tempGfxHead = gDisplayListHead;
 

@@ -533,7 +533,7 @@ static void level_cmd_place_object(void) {
         spawnInfo->behaviorScript = CMD_GET(void *, 20);
         spawnInfo->model = gLoadedGraphNodes[model];
         spawnInfo->next = gAreas[sCurrAreaIndex].objectSpawnInfos;
-        spawnInfo->pointerSeed = (uintptr_t)sCurrentCmd;
+        spawnInfo->pointerSeed = virtual_to_segmented2(sCurrentCmd) ^ (gCurrLevelNum << 24);
 
         gAreas[sCurrAreaIndex].objectSpawnInfos = spawnInfo;
     }
