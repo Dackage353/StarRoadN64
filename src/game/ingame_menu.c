@@ -1184,7 +1184,7 @@ void handle_special_dialog_text(s16 dialogID) { // dialog ID tables, in order
 
     for (i = 0; i < (s16) ARRAY_COUNT(sDialogBossStop); i++) {
         if (sDialogBossStop[i] == dialogID) {
-            seq_player_fade_out(SEQ_PLAYER_LEVEL, 1);
+            // seq_player_fade_out(SEQ_PLAYER_LEVEL, 1);
             return;
         }
     }

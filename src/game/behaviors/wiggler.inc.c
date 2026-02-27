@@ -7,6 +7,8 @@
  * Processing order is bhvWigglerHead, then bhvWigglerBody 1, 2, then 3.
  */
 
+ #include "game/randomizer.h"
+
 /**
  * Hitbox for wiggler's non-head body parts.
  */
@@ -347,7 +349,7 @@ static void wiggler_act_shrink(void) {
  */
 static void wiggler_act_fall_through_floor(void) {
     if (o->oTimer == 60) {
-        stop_background_music(SEQUENCE_ARGS_R(4, SEQ_EVENT_BOSS));
+        // stop_background_music(SEQUENCE_ARGS_R(4, SEQ_EVENT_BOSS));
         o->oWigglerFallThroughFloorsHeight = 1700.0f;
     } else if (o->oTimer > 60) {
         if (o->oPosY < o->oWigglerFallThroughFloorsHeight) {
