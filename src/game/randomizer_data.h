@@ -224,6 +224,9 @@ static const struct Randomizer_AreaParams b2fParams[] = {
     {-5149, 5180, -1006, 434, -5619, 5745, 0, 0, NULL}
 };
 
+static const struct Randomizer_AreaParams endParams[] = {
+    {-8192,-2044, -1166, 2429, -6084, 7820, 0, 0, NULL}
+};
 
 const Randomizer_AreaParamsArray *Randomizer_sLevelParams[] = {
     &bbhParams,
@@ -247,7 +250,7 @@ const Randomizer_AreaParamsArray *Randomizer_sLevelParams[] = {
     &lllParams,
     &dddParams,
     &wfParams,
-    NULL,
+    &endParams,
     &ccParams,
     &pssParams,
     &cotmcParams,
