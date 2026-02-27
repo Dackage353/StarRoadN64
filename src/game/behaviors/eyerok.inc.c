@@ -383,6 +383,11 @@ static void eyerok_hand_act_target_mario(void) {
         approach_f32_ptr(&o->oPosY, o->oHomeY + 300.0f, 20.0f);
         cur_obj_rotate_yaw_toward(o->oAngleToMario, 4000);
     }
+
+    if (o->oPosY < o->oHomeY)
+    {
+        o->oPosY = o->oHomeY;
+    }
 }
 
 static void eyerok_hand_act_smash(void) {
