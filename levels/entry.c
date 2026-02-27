@@ -9,7 +9,7 @@
 
 #include "config.h"
 
-#define TEST_LEVEL LEVEL_BOB
+#define TEST_LEVEL LEVEL_WF
 
 extern s32 Randomizer_init_randomizer_test(s32, s32);
 

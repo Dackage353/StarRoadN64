@@ -185,6 +185,7 @@ const LevelScript level_bbh_entry[] = {
 		OBJECT_WITH_ACTS(7,-3173,-806,1809,0,0,0,0x0, bhvBitfsTiltingInvertedPyramid,63),
 		OBJECT_WITH_ACTS(7,-1997,-806,2152,0,0,0,0x0, bhvBitfsTiltingInvertedPyramid,63),
 		OBJECT_WITH_ACTS(7,-2292,-806,3384,0,0,0,0x0, bhvBitfsTiltingInvertedPyramid,63),
+		OBJECT_WITH_ACTS(MODEL_RED_COIN_RADAR,0,0,0,0,0,0,4<<24, bhvRedCoinRadar, 31),
 		WARP_NODE(10,9,1,10,0),
 		WARP_NODE(11,9,1,12,0),
 		WARP_NODE(12,9,1,11,0),
