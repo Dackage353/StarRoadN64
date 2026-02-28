@@ -83,7 +83,132 @@ u8 Randomizer_gRandomSongs[] = { 2,3,4,5,6,7,8,9,12,13,14,17,19,24,25,26,30,31,3
     , 94 // yi title screen
     , 95 // sa ec2
     , 96 // sa tornado
+    , 97 // sm spin dig galaxy
 };
+
+struct SongDescription {
+    const char* game;
+    const char* song;
+};
+
+static const char sBM64[]               = "Bomberman 64";
+static const char sBMH[]                = "Bomberman Hero";
+static const char sChameleonTwist2[]    = "Chameleon Twist 2";
+static const char sDKC2[]               = "Donkey Kong Country 2";
+static const char sKA[]                 = "Kirby's Adventure";
+static const char sKDL2[]               = "Kirby's Dream Land 2";
+static const char sMKDS[]               = "Mario Kart DS";
+static const char sMKDD[]               = "Mario Kart: Double Dash!!";
+static const char sMP[]                 = "Mario Party";
+static const char sM_LSS[]              = "Mario & Luigi: Superstar Saga";
+static const char sM_LPIT[]             = "Mario & Luigi: Partners in Time";
+static const char sMetroidPrime[]       = "Metroid Prime";
+static const char sPM[]                 = "Paper Mario";
+static const char sTTYD[]               = "Paper Mario: The Thousand-Year Door";
+static const char sRayman[]             = "Rayman";
+static const char sSAdvance[]           = "Sonic Advance";
+static const char sSMG[]                = "Super Mario Galaxy";
+static const char sSMG2[]               = "Super Mario Galaxy 2";
+static const char sSMRPG[]              = "Super Mario RPG: Legend of the Seven Stars";
+static const char sSuperMarioSunshine[] = "Super Mario Sunshine";
+static const char sSMW[]                = "Super Mario World";
+static const char sYI[]                 = "Super Mario World 2: Yoshi's Island";
+static const char sSPM[]                = "Super Paper Mario";
+static const char sSSB[]                = "Super Smash Bros.";
+static const char sSSSV[]               = "Space Station Silicon Valley";
+static const char sSA[]                 = "Sonic Adventure";
+static const char sWW[]                 = "The Legend of Zelda: The Wind Waker";
+static const char sK64[]                = "Kirby 64: The Crystal Shards";
+
+static const struct SongDescription songDescriptions[] = {
+    [2 ] = { sSMG            , "Buoy Base Galaxy" },
+    [3 ] = { sBM64           , "Green Garden" },
+    [4 ] = { sSMG            , "Battlerock Galaxy" },
+    [5 ] = { sDKC2           , "In a Snow-Bound Land" },
+    [6 ] = { sChameleonTwist2, "Toy Land (Stage 5)" },
+    [7 ] = { sPM             , "Dry Dry Desert Trek" },
+    [8 ] = { sSAdvance       , "Ice Mountain Zone (Act 1)" },
+    [9 ] = { sMKDD           , "Circuit Theme" },
+    [12] = { sSMG            , "Waltz of the Boos" },
+    [13] = { sSMG            , "Rosalina in the Observatory" },
+    [14] = { sSSSV           , "Chase the Bunnies!" }, //?
+    [17] = { sSMG            , "Puzzle Plank Galaxy" },
+    [19] = { sSMRPG          , "Nimbus Land" },
+    [24] = { sSMRPG          , "Beware the Forest's Mushrooms" },
+    [25] = { sSSSV           , "The Engine Room" },
+    [26] = { sSMG2           , "Starship Mario 1" }, //?
+    [30] = { sMKDS           , "Desert Hills" },
+    [31] = { sSA             , "Windy Hill" },
+    [32] = { sSPM            , "The Overthere Stair" },
+    [33] = { sSMG            , "Gateway Galaxy" },
+    [34] = { sM_LSS          , "Come On, Again!" },
+    [35] = { sKA             , "Rainbow Resort" },
+    [36] = { sYI             , "Overworld" },
+    [37] = { sDKC2           , "Bayou Boogie" },
+    [38] = { sSMW            , "Castle & Fortress" },
+    [39] = { sRayman         , "Harmony" },
+    [40] = { sWW             , "Outset Island" },
+    [41] = { sTTYD           , "X-Naut Fortress" },
+    [42] = { sMP             , "Bowser's Magma Mountain" },
+    [43] = { sMetroidPrime   , "Vs. Parasite Queen" },
+    [44] = { sM_LPIT         , "Koopaseum" },
+    [47] = { sSMG2           , "Starship Mario 1" },
+    [49] = { sSMG2           , "Space Junk Galaxy" },
+    [51] = { sKDL2           , "Dark Castle" },
+    [52] = { sSA             , "Dilapidated Way ... for Casinopolis" },
+    [53] = { sBM64           , "Blue Resort" },
+    [54] = { sBMH            , "Hero Radical" },
+    [55] = { sKA             , "Yogurt Yard" },
+    [56] = { sMKDS           , "Waluigi Pinball" },
+
+    [58] = { sSA             , "Tikal Theme" },
+    [59] = { sK64            , "Above the Clouds" },
+    [60] = { sSMG2           , "Beach Bowl Galaxy" },
+    [61] = { sMKDD           , "Thwomp Ruins" },
+    [62] = { sMKDD           , "Holly Jolly" },
+
+    [64] = { sSMRPG          , "Sunken Ship" },
+    [65] = { sPM             , "Forever Forest" },
+    [66] = { sMP             , "Full of Danger" },
+    [67] = { sSPM            , "Stickerbrush Symphony" },
+    [68] = { sRayman         , "Harmony" },
+    [69] = { sTTYD           , "X-Naut Fortress" },
+
+    [72] = { sSMG            , "Galaxy Rolling" },
+    [73] = { sMP             , "Good Egg Galaxy" },
+    [74] = { sMP             , "Mario Party Ending Theme" },
+    [75] = { sMKDD           , "Star Hill" },
+    [77] = { sSMG2           , "Space Junk Galaxy" },
+    [78] = { sSMG2           , "Honeyhive Galaxy" },
+    [79] = { sSMG2           , "Battlerock Galaxy" },
+    [80] = { sDKC2           , "Hot-Head Bop-a-Boo" },
+    [81] = { sTTYD           , "Glitz Pit" },
+    [82] = { sMKDD           , "Dry Dry Desert" },
+    [83] = { sPM             , "Crystal Palace" },
+    [85] = { sTTYD           , "Battle Theme" },
+    [86] = { sPM             , "Lavalava Island" },
+    [87] = { sPM             , "Freeze Flame Core" },
+    [89] = { sRayman         , "Dream Forest" },
+    [91] = { sSMG            , "Freezeflame Galaxy" },
+    [92] = { sSMRPG          , "Marrymore" },
+    [93] = { sSPM            , "Lineland Road" },
+    [94] = { sYI             , "Title Screen Theme" },
+    [95] = { sSA             , "Emerald Coast 2" },
+    [96] = { sSA             , "Tornado" },
+    [97] = { sSMG            , "Spin-Dig Galaxy" },
+};
+
+extern u8 sCurrentBackgroundMusicSeqId;
+void Randomizer_print_cur_song()
+{
+    char buf[200];
+    const struct SongDescription* songDesc = &songDescriptions[sCurrentBackgroundMusicSeqId];
+    sprintf(buf, "%s - %s", songDesc->game, songDesc->song);
+    
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
+    print_generic_string_aligned(20, 195, buf, TEXT_ALIGN_LEFT);
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+}
 
 const u8 Randomizer_gRandomSongsCount = sizeof(Randomizer_gRandomSongs) / sizeof(Randomizer_gRandomSongs[0]);
 

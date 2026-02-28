@@ -38,6 +38,8 @@ DialogVariable gDialogVariable;
 u16 gDialogTextAlpha;
 s8 gRedCoinsCollected;
 
+extern void Randomizer_print_cur_song();
+
 // The language to display the game's text in.
 u8 gInGameLanguage = LANGUAGE_ENGLISH;
 
@@ -2069,6 +2071,7 @@ s32 render_pause_courses_and_castle(void) {
             }
             break;
     }
+    Randomizer_print_cur_song();
     gDialogTextAlpha += 25;
     if (gDialogTextAlpha > 250) {
         gDialogTextAlpha = 250;

@@ -96,5 +96,6 @@
 	"5d_spm_lineroad_ninst37": ["25"],
 	"5e_yi_title": ["0C_extended_bank"],
 	"5f_sa_ec2": ["0C_extended_bank"],
-	"60_sa_tornado": ["0C_extended_bank"]
+	"60_sa_tornado": ["0C_extended_bank"],
+	"61_spg": ["0C_extended_bank"]
 }
