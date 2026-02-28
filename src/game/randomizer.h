@@ -62,7 +62,7 @@ enum Randomizer_StarDoorReqIDs {
     Randomizer_STAR_REQ_MAX
 };
 
-#define RANDO_DOOR_PARAM(req) (((req) + 1) << 8)
+#define RANDO_DOOR_PARAM(id, req) (((id) << 12) | (((req) + 1) << 8) )
 
 struct Randomizer_nodeInfo {
     u8 level;

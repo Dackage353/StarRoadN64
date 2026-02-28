@@ -214,6 +214,9 @@ ALIGNED8 u8 castle_grounds_1__texture_0E02A810[] = {
 ALIGNED8 u8 castle_grounds_1__texture_0E02D810[] = {
 #include "levels/castle_grounds/custom_textures/castle_grounds_1_0xe02d810_custom.rgba16.inc.c"
 };
+ALIGNED8 u8 castle_grounds_1__texture_0E02D810_orig[] = {
+#include "levels/castle_grounds/custom_textures/castle_grounds_1_0xe02d810_custom.rgba16.inc.c"
+};
 ALIGNED8 u8 castle_grounds_1__texture_0E02E810[] = {
 #include "levels/castle_grounds/custom_textures/castle_grounds_1_0xe02e810_custom.rgba16.inc.c"
 };

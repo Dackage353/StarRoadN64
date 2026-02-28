@@ -155,6 +155,29 @@ const u8 *const puppyprint_kerning_lut[][95] = {
 
 #endif
 
+ALIGNED8 const Texture texture_hud_char_s[] = {
+#include "textures/segment2/s0.rgba16.inc.c"
+,
+#include "textures/segment2/s1.rgba16.inc.c"
+,
+#include "textures/segment2/s2.rgba16.inc.c"
+,
+#include "textures/segment2/s3.rgba16.inc.c"
+,
+#include "textures/segment2/s4.rgba16.inc.c"
+,
+#include "textures/segment2/s5.rgba16.inc.c"
+,
+#include "textures/segment2/s6.rgba16.inc.c"
+,
+#include "textures/segment2/s7.rgba16.inc.c"
+,
+#include "textures/segment2/s8.rgba16.inc.c"
+,
+#include "textures/segment2/s9.rgba16.inc.c"
+,
+};
+
 ALIGNED8 static const Texture texture_hud_char_0[] = {
 #include "textures/segment2/segment2.00000.rgba16.inc.c"
 };

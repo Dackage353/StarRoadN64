@@ -822,13 +822,14 @@ static void randomize_star_doors() {
     starTotal += calulate_star_total(LEVEL_SSL);
     starTotal += calulate_star_total(LEVEL_SL);
     
-    Randomizer_gRequiredStars[Randomizer_STAR_REQ_MMM]      = get_star_requirement(0, 1, starTotal, 2, &randomState);
+    Randomizer_gRequiredStars[Randomizer_STAR_REQ_MMM]      = get_star_requirement(0, 1, starTotal, 3, &randomState);
+    Randomizer_gRequiredStars[Randomizer_STAR_REQ_BASE]     = get_star_requirement(0, 1, starTotal, 2, &randomState);
 
     starTotal += calulate_star_total(LEVEL_DDD);
 
     starTotal += calulate_star_total(LEVEL_HMC);
 
-    Randomizer_gRequiredStars[Randomizer_STAR_REQ_KC] = get_star_requirement(1, 1, starTotal, 2, &randomState);
+    Randomizer_gRequiredStars[Randomizer_STAR_REQ_KC] = get_star_requirement(1, 1, starTotal, 3, &randomState);
 
     starTotal += calulate_star_total(LEVEL_LLL);
     
