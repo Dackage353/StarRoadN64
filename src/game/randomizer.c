@@ -84,6 +84,7 @@ u8 Randomizer_gRandomSongs[] = { 2,3,4,5,6,7,8,9,12,13,14,17,19,24,25,26,30,31,3
     , 95 // sa ec2
     , 96 // sa tornado
     , 97 // sm spin dig galaxy
+    , 98 // smg2 starshine galaxy
 };
 
 struct SongDescription {
@@ -196,6 +197,7 @@ static const struct SongDescription songDescriptions[] = {
     [95] = { sSA             , "Emerald Coast 2" },
     [96] = { sSA             , "Tornado" },
     [97] = { sSMG            , "Spin-Dig Galaxy" },
+    [98] = { sSMG2           , "Starshine_Galaxy" },
 };
 
 extern u8 sCurrentBackgroundMusicSeqId;

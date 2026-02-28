@@ -1293,7 +1293,7 @@ extern void save_main_menu_data(void);
 extern void seq_player_play_sequence(u8 player, u8 seqId, u16 arg2);
 void bhv_menu_button_manager_loop(void) {
 #if 1
-    static int music = 0x4f;
+    static int music = 0x60;
     if (gPlayer1Controller->buttonPressed & R_JPAD)
     {
         music++;
