@@ -134,8 +134,8 @@ static void blitStarCount(Texture* texture, s32 requiredStars) {
 
     s8 digits[3];
     digits[0] = requiredStars % 10;
-    digits[1] = requiredStars > 10 ? (requiredStars / 10) % 10 : -1;
-    digits[2] = requiredStars > 100 ? (requiredStars / 100) % 10 : -1;
+    digits[1] = requiredStars >= 10 ? (requiredStars / 10) % 10 : -1;
+    digits[2] = requiredStars >= 100 ? (requiredStars / 100) % 10 : -1;
 
     u8 len = 0;
     for (int i = 0; i < 3; i++)
