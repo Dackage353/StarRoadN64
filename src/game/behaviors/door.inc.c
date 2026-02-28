@@ -126,7 +126,7 @@ void bhv_door_init(void) {
         o->oBehParams = (Randomizer_gRequiredStars[bparam3 - 1] << 24) + (o->oBehParams & 0x00FFFFFF);
     }
 
-#if 0
+#if 1
     // Check model id
     if ((!Randomizer_gOptionsSettings.gameplay.s.keepStructure) && (o->header.gfx.sharedChild == gLoadedGraphNodes[MODEL_CASTLE_KEY_DOOR])) {
         o->header.gfx.sharedChild = gLoadedGraphNodes[MODEL_CASTLE_CASTLE_DOOR];
