@@ -146,7 +146,7 @@ static const char textPreset7Desc[] = "Iron Mario permadeath mode with\n130 star
 static const char textPresetCustom[] = "CUSTOM";
 static const char textUsePreset[] = "USE PRESET";
 
-static const char *textsPresets[] = { textPreset1, textPreset2, textPreset3, textPreset4, textPreset5, textPreset6, textPreset7};
+static const char *textsPresets[] = { textPreset1, textPreset2, textPreset3, textPreset4 /*, textPreset5, textPreset6, textPreset7*/};
 static const char *textsPresetDescriptions[] = { textPreset1Desc, textPreset2Desc, textPreset3Desc, textPreset4Desc, textPreset5Desc, textPreset6Desc, textPreset7Desc};
 
 static u8 OptionPage = 3;
