@@ -98,5 +98,6 @@
 	"5f_sa_ec2": ["0C_extended_bank"],
 	"60_sa_tornado": ["0C_extended_bank"],
 	"61_spg": ["0C_extended_bank"],
-	"62_starshine": ["0C_extended_bank"]
+	"62_starshine": ["0C_extended_bank"],
+	"63_altair": ["0C_extended_bank"]
 }
