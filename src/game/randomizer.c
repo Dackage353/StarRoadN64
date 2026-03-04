@@ -61,7 +61,6 @@ u8 Randomizer_gRandomSongs[] = { 2,3,4,5,6,7,8,9,12,13,14,17,19,24,25,26,30,31,3
     , 72 // galaxy rolling
     , 73 // good egg
     , 74 // mp ending
-    , 75 // pit star hill
     // , 76 free
     , 77 // galaxy spacejunk
     , 78 // galaxy honey
@@ -80,12 +79,35 @@ u8 Randomizer_gRandomSongs[] = { 2,3,4,5,6,7,8,9,12,13,14,17,19,24,25,26,30,31,3
     , 91 // smg freezeflame
     , 92 // smrpg marrymore
     , 93 // spm lineroad
-    , 94 // yi title screen
     , 95 // sa ec2
-    , 96 // sa tornado
     , 97 // sm spin dig galaxy
     , 98 // smg2 starshine galaxy
 };
+
+static u8 Randomizer_gRandomBossSongs[] = {
+    57, /*e101*/
+    15, /*mc*/
+    46, /*b3 alt*/
+    48, /*game over*/
+    63, /*dkc2*/
+    75, /*pit star hill*/
+    84, /*pm64 gusty gulch*/
+    94, /*yi title screen*/
+    96, /*sa tornado*/
+    99, /*bm64 altair*/
+};
+
+extern u8 Randomizer_get_random_boss_song()
+{
+    const int total = sizeof(Randomizer_gRandomBossSongs) / sizeof(Randomizer_gRandomBossSongs[0]) + sizeof(Randomizer_gRandomSongs) / sizeof(Randomizer_gRandomSongs[0]);
+    int which = random_u16_seeded(Randomizer_gGameSeed - (gCurrLevelNum * 0x100)) % total;
+    if (which < sizeof(Randomizer_gRandomBossSongs) / sizeof(Randomizer_gRandomBossSongs[0])) {
+        return Randomizer_gRandomBossSongs[which];
+    } else {
+        which -= sizeof(Randomizer_gRandomBossSongs) / sizeof(Randomizer_gRandomBossSongs[0]);
+        return Randomizer_gRandomSongs[which];
+    }
+}
 
 struct SongDescription {
     const char* game;
@@ -133,6 +155,7 @@ static const struct SongDescription songDescriptions[] = {
     [12] = { sSMG            , "Waltz of the Boos" },
     [13] = { sSMG            , "Rosalina in the Observatory" },
     [14] = { sSSSV           , "Chase the Bunnies!" }, //?
+    [15] = { sSSB            , "Meta Crystal" },
     [17] = { sSMG            , "Puzzle Plank Galaxy" },
     [19] = { sSMRPG          , "Nimbus Land" },
     [24] = { sSMRPG          , "Beware the Forest's Mushrooms" },
@@ -153,7 +176,9 @@ static const struct SongDescription songDescriptions[] = {
     [42] = { sMP             , "Bowser's Magma Mountain" },
     [43] = { sMetroidPrime   , "Vs. Parasite Queen" },
     [44] = { sM_LPIT         , "Koopaseum" },
+    [46] = { sKDL2           , "Dark Castle" },
     [47] = { sSMG2           , "Starship Mario 1" },
+    [48] = { sTTYD           , "Sadness and Happiness" },
     [49] = { sSMG2           , "Space Junk Galaxy" },
     [51] = { sKDL2           , "Dark Castle" },
     [52] = { sSA             , "Dilapidated Way ... for Casinopolis" },
@@ -161,13 +186,13 @@ static const struct SongDescription songDescriptions[] = {
     [54] = { sBMH            , "Hero Radical" },
     [55] = { sKA             , "Yogurt Yard" },
     [56] = { sMKDS           , "Waluigi Pinball" },
-
+    [57] = { sSA             , "E101 MK2 Theme" },
     [58] = { sSA             , "Tikal Theme" },
     [59] = { sK64            , "Above the Clouds" },
     [60] = { sSMG2           , "Beach Bowl Galaxy" },
     [61] = { sMKDD           , "Thwomp Ruins" },
     [62] = { sMKDD           , "Holly Jolly" },
-
+    [63] = { sDKC2           , "Boss Bossanova" },
     [64] = { sSMRPG          , "Sunken Ship" },
     [65] = { sPM             , "Forever Forest" },
     [66] = { sMP             , "Full of Danger" },
@@ -186,6 +211,7 @@ static const struct SongDescription songDescriptions[] = {
     [81] = { sTTYD           , "Glitz Pit" },
     [82] = { sMKDD           , "Dry Dry Desert" },
     [83] = { sPM             , "Crystal Palace" },
+    [84] = { sPM             , "Gusty Gulch" },
     [85] = { sTTYD           , "Battle Theme" },
     [86] = { sPM             , "Lavalava Island" },
     [87] = { sPM             , "Freeze Flame Core" },
@@ -198,6 +224,7 @@ static const struct SongDescription songDescriptions[] = {
     [96] = { sSA             , "Tornado" },
     [97] = { sSMG            , "Spin-Dig Galaxy" },
     [98] = { sSMG2           , "Starshine_Galaxy" },
+    [99] = { sBM64           , "Altair Fight" },
 };
 
 extern u8 sCurrentBackgroundMusicSeqId;

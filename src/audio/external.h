@@ -18,6 +18,14 @@
         0 \
     : seqId)))
 
+extern u8 Randomizer_get_random_boss_song();
+#define SEQUENCE_ARGS_BOSS(priority, seqId) ((priority << 8) | \
+    ((Randomizer_gOptionsSettings.cosmetic.s.musicOn == 1) ? \
+        (((seqId) & 0x80) | Randomizer_get_random_boss_song()) \
+    : (Randomizer_gOptionsSettings.cosmetic.s.musicOn == 2 ? \
+        0 \
+    : seqId)))
+
 enum SoundModes {
     SOUND_MODE_STEREO,
     SOUND_MODE_MONO,
