@@ -129,7 +129,9 @@ static const struct Randomizer_AvoidancePoint ccAvoidancePoints[] = {
 
 static const struct Randomizer_AvoidancePoint ccandyAvoidancePoints[] = {
     {bhvStub, {580, 2003, 5703}, 1500.0f, 1500.0f, Randomizer_AVOIDANCE_SAFETY_HARD}, // target
-    {bhvStub, {-4527, -3297, 1661}, 1100.0f, 500.0f, Randomizer_AVOIDANCE_SAFETY_HARD} // top of the coin
+    {bhvStub, {-4527, -3297, 1661}, 1100.0f, 500.0f, Randomizer_AVOIDANCE_SAFETY_HARD}, // top of the coin
+    {bhvStub, {-5134, 890, -1687}, 1000.0f, 1000.0f, Randomizer_AVOIDANCE_SAFETY_HARD}, // on roof for coin
+    {bhvStub, {-5134, 890, -1687}, 1000.0f, 1000.0f, Randomizer_AVOIDANCE_SAFETY_HARD}, // on roof for coin
 };
 
 
