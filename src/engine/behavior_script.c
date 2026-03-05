@@ -365,6 +365,10 @@ static s32 bhv_cmd_randomize_object(void) {
     {
         goto end;
     }
+    if (gCurrLevelNum != LEVEL_HMC && gCurrentObject->behavior == bhvBowserBomb)
+    {
+        goto end;
+    }
 
     u32 randType = BHV_CMD_GET_U32(1);
     u8 randomize = FALSE;

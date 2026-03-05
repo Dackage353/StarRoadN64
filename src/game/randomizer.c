@@ -636,6 +636,7 @@ void Randomizer_create_dynamic_avoidance_point(Vec3f pos, f32 radius, f32 height
     Randomizer_gNumDynamicAvoidancePoints++;
 }
 
+extern const BehaviorScript bhvStarRoadGGGrave[];
 void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRange, f32 maxHeightRange, tinymt32_t *randomState,
                        u8 floorSafeLevel, u32 randPosFlags) {
     const struct Randomizer_AreaParams *areaParams = &(*Randomizer_sLevelParams[gCurrLevelNum - 4])[gCurrAreaIndex - 1];
@@ -874,10 +875,17 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
             continue;
 
         // Spawn avoidance point if needed
-        if ((randPosFlags & RAND_TYPE_CREATE_AVOIDANCE_POINT) && (Randomizer_gNumDynamicAvoidancePoints < 50)) {
+        if ((randPosFlags & RAND_TYPE_CREATE_AVOIDANCE_POINT) && (Randomizer_gNumDynamicAvoidancePoints < 200)) {
             Vec3f fpos;
             vec3_copy(fpos, pos);
-            Randomizer_create_dynamic_avoidance_point(fpos, 100.f, 200.f, 50.f);
+            f32 radius = 100.f;
+            f32 height = 200.f;
+            if (o->behavior == bhvStarRoadGGGrave || o->behavior == bhvPushableMetalBox)
+            {
+                radius *= 3.f;
+                height *= 1.5f;
+            }
+            Randomizer_create_dynamic_avoidance_point(fpos, radius, height, 50.f);
         }
 
         return;
