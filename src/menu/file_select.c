@@ -2492,7 +2492,7 @@ static const char *textsModes[] = {
     "GREEN DEMON MODE",
 };
 
-#define textCountModes (sizeof(textsModes) / 4)
+#define textCountModes ((sizeof(textsModes) - 4) / 4)
 
 static void page_modes() {
     if (check_clicked_text(180, OPTIONS_Y(0), 0)) {
@@ -2628,32 +2628,32 @@ void handle_info_display(const struct InfoDisplay displays[], s32 count) {
 
 struct InfoDisplay aestheticInfo[] = {
     {"\
-Randomize the colors of Mario\x3Es\n\
-model\x3F Selecting CLOTHES will\n\
+Randomize the colors of Mario's\n\
+model. Selecting CLOTHES will\n\
 keep his hair and skin their\n\
-regular color\x3F", 170, 4},
+regular color.", 170, 4},
 
     {"\
-Randomize the color of stars\x3F\n\
+Randomize the color of stars.\n\
 Star colors can be unique for\n\
 every star, tied to the level,\n\
-or fixed for the whole game\x3F", 157, 4},
+or fixed for the whole game.", 157, 4},
 
     {"\
 Randomize the color of yellow,\n\
-red and blue coins\x3F Coin colors\n\
+red and blue coins. Coin colors\n\
 will always be relatively\n\
-distinct from each other\x3F", 162, 4},
+distinct from each other.", 162, 4},
 
     {"\
 Randomize the skybox displayed\n\
-in the background of each level\x3F", 168, 2},
+in the background of each level.", 168, 2},
 
     {"\
 Randomize the music that plays\n\
 within each level, or during\n\
-events\x3F Selecting MUTED will\n\
-play no music at all\x3F", 168, 4},
+events. Selecting MUTED will\n\
+play no music at all.", 168, 4},
 };
 
 char *textsStarSettings[] = {
@@ -2675,8 +2675,7 @@ void page_cosmetics_print() {
     
     options_page_print_options(textCountCosmetics, textsCosmetic);
     
-    options_page_print_three(Randomizer_gOptionsSettings.cosmetic.s.marioColors, OPTIONS_Y(0),
-        165, 198, 250, "OFF", "CLOTHES", "ALL");
+    options_page_print_on_off(Randomizer_gOptionsSettings.cosmetic.s.marioColors, OPTIONS_Y(0), 190, 222);
 
     options_page_print_three(Randomizer_gOptionsSettings.cosmetic.s.musicOn, OPTIONS_Y(4),
         171, 206, 240, "OFF", "ON", "MUTED");
@@ -2700,16 +2699,16 @@ struct InfoDisplay objectInfo[] = {
     {"\
 Controls the average difficulty of\n\
 object placements, including factors\n\
-like height and ground steepness\x3F", 188, 3},
+like height and ground steepness.", 188, 3},
     {"\
 Controls which kinds of objects are\n\
-randomized\x3F If set to KEY, only\n\
+randomized. If set to KEY, only\n\
 objects that are directly required\n\
-to obtain stars are randomized\x3F", 184, 4},
+to obtain stars are randomized.", 184, 4},
     {"\
 Whether stars that are spawned\n\
 by other objects have their\n\
-positions randomized or not\x3F", 170, 3},
+positions randomized or not.", 170, 3},
 };
 
 void page_objects_print() {
@@ -2731,31 +2730,31 @@ void page_objects_print() {
 static const struct InfoDisplay modeInfo[] = {
     {"\
 Determines the main gameplay structure\n\
-of the playthrough\x3F If set to ON, keys\n\
+of the playthrough. If set to ON, keys\n\
 will be required to progress and levels\n\
 will be separated into the three main\n\
-areas\x3F Otherwise, key doors will be\n\
-disabled and levels will be fully random\x3F", 212, 6},
+areas. Otherwise, key doors will be\n\
+disabled and levels will be fully random.", 212, 6},
 
     {"\
 With Nonstop mode, collecting a\n\
-star won\x3Et take you out of the level\x3F\n\
+star won't take you out of the level.\n\
 If SAVE is chosen, stars will bring\n\
 up a save prompt when collected,\n\
 otherwise they will be collected\n\
-instantly\x3F", 190, 6},
+instantly.", 190, 6},
 
     {"\
 Enables Green Demon mode, where a\n\
-1\x9Fup will chase you through all\n\
-levels and will kill you on contact\x3F", 182, 3},
+1up will chase you through all\n\
+levels and will kill you on contact.", 182, 3},
 };
 
 void page_modes_print() {
     options_page_print_options(textCountModes, textsModes);
 
     options_page_print_on_off(Randomizer_gOptionsSettings.gameplay.s.keepStructure, OPTIONS_Y(0), 190, 222);
-    options_page_print_on_off(Randomizer_gOptionsSettings.gameplay.s.demonOn, OPTIONS_Y(2), 190, 222);
+    //options_page_print_on_off(Randomizer_gOptionsSettings.gameplay.s.demonOn, OPTIONS_Y(2), 190, 222);
     
     options_page_print_three(Randomizer_gOptionsSettings.gameplay.s.nonstopMode, OPTIONS_Y(1),
         166, 197, 231, "OFF", "SAVE", "NOSAVE");
@@ -2791,29 +2790,29 @@ static const struct InfoDisplay warpInfo[] = {
     {"\
 Sets the number of stars\n\
 required to enter Bowser\n\
-in the Sky\x3F", 137, 3},
+in the Sky.", 137, 3},
 
     {"\
-Determines if Mario\x3Es starting\n\
+Determines if Mario's starting\n\
 position is randomized whenever\n\
-he enters a level\x3F", 166, 3},
+he enters a level.", 166, 3},
 
     {"\
 Determines if the level entrances\n\
 lead to random levels, or if they\n\
-lead to their original level\x3F", 173, 3},
+lead to their original level.", 173, 3},
 
     {"\
 Adjusted exits will return Mario\n\
 outside of the painting he just\n\
 entered, rather than the painting\n\
-of the level he was just in\x3F", 175, 4},
+of the level he was just in.", 175, 4},
 
     {"\
 Whether to randomize the star\n\
 requirements for accessing new\n\
-levels\x3F Setting to NONE will\n\
-remove all star requirements\x3F", 166, 4},
+levels. Setting to NONE will\n\
+remove all star requirements.", 166, 4},
 };
 
 void page_warps_print() {
