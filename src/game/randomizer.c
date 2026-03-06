@@ -636,7 +636,7 @@ void Randomizer_create_dynamic_avoidance_point(Vec3f pos, f32 radius, f32 height
     Randomizer_gNumDynamicAvoidancePoints++;
 }
 
-#define DEBUG_FAIRNESS
+// #define DEBUG_FAIRNESS
 #ifdef DEBUG_FAIRNESS
 int gFailReasons[30] = {0};
 #define LOG_FAIL(idx) do { gFailReasons[(idx) + 1]++; } while(0)

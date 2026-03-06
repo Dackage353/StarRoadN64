@@ -691,8 +691,8 @@ u8 Randomizer_gOverwriteFileSeed;
 
 void save_file_set_seed_and_options(s32 fileNum) {
     struct SaveFile *saveFile = &gSaveBuffer.files[fileNum - 1][0];
-    u8 overwriteOptions = Randomizer_gOverwriteFileOptions;
-    u8 overwriteSeed = Randomizer_gOverwriteFileSeed;
+    u8 overwriteOptions = FALSE;
+    u8 overwriteSeed = FALSE;
 
     // New file, set the file's seed to the one picked.
     if (!(saveFile->flags & SAVE_FLAG_FILE_EXISTS)){
