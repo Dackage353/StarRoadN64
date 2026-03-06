@@ -636,6 +636,13 @@ void Randomizer_create_dynamic_avoidance_point(Vec3f pos, f32 radius, f32 height
     Randomizer_gNumDynamicAvoidancePoints++;
 }
 
+#ifdef DEBUG_FAIRNESS
+int gFailReasons[30] = {0};
+#define LOG_FAIL(idx) do { gFailReasons[(idx) + 1]++; } while(0)
+#else
+#define LOG_FAIL(idx) do {} while(0)
+#endif
+
 extern const BehaviorScript bhvStarRoadGGGrave[];
 void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRange, f32 maxHeightRange, tinymt32_t *randomState,
                        u8 floorSafeLevel, u32 randPosFlags) {
@@ -663,13 +670,6 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
         return;
     }
 
-    minX = areaParams->minX;
-    maxX = areaParams->maxX;
-    minY = areaParams->minY;
-    maxY = areaParams->maxY;
-    minZ = areaParams->minZ;
-    maxZ = areaParams->maxZ;
-
     if (Randomizer_gOptionsSettings.gameplay.s.nonstopMode == 1) {
         if ((obj->behavior == segmented_to_virtual(bhvStar))
          || (obj->behavior == segmented_to_virtual(bhvStarSpawnCoordinates))
@@ -681,21 +681,73 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
     }
 
     while (TRUE) {
+        minX = areaParams->minX;
+        maxX = areaParams->maxX;
+        minY = areaParams->minY;
+        maxY = areaParams->maxY;
+        minZ = areaParams->minZ;
+        maxZ = areaParams->maxZ;
+
         u32 dangerShiftedOverHighFloor = FALSE;
 
         // Generate random position
-        pos[0] = Randomizer_get_val_in_range_uniform(minX, maxX, randomState);
         pos[1] = Randomizer_get_val_in_range_uniform(minY, maxY, randomState);
-        pos[2] = Randomizer_get_val_in_range_uniform(minZ, maxZ, randomState);
 
-        lowFloorHeight = find_floor(pos[0], pos[1] + 20, pos[2], &lowFloor);
+        if (gCurrCourseNum == COURSE_HMC)
+        {
+            if (pos[1] < 1743)
+            {
+                minX = -3773;
+                //maxX = areaParams->maxX;
+                minZ = -7136;
+                maxZ = 6126;
+            }
+            if (pos[1] < -2577)
+            {
+                minX = -2763;
+                //maxX = areaParams->maxX;
+                minZ = -2563;
+                maxZ = 5054;
+            }
+        }
 
-        if (lowFloor == NULL)
-            continue;
+        if (gCurrCourseNum == COURSE_CCM)
+        {
+            if (pos[1] < 2359)
+            {
+                minX = 0;
+                maxX = 4964;
+                minZ = -1711;
+                maxZ = 6906;
+            }
+        }
+
+        // For courses like CCCoral special handling is used. We prioritize randomness within Y coordinates fairness.
+        // Goal is to discover the spot where on a given height there is _possibly_ a floor instead of rejecting Y and rerolling it.
+        int wantYFairness = gCurrCourseNum == COURSE_HMC;
+        if (wantYFairness)
+        {
+            do
+            {
+                pos[0] = Randomizer_get_val_in_range_uniform(minX, maxX, randomState);
+                pos[2] = Randomizer_get_val_in_range_uniform(minZ, maxZ, randomState);
+
+                lowFloorHeight = find_floor(pos[0], pos[1] + 20, pos[2], &lowFloor);
+                LOG_FAIL(-1); 
+            }
+            while (!lowFloor);
+        }
+        else
+        {
+            pos[0] = Randomizer_get_val_in_range_uniform(minX, maxX, randomState);
+            pos[2] = Randomizer_get_val_in_range_uniform(minZ, maxZ, randomState);
+
+            lowFloorHeight = find_floor(pos[0], pos[1] + 20, pos[2], &lowFloor);
+            if (lowFloor == NULL) { LOG_FAIL(0); continue; }
+        }
 
         int lowDiff = 800;
-        if ((pos[1] - lowFloorHeight) > lowDiff)
-            continue;
+        if ((pos[1] - lowFloorHeight) > lowDiff) { LOG_FAIL(1); continue; }
 
         if (lowFloorHeight + 20 <= maxY) {
             pos[1] = lowFloorHeight + 20;
@@ -708,16 +760,13 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
 
         lowFloorHeight = find_floor(pos[0], pos[1], pos[2], &lowFloor);
 
-        if ((pos[1] - lowFloorHeight) > lowDiff)
-            continue;
+        if ((pos[1] - lowFloorHeight) > lowDiff) { LOG_FAIL(2); continue; }
 
         pos[1] = lowFloorHeight;
 
-        if (lowFloor == NULL)
-            continue;
+        if (lowFloor == NULL) { LOG_FAIL(3); continue; }
 
-        if (!is_floor_safe(lowFloor, floorSafeLevel, randPosFlags))
-            continue;
+        if (!is_floor_safe(lowFloor, floorSafeLevel, randPosFlags)) { LOG_FAIL(4); continue; }
 
         // Snap to ground and check if safe
         objCanBeUnderwater =
@@ -774,14 +823,14 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
             (RAYCAST_FIND_FLOOR | RAYCAST_FIND_WALL | RAYCAST_FIND_CEIL));
 
             if (surf != NULL) {
-                continue;
+                LOG_FAIL(5); continue;
             }
             
             waterLevel = find_water_level(pos[0], pos[2]);
 
             lowFloorHeight = find_floor(pos[0], pos[1], pos[2], &lowFloor);
             if (lowFloor == NULL) {
-                continue;
+                LOG_FAIL(6); continue;
             }
             if ((pos[1] - lowFloorHeight) > 800.f) {
                 dangerShiftedOverHighFloor = TRUE;
@@ -793,11 +842,9 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
         // Ceiling check
         cHeight = find_ceil(pos[0], lowFloorHeight + 80, pos[2], &ceil);
 
-        if (pos[1] > cHeight - 100.f) // If in a ceiling, cancel spawn
-            continue;
+        if (pos[1] > cHeight - 100.f) { LOG_FAIL(7); continue; } // If in a ceiling, cancel spawn
 
-        if (dangerShiftedOverHighFloor & (pos[1] > cHeight - 200.f)) // If no ground nearby and too close to the ceiling
-            continue;
+        if (dangerShiftedOverHighFloor & (pos[1] > cHeight - 200.f)) { LOG_FAIL(8); continue; } // If no ground nearby and too close to the ceiling
 
         // Floor Check
         highFloorHeight = find_floor(pos[0], cHeight - 80, pos[2],
@@ -805,18 +852,15 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
 
         if ((highFloorHeight > (pos[1] + 20))
             && ((highFloorHeight - pos[1])
-                < 1500)) // If under floor and not large distance, deny height
-            continue;
+                < 1500)) { LOG_FAIL(9); continue; } // If under floor and not large distance, deny height
 
         if ((pos[1] - highFloorHeight) < (minHeightRange - 50.f)) {
-            continue;
+            LOG_FAIL(10); continue;
         }
 
-        if (!objCanBeUnderwater && (waterLevel > pos[1]))
-            continue;
+        if (!objCanBeUnderwater && (waterLevel > pos[1])) { LOG_FAIL(11); continue; }
 
-        if ((randPosFlags & RAND_TYPE_MUST_BE_UNDERWATER) && (waterLevel < pos[1]))
-            continue;
+        if ((randPosFlags & RAND_TYPE_MUST_BE_UNDERWATER) && (waterLevel < pos[1])) { LOG_FAIL(12); continue; }
 
 #if 0
         if (randPosFlags & RAND_TYPE_LIMITED_BBH_HMC_SPAWNS) {
@@ -836,8 +880,7 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
                 {
                     struct Surface* t = NULL;
                     f32 height = find_floor(pos[0], 8000.f, pos[2], &t);
-                    if (height - 2073.f > 10.f)
-                        continue;
+                    if (height - 2073.f > 10.f) { LOG_FAIL(13); continue; }
                 }
 
                 // raycast to the left to check if covered by wall - first find the rock location...
@@ -862,17 +905,14 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
                 }
 
                 f32 dx = hitPos[0] - loc[0];
-                if (dx < -10.f)
-                    continue;
+                if (dx < -10.f) { LOG_FAIL(14); continue; }
             }
         }
 
-        if (is_in_avoidance_point(pos, areaParams, obj))
-            continue;
+        if (is_in_avoidance_point(pos, areaParams, obj)) { LOG_FAIL(15); continue; }
 
         // Wall Check
-        if (!Randomizer_raycast_wall_check(pos))
-            continue;
+        if (!Randomizer_raycast_wall_check(pos)) { LOG_FAIL(16); continue; }
 
         // Spawn avoidance point if needed
         if ((randPosFlags & RAND_TYPE_CREATE_AVOIDANCE_POINT) && (Randomizer_gNumDynamicAvoidancePoints < 200)) {
