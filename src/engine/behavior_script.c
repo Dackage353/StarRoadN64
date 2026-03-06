@@ -357,11 +357,15 @@ static s32 bhv_cmd_randomize_object(void) {
     {
         goto end;
     }
+    if (gCurrLevelNum == LEVEL_BOB && gCurrentObject->behavior == bhvExclamationBox && gCurrentObject->oBehParams2ndByte == 2)
+    {
+        goto end;
+    }
     if (gCurrLevelNum == LEVEL_THI && gCurrentObject->behavior == bhvExclamationBox && (gCurrentObject->oBehParams2ndByte == 3 || gCurrentObject->oBehParams2ndByte == 1))
     {
         goto end;
     }
-    if (gCurrLevelNum == LEVEL_WF && gCurrentObject->behavior == bhvExclamationBox && (gCurrentObject->oBehParams2ndByte <= 2))
+    if ((gCurrLevelNum == LEVEL_WF || gCurrLevelNum == LEVEL_CASTLE_COURTYARD) && gCurrentObject->behavior == bhvExclamationBox && (gCurrentObject->oBehParams2ndByte <= 2))
     {
         goto end;
     }
