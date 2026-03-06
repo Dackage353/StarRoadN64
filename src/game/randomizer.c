@@ -21,7 +21,7 @@
 #include "segment2.h"
 #include "game/emutest.h"
 
-u32 Randomizer_gGameSeed = 2976852;
+u32 Randomizer_gGameSeed = 0;
 
 u8 Randomizer_gIsSetSeed = FALSE;
 
@@ -636,6 +636,7 @@ void Randomizer_create_dynamic_avoidance_point(Vec3f pos, f32 radius, f32 height
     Randomizer_gNumDynamicAvoidancePoints++;
 }
 
+#define DEBUG_FAIRNESS
 #ifdef DEBUG_FAIRNESS
 int gFailReasons[30] = {0};
 #define LOG_FAIL(idx) do { gFailReasons[(idx) + 1]++; } while(0)
@@ -722,9 +723,44 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
             }
         }
 
+        if (gCurrCourseNum == COURSE_RR)
+        {
+            if (pos[1] < -1980)
+            {
+                minX = -7576;
+                maxX = 6152;
+                minZ = -7096;
+                maxZ = 3719;
+            }
+
+            if (pos[1] > 3255)
+            {
+                minX = -2609;
+                maxX = -870;
+                minZ = -6062;
+                maxZ = -357;
+            }
+
+            if (pos[1] > 4164)
+            {
+                minX = -4336;
+                maxX = 1980;
+                minZ = -967;
+                maxZ = 7471;
+            }
+
+            if (pos[1] > 6234)
+            {
+                minX = -8190;
+                maxX = 5658;
+                minZ = -601;
+                maxZ = 7471;
+            }
+        }
+
         // For courses like CCCoral special handling is used. We prioritize randomness within Y coordinates fairness.
         // Goal is to discover the spot where on a given height there is _possibly_ a floor instead of rejecting Y and rerolling it.
-        int wantYFairness = gCurrCourseNum == COURSE_HMC;
+        int wantYFairness = gCurrCourseNum == COURSE_HMC || gCurrCourseNum == COURSE_RR;
         if (wantYFairness)
         {
             do
@@ -735,7 +771,7 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
                 lowFloorHeight = find_floor(pos[0], pos[1] + 20, pos[2], &lowFloor);
                 LOG_FAIL(-1); 
             }
-            while (!lowFloor);
+            while (!lowFloor || lowFloor->type == SURFACE_DEATH_PLANE);
         }
         else
         {
