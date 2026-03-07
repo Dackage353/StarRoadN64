@@ -108,6 +108,7 @@ const LevelScript level_ddd_entry[] = {
 		OBJECT_WITH_ACTS(215,-3114,-550,1270,0,0,0,0x0, bhvRedCoin,63),
 		OBJECT_WITH_ACTS_FORCE_ACTIVE(212,4481,-1240,-862,0,0,0,0x0, bhv1Up,59),
 		OBJECT_WITH_ACTS(0,1076,1312,4870,0,16,0,0x0, bhvTTCPitBlock,63),
+		OBJECT_WITH_ACTS(0,1870,1625,4677,0,0,0,0xef0000, bhvFadingWarp,63),
 		OBJECT_WITH_ACTS_FORCE_ACTIVE(116,4481,-538,-1537,0,0,0,0x0, bhvOneCoin,59),
 		OBJECT_WITH_ACTS(122,4123,2007,-5484,0,0,0,0x0, bhvStar,63),
 		OBJECT_WITH_ACTS(137,6686,1267,1835,0,17,0,0x10a0000, bhvExclamationBox,63),
@@ -187,6 +188,7 @@ const LevelScript level_ddd_entry[] = {
 		WARP_NODE(4,9,1,10,0),
 		WARP_NODE(5,23,1,6,0),
 		WARP_NODE(6,23,1,5,0),
+		WARP_NODE(239,LEVEL_DDD,1,239,0),
 		/* Fast64 end persistent block [area commands] */
 	END_AREA(),
 	FREE_LEVEL_POOL(),

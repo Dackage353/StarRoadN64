@@ -235,6 +235,9 @@ void Randomizer_print_cur_song()
 
     char buf[200];
     const struct SongDescription* songDesc = &songDescriptions[sCurrentBackgroundMusicSeqId];
+    if (!songDesc->game || !songDesc->song)
+        return;
+
     sprintf(buf, "%s - %s", songDesc->game, songDesc->song);
     
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);

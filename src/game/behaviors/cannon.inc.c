@@ -182,7 +182,7 @@ extern const char* gExtraTexts[2];
 extern u16 gExtraGuides[2];
 
 void bhv_cannon_base_loop(void) {
-    int canFastWarp = configFasterObjects && (gCurrLevelNum == LEVEL_BOB || gCurrLevelNum == LEVEL_JRB || gCurrLevelNum == LEVEL_RR || gCurrLevelNum == LEVEL_WDW);
+    int canFastWarp = configFasterObjects && (gCurrLevelNum == LEVEL_BOB || gCurrLevelNum == LEVEL_JRB || gCurrLevelNum == LEVEL_RR || gCurrLevelNum == LEVEL_WDW || gCurrLevelNum == LEVEL_DDD);
     if (canFastWarp)
     {
         if (o->oAction >= 4 || o->oAction == 1)

@@ -185,6 +185,9 @@ void fail_warp_init_mario_after_quick_warp_reset_camera(struct Object* spawnObje
                 case LEVEL_RR:
                     s8DirModeYawOffset = 0x000;
                     break;
+                case LEVEL_DDD:
+                    s8DirModeYawOffset = 0x4000;
+                    break;
             }
         }
 
