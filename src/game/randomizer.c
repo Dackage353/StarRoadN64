@@ -230,6 +230,9 @@ static const struct SongDescription songDescriptions[] = {
 extern u8 sCurrentBackgroundMusicSeqId;
 void Randomizer_print_cur_song()
 {
+    if (sCurrentBackgroundMusicSeqId >= sizeof(songDescriptions) / sizeof(*songDescriptions))
+        return;
+
     char buf[200];
     const struct SongDescription* songDesc = &songDescriptions[sCurrentBackgroundMusicSeqId];
     sprintf(buf, "%s - %s", songDesc->game, songDesc->song);
