@@ -729,6 +729,24 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
             }
         }
 
+        if (gCurrCourseNum == COURSE_SSL)
+        {
+            if (pos[1] > 570)
+            {
+                minX = -2362;
+                maxX = 2279;
+                minZ = 1024;
+                maxZ = 3924;
+            }
+            if (pos[1] < -1350)
+            {
+                minX = -2911;
+                maxX = 604;
+                minZ = 1436;
+                maxZ = 4330;
+            }
+        }
+
         if (gCurrCourseNum == COURSE_RR)
         {
             if (pos[1] < -1980)
