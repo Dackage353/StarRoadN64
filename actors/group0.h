@@ -272,6 +272,14 @@ extern const Gfx sparkles_seg4_dl_0402A528[];
 extern const Gfx sparkles_seg4_dl_0402A540[];
 extern const Gfx sparkles_seg4_dl_0402A558[];
 extern const Gfx sparkles_seg4_dl_0402A570[];
+extern const GeoLayout sparkles_alt_geo[];
+extern const Gfx sparkles_seg4_dl_alt_0402A490[];
+extern const Gfx sparkles_seg4_dl_alt_0402A4F8[];
+extern const Gfx sparkles_seg4_dl_alt_0402A510[];
+extern const Gfx sparkles_seg4_dl_alt_0402A528[];
+extern const Gfx sparkles_seg4_dl_alt_0402A540[];
+extern const Gfx sparkles_seg4_dl_alt_0402A558[];
+extern const Gfx sparkles_seg4_dl_alt_0402A570[];
 
 // sparkle_animation
 extern const GeoLayout sparkles_animation_geo[];

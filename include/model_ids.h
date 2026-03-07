@@ -574,5 +574,6 @@
 
 #define MODEL_RED_COIN_RADAR 0xf0
 #define MODEL_CHECKMARK 0xf1
+#define MODEL_SPARKLES_ALT 0xf2
 
 #endif // MODEL_IDS_H

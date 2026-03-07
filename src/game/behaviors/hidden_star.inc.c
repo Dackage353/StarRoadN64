@@ -32,7 +32,7 @@ void bhv_hidden_star_loop(void) {
 extern const BehaviorScript bhvCheckMark[];
 void bhv_hidden_star_trigger_loop(void) {
     if (gGlobalTimer % 5 == 0) {
-        struct Object *sparkle = spawn_object(o, 149, bhvCoinSparkles);
+        struct Object *sparkle = spawn_object(o, gCurrCourseNum == COURSE_LLL ? MODEL_SPARKLES_ALT : MODEL_SPARKLES, bhvCoinSparkles);
         sparkle->oPosX += random_float() * 100 - 50;
         sparkle->oPosY += random_float() * 100 - 50;
         sparkle->oPosZ += random_float() * 100 - 50;
