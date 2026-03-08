@@ -85,6 +85,9 @@ void bhv_star_spawn_init(void) {
     cur_obj_become_intangible();
 }
 
+extern const char* gExtraTexts[2];
+extern u16 gExtraGuides[2];
+
 void bhv_star_spawn_loop(void) {
     switch (o->oAction) {
         case SPAWN_STAR_ARC_CUTSCENE_ACT_START:
@@ -132,10 +135,21 @@ void bhv_star_spawn_loop(void) {
 
         case SPAWN_STAR_ARC_CUTSCENE_ACT_END:
             o->oFaceAngleYaw += 0x800;
-            if (o->oTimer == 20) {
-                gObjCutsceneDone = TRUE;
-                clear_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
-                o->activeFlags &= ~ACTIVE_FLAG_INITIATED_TIME_STOP;
+            if (o->oTimer > 20) {
+                if (!gObjCutsceneDone)
+                {
+                    if (gPlayer1Controller->buttonPressed)
+                    {
+                        gObjCutsceneDone = TRUE;
+                        clear_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
+                        o->activeFlags &= ~ACTIVE_FLAG_INITIATED_TIME_STOP;
+                    }
+                    else
+                    {
+                        gExtraTexts[0] = "Press any button to continue";
+                        gExtraGuides[0] = 256/16;
+                    }
+                }
             }
 
             if (o->oInteractStatus & INT_STATUS_INTERACTED) {

@@ -3374,6 +3374,7 @@ const BehaviorScript bhvSmallWhomp[] = {
     SET_HOME(),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_whomp_loop),
+        SET_FLOAT(oDrawingDistance, 20000),
     END_LOOP(),
 };
 
