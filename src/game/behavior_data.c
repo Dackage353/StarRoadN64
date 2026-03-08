@@ -576,6 +576,7 @@ const BehaviorScript bhvKingBobomb[] = {
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_king_bobomb_loop),
         CALL_NATIVE(bhv_king_bobomb_loop),
+        SET_FLOAT(oDrawingDistance, 20000),
     END_LOOP(),
 };
 
