@@ -515,10 +515,22 @@ static u8 is_floor_safe(struct Surface *floor, u8 floorSafeLevel,
                 case LEVEL_SL:
                     norm = 0.78f;
                     break;
+                case LEVEL_THI:
+                    norm = 0.891f;
+                    break;
+                case LEVEL_TTC:
+                    norm = 0.71f;
+                    break;
                 default:
                     norm = 0.7f;
                     break;
             }
+    }
+
+    slipperiness = find_floor_slipperiness(floor);
+    if (SURFACE_CLASS_NOT_SLIPPERY == slipperiness)
+    {
+        norm = 0.4f;
     }
 
     if ((floorSafeLevel == Randomizer_FLOOR_SAFETY_HIGH) || (randPosFlags & RAND_TYPE_SAFE)) {
@@ -529,7 +541,6 @@ static u8 is_floor_safe(struct Surface *floor, u8 floorSafeLevel,
         return FALSE;
     }
 
-    slipperiness = find_floor_slipperiness(floor);
     if ((randPosFlags & RAND_TYPE_SAFE) && (floorSafeLevel == Randomizer_FLOOR_SAFETY_HIGH)
         && ((slipperiness == SURFACE_CLASS_SLIPPERY) || (slipperiness == SURFACE_CLASS_VERY_SLIPPERY))) {
 
