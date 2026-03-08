@@ -21,7 +21,7 @@
 #include "segment2.h"
 #include "game/emutest.h"
 
-u32 Randomizer_gGameSeed = 1;
+u32 Randomizer_gGameSeed = 8955075;
 
 u8 Randomizer_gIsSetSeed = FALSE;
 
@@ -31,9 +31,7 @@ u8 Randomizer_gNumDynamicAvoidancePoints = 0;
 struct Randomizer_AvoidancePoint Randomizer_gDynamicAvoidancePoints[200];
 
 s32 Randomizer_curPreset;
-struct Randomizer_OptionsSettings Randomizer_gOptionsSettings = {
-    .gameplay.w = 0x780,
-};
+struct Randomizer_OptionsSettings Randomizer_gOptionsSettings;
 
 #include "randomizer_data.h"
 
@@ -1276,6 +1274,7 @@ s32 Randomizer_init_randomizer_test(s32, s32 v)
 {
     Randomizer_gOverwriteFileOptions = 1;
     Randomizer_gOverwriteFileSeed = 1;
+    Randomizer_gOptionsSettings = Randomizer_gPresets[3];
     Randomizer_init_randomizer(v);
     return v;
 }
