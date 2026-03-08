@@ -94,8 +94,7 @@ void detect_emulator() {
         gEmulator = emux_detect() ? EMU_ARES : EMU_CONSOLE;
         return;
     }
-    
-#if 0
+
     /*
      * This check forces RZ bug on vc
      * If console is N64/adequate Emu, the current rounding mode, which is initialized to round-to-nearest (RN), is used
@@ -105,15 +104,10 @@ void detect_emulator() {
      * Exponent=01111111110, Mantissa=1111111111111111111111111111111111111111111111111111
      * RZ will output not 1.0f, RN will output exactly 1.0f
     */
-    const FloatRoundingMode roundingMode = fcr_get_rounding_mode();
-    fcr_set_rounding_mode(FCR_RM_ROUND_TO_NEAREST);
-    if (1.0f != round_double_to_float(0.9999999999999999)) {
+    if (1.0f != round_double_to_float(0.9999999999999999L)) {
         gEmulator = EMU_WIIVC;
-        fcr_set_rounding_mode(roundingMode);
         return;
     }
-    fcr_set_rounding_mode(roundingMode);
-#endif
 
     // Perform a read from unmapped PIF ram.
     // On console and well behaved emulators, this echos back the lower half of
