@@ -21,7 +21,7 @@
 #include "segment2.h"
 #include "game/emutest.h"
 
-u32 Randomizer_gGameSeed = 0;
+u32 Randomizer_gGameSeed = 1;
 
 u8 Randomizer_gIsSetSeed = FALSE;
 
@@ -738,7 +738,7 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
 
         if (gCurrCourseNum == COURSE_SSL)
         {
-            if (pos[1] > 570)
+            if (pos[1] > 780)
             {
                 minX = -2362;
                 maxX = 2279;
