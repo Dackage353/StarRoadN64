@@ -782,6 +782,19 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
             }
         }
 
+        if (gCurrCourseNum == COURSE_PSS)
+        {
+            if (pos[1] > 1620)
+            {
+                minZ = 144;
+                maxZ = 7183;   
+            }
+            if (pos[1] < -870)
+            {
+                maxZ = 3065;   
+            }
+        }
+
         // For courses like CCCoral special handling is used. We prioritize randomness within Y coordinates fairness.
         // Goal is to discover the spot where on a given height there is _possibly_ a floor instead of rejecting Y and rerolling it.
         int wantYFairness = gCurrCourseNum == COURSE_HMC || gCurrCourseNum == COURSE_RR;
