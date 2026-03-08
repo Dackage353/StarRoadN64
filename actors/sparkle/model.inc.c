@@ -59,7 +59,7 @@ const Gfx sparkles_seg4_dl_0402A490[] = {
 #define	G_CC_SPARKLE_ALT TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, TEXEL0
 const Gfx sparkles_seg4_dl_alt_0402A490[] = {
     gsDPSetCombineMode(G_CC_SPARKLE_ALT, G_CC_SPARKLE_ALT),
-    gsDPSetPrimColor(0, 0, 0x50, 0xff, 0x50, 0),
+    gsDPSetPrimColor(0, 0, 0x6a*1.4f, 0x0d*1.4f, 0xad*1.4f, 0),
     gsSPTexture(0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
     gsDPLoadSync(),
