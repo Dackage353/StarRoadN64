@@ -124,7 +124,9 @@ static const struct Randomizer_AvoidancePoint micrAvoidancePoints[] = {
 };
 
 static const struct Randomizer_AvoidancePoint ccAvoidancePoints[] = {
-    {bhvStub, {923, -1785, 1529}, 300.0f, 200.0f, Randomizer_AVOIDANCE_SAFETY_ALL} // Snow pile in bottom
+    {bhvStub, {923, -1785, 1529}, 300.0f, 200.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // ?
+    {bhvStub, {50+958, 3711, -1325}, 200.0f, 2000.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // geometry pieces
+    {bhvStub, {-50-2924, 3711, -1325}, 200.0f, 2000.0f, Randomizer_AVOIDANCE_SAFETY_ALL} // 
 };
 
 static const struct Randomizer_AvoidancePoint ccandyAvoidancePoints[] = {
@@ -136,6 +138,11 @@ static const struct Randomizer_AvoidancePoint ccandyAvoidancePoints[] = {
 
 static const struct Randomizer_AvoidancePoint b1fAvoidancePoints[] = {
     {bhvStub, {3258, 465, -2816}, 700.0f, 700.0f, Randomizer_AVOIDANCE_SAFETY_ALL} // top of the roof
+};
+
+static const struct Randomizer_AvoidancePoint c15AvoidancePoints[] = {
+    {bhvStub, {3900, -3008, -4141}, 600.0f, 1000.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // bulb1
+    {bhvStub, {3900, -2008, -4141}, 1000.0f, 1200.0f, Randomizer_AVOIDANCE_SAFETY_ALL} // bulb2
 };
 
 
@@ -185,7 +192,7 @@ static const struct Randomizer_AreaParams ttcParams[] = {
     {-5834, 6167, -1524, 3785, -7578, 5612, 0, 0, NULL}
 };
 static const struct Randomizer_AreaParams rrParams[] = {
-    {-7883, 7637, -6624, 11416, -7451, 7450, 0, 0, NULL}
+    {-7883, 7637, -6624, 11416, -7451, 7450, 0, ARRAY_SIZE(c15AvoidancePoints), &c15AvoidancePoints}
 };
 
 // Secret courses
