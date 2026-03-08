@@ -1372,7 +1372,14 @@ static void set_mario_light(void* dl, u8 r, u8 g, u8 b) {
     walker[2] = b;
 }
 
-void set_mario_light_random(void* dl1, void* dl2, tinymt32_t *randomState) {
+struct Color
+{
+    u8 r;
+    u8 g;
+    u8 b;
+};
+
+struct Color set_mario_light_random(void* dl1, void* dl2, tinymt32_t *randomState) {
     u8 RGB[3];
     get_random_color(RGB, randomState);
     u8 r = RGB[0];
@@ -1380,6 +1387,8 @@ void set_mario_light_random(void* dl1, void* dl2, tinymt32_t *randomState) {
     u8 b = RGB[2];
     set_mario_light(dl1, r, g, b);
     set_mario_light(dl2, r, g, b);
+    struct Color color = {r, g, b};
+    return color;
 }
 
 extern Gfx mat_mario_blue[];
@@ -1387,6 +1396,8 @@ extern Gfx mat_mario_button_layer1[];
 
 extern Gfx mat_mario_red[];
 extern Gfx mat_mario_logo_layer1[];
+
+extern Gfx mat_mario_red_dark[];
 
 // 4 vertex colors each
 extern Vtx coin_seg3_vertex_yellow[];
@@ -1432,7 +1443,12 @@ void Randomizer_set_mario_rando_colors(void) {
             tinymt32_init(&randomState, Randomizer_gGameSeed);
 
             set_mario_light_random(segmented_to_virtual(&mat_mario_blue), segmented_to_virtual(&mat_mario_button_layer1), &randomState);
-            set_mario_light_random(segmented_to_virtual(&mat_mario_red), segmented_to_virtual(&mat_mario_logo_layer1), &randomState);
+            struct Color hatColor = set_mario_light_random(segmented_to_virtual(&mat_mario_red), segmented_to_virtual(&mat_mario_logo_layer1), &randomState);
+            u8* underhat = (u8*) segmented_to_virtual(mat_mario_red_dark);
+            u8* color = underhat + 8*8;
+            color[4] = hatColor.r / 2.5f;
+            color[5] = hatColor.g / 2.5f;
+            color[6] = hatColor.b / 2.5f;
         }
     }
 
