@@ -487,7 +487,25 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
             
             // Warps are done here so that they randomize before Mario is spawned
             if ((Randomizer_is_warp_behavior(script)) && (gCurrCourseNum != COURSE_NONE && gCurrLevelNum != LEVEL_BOWSER_2) && (Randomizer_gOptionsSettings.gameplay.s.randomLevelSpawn)) {
-                Randomizer_get_safe_position(object, spawnInfo->startPos, 700.f, 900.f, &gGlobalRandomState, Randomizer_FLOOR_SAFETY_HIGH, RAND_TYPE_MAX_VARIATION | RAND_TYPE_CAN_BE_UNDERWATER | RAND_TYPE_SPAWN_TOP_OF_SLIDE | RAND_TYPE_LIMITED_BBH_HMC_SPAWNS | RAND_TYPE_SAFE);
+                int ok = 0;
+                while (!ok)
+                {
+                    Randomizer_get_safe_position(object, spawnInfo->startPos, 700.f, 900.f, &gGlobalRandomState, Randomizer_FLOOR_SAFETY_HIGH, RAND_TYPE_MAX_VARIATION | RAND_TYPE_CAN_BE_UNDERWATER | RAND_TYPE_SPAWN_TOP_OF_SLIDE | RAND_TYPE_LIMITED_BBH_HMC_SPAWNS | RAND_TYPE_SAFE);
+                    
+                    struct Surface *floor0 = NULL, *floor1 = NULL, *floor2 = NULL, *floor3 = NULL;
+                    find_floor(spawnInfo->startPos[0] + 20.f, spawnInfo->startPos[1] + 20.f, spawnInfo->startPos[2] - 20.f, &floor0);
+                    find_floor(spawnInfo->startPos[0] + 20.f, spawnInfo->startPos[1] + 20.f, spawnInfo->startPos[2] - 20.f, &floor1);
+                    find_floor(spawnInfo->startPos[0] - 20.f, spawnInfo->startPos[1] + 20.f, spawnInfo->startPos[2] + 20.f, &floor2);
+                    find_floor(spawnInfo->startPos[0] - 20.f, spawnInfo->startPos[1] + 20.f, spawnInfo->startPos[2] + 20.f, &floor3);
+
+                    #define IS_OK(f) (f && (f->type != SURFACE_BURNING && f->type != SURFACE_INSTANT_QUICKSAND && f->type != SURFACE_DEATH_PLANE))
+                    int ok0 = IS_OK(floor0);
+                    int ok1 = IS_OK(floor1);
+                    int ok2 = IS_OK(floor2);
+                    int ok3 = IS_OK(floor3);
+
+                    ok = ok0 && ok1 && ok2 && ok3;
+                }
             }
 
             // Record death/collection in the SpawnInfo
