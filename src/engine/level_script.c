@@ -800,8 +800,15 @@ static void level_cmd_set_music(void) {
         gAreas[sCurrAreaIndex].musicParam = CMD_GET(s16, 2);
         
         if (Randomizer_gOptionsSettings.cosmetic.s.musicOn == 1) {
-            s32 i = random_u16_seeded(Randomizer_gGameSeed + gCurrLevelNum * 8 + sCurrAreaIndex) % Randomizer_gRandomSongsCount;
-            gAreas[sCurrAreaIndex].musicParam2 = Randomizer_gRandomSongs[i];
+            s32 i = gCurrLevelNum;
+            if (gCurrLevelNum == LEVEL_BOWSER_2)
+            {
+                gAreas[sCurrAreaIndex].musicParam2 = Randomizer_get_random_boss_song();
+            }
+            else
+            {
+                gAreas[sCurrAreaIndex].musicParam2 = Randomizer_gRandomSongs[i];
+            }
         } else if (Randomizer_gOptionsSettings.cosmetic.s.musicOn == 2) {
             gAreas[sCurrAreaIndex].musicParam2 = 0;
         } else {            

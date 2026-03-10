@@ -1165,7 +1165,7 @@ void handle_special_dialog_text(s16 dialogID) { // dialog ID tables, in order
     for (i = 0; i < (s16) ARRAY_COUNT(sDialogBossStart); i++) {
         if (sDialogBossStart[i] == dialogID) {
             seq_player_unlower_volume(SEQ_PLAYER_LEVEL, 60);
-            play_music(SEQ_PLAYER_LEVEL, SEQUENCE_ARGS_R(4, SEQ_EVENT_BOSS), 0);
+            play_music(SEQ_PLAYER_LEVEL, SEQUENCE_ARGS_BOSS(4, SEQ_EVENT_BOSS), 0);
             return;
         }
     }

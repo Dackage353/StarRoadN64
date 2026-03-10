@@ -9,7 +9,7 @@
 
 #include "config.h"
 
-#define TEST_LEVEL LEVEL_CCM
+// #define TEST_LEVEL LEVEL_BOWSER_2
 
 extern s32 Randomizer_init_randomizer_test(s32, s32);
 

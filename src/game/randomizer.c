@@ -21,7 +21,7 @@
 #include "segment2.h"
 #include "game/emutest.h"
 
-u32 Randomizer_gGameSeed = 8955075;
+u32 Randomizer_gGameSeed = 0;
 
 u8 Randomizer_gIsSetSeed = FALSE;
 
@@ -97,13 +97,15 @@ static u8 Randomizer_gRandomBossSongs[] = {
 
 extern u8 Randomizer_get_random_boss_song()
 {
-    const int total = sizeof(Randomizer_gRandomBossSongs) / sizeof(Randomizer_gRandomBossSongs[0]) + sizeof(Randomizer_gRandomSongs) / sizeof(Randomizer_gRandomSongs[0]);
+    const int normalTotals = sizeof(Randomizer_gRandomSongs) / sizeof(Randomizer_gRandomSongs[0]) - 0x30;
+    const int bossTotals = sizeof(Randomizer_gRandomBossSongs) / sizeof(Randomizer_gRandomBossSongs[0]);
+    const int total = bossTotals + normalTotals;
     int which = random_u16_seeded(Randomizer_gGameSeed - (gCurrLevelNum * 0x100)) % total;
-    if (which < sizeof(Randomizer_gRandomBossSongs) / sizeof(Randomizer_gRandomBossSongs[0])) {
+    if (which < bossTotals) {
         return Randomizer_gRandomBossSongs[which];
     } else {
-        which -= sizeof(Randomizer_gRandomBossSongs) / sizeof(Randomizer_gRandomBossSongs[0]);
-        return Randomizer_gRandomSongs[which];
+        which -= bossTotals;
+        return Randomizer_gRandomSongs[which + 0x30];
     }
 }
 
@@ -189,8 +191,8 @@ static const struct SongDescription songDescriptions[] = {
     [58] = { sSA             , "Tikal Theme" },
     [59] = { sK64            , "Above the Clouds" },
     [60] = { sSMG2           , "Beach Bowl Galaxy" },
-    [61] = { sMKDD           , "Thwomp Ruins" },
-    [62] = { sMKDD           , "Holly Jolly" },
+    [61] = { sM_LPIT         , "Thwomp Ruins" },
+    [62] = { sM_LPIT         , "Holli Jolli" },
     [63] = { sDKC2           , "Boss Bossanova" },
     [64] = { sSMRPG          , "Sunken Ship" },
     [65] = { sPM             , "Forever Forest" },
@@ -1206,6 +1208,18 @@ static void shuffle_warp_pool(const u8* warpPool, size_t warpPoolSize, tinymt32_
     }
 }
 
+static void shuffle_u8(u8* arr, size_t arrSize, tinymt32_t *randomState)
+{
+    for (int i = arrSize - 1; i > 0; i--) {
+        u8 i1 = i;
+        u8 i2 = Randomizer_get_val_in_range_uniform(0, i + 1, randomState);
+
+        u8 tmp = arr[i1];
+        arr[i1] = arr[i2];
+        arr[i2] = tmp;
+    }
+}
+
 u8 Randomizer_get_nonrandom_level(u8 currLevel)
 {
     for (int i = 0; i < ARRAY_COUNT(Randomizer_gWarpDestinations); i++) {
@@ -1271,11 +1285,32 @@ static void init_warp_scramble() {
     }
 }
 
+static void init_random_songs()
+{
+    // sort array Randomizer_gRandomSongs by using counting sort
+    uint8_t arr[256] = {0};
+    for (size_t i = 0; i < ARRAY_SIZE(Randomizer_gRandomSongs); i++) {
+        arr[Randomizer_gRandomSongs[i]] = 1;
+    }
+    size_t index = 0;
+    for (size_t i = 0; i < 256; i++) {
+        if (arr[i])
+        {
+            Randomizer_gRandomSongs[index++] = i;
+        }
+    }
+    
+    tinymt32_t randomState;
+    tinymt32_init(&randomState, Randomizer_gGameSeed * 42);
+    shuffle_u8(Randomizer_gRandomSongs, ARRAY_SIZE(Randomizer_gRandomSongs), &randomState);
+}
+
 extern void save_main_menu_data(void);
 void Randomizer_init_randomizer(s32 fileNum) {
     save_main_menu_data();
     save_file_set_seed_and_options(fileNum);
     init_warp_scramble();
+    init_random_songs();
     init_required_stars();
 }
 
