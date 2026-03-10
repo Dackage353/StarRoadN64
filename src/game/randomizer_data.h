@@ -115,6 +115,10 @@ const u8 Randomizer_gStarDoorReqLUT[] = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 
 
 // Use bhvStub for avoidance points for all objects.
 // Use bhv<OBJECT> for points that only those OBJECTs should avoid.
+static const struct Randomizer_AvoidancePoint boiAvoidancePoints[] = {
+    {bhvBobombBuddyOpensCannon, {4440, -864, -2526}, 1000.0f, 3500.0f, Randomizer_AVOIDANCE_SAFETY_ALL} // Arph bottom
+};
+
 static const struct Randomizer_AvoidancePoint mmmAvoidancePoints[] = {
     {bhvStub, {573, -2493, -1339}, 1500.0f, 3500.0f, Randomizer_AVOIDANCE_SAFETY_ALL} // Arph bottom
 };
@@ -153,7 +157,7 @@ static const struct Randomizer_AvoidancePoint c15AvoidancePoints[] = {
 
 // Main courses
 static const struct Randomizer_AreaParams bobParams[] = {
-    {-7356, 7474, -3498, 2350, -8000, 6700, 0, 0, NULL}
+    {-7356, 7474, -3498, 2350, -8000, 6700, 0, ARRAY_SIZE(boiAvoidancePoints), &boiAvoidancePoints}
 };
 static const struct Randomizer_AreaParams wfParams[] = {
     {-6000, 8192, -2166, 3564, -7200, 7000, 0, 0, NULL}
