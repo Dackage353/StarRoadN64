@@ -2529,7 +2529,7 @@ static void page_presets() {
 }
 
 static const char *textsWarps[] = {
-    "BitS STARS NEEDED",
+    "B3 STARS NEEDED",
     "RANDOMIZE LEVEL SPAWN",
     "RANDOMIZE LEVEL WARPS",
     "ADJUST WARP EXITS",
