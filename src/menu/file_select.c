@@ -2417,14 +2417,11 @@ static const char *textsCosmetic[] = {
 static void page_cosmetics() {
     u32 i;
     
-    if (check_clicked_text(165, OPTIONS_Y(0), 0)){
+    if (check_clicked_text(180, OPTIONS_Y(0), 0)){
         Randomizer_gOptionsSettings.cosmetic.s.marioColors = 0;
     }
-    if (check_clicked_text_width(198, OPTIONS_Y(0), 0, 45)){
+    if (check_clicked_text(222, OPTIONS_Y(0), 0)){
         Randomizer_gOptionsSettings.cosmetic.s.marioColors = 1;
-    }
-    if (check_clicked_text(250, OPTIONS_Y(0), 0)){
-        Randomizer_gOptionsSettings.cosmetic.s.marioColors = 2;
     }
 
     s32 temp = Randomizer_gOptionsSettings.cosmetic.s.starColors;
@@ -3077,9 +3074,9 @@ void print_score_file_course_coin_score(s8 fileIndex, s16 courseIndex, s16 x, s1
     // MYSCORE
     if (sScoreFileCoinScoreMode == 0) {
         // Print coin score
-        format_int_to_string(coinScoreText, save_file_get_course_coin_score(fileIndex, courseIndex));
-        sprintf(str, "✪×%s", coinScoreText);
-        print_menu_generic_string(x + 25, y, str);
+        // format_int_to_string(coinScoreText, save_file_get_course_coin_score(fileIndex, courseIndex));
+        // sprintf(str, "✪×%s", coinScoreText);
+        // print_menu_generic_string(x + 25, y, str);
         // If collected, print 100 coin star
         if (stars & STAR_FLAG_ACT_100_COINS) {
             print_menu_generic_string(x + 70, y, "★");

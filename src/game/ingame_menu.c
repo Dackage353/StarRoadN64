@@ -1968,9 +1968,9 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
 
         render_pause_castle_course_stars(x - 65, y, gCurrSaveFileNum - 1, gDialogLineNum);
 
-        format_int_to_string(countText, save_file_get_course_coin_score(gCurrSaveFileNum - 1, gDialogLineNum));
-        sprintf(str, LANG_ARRAY(textCoinX), countText);
-        print_generic_string(x - 22, y, str);
+        //format_int_to_string(countText, save_file_get_course_coin_score(gCurrSaveFileNum - 1, gDialogLineNum));
+        //sprintf(str, LANG_ARRAY(textCoinX), countText);
+        //print_generic_string(x - 22, y, str);
 
         format_int_to_string(str, gDialogLineNum + 1);
         print_generic_string_aligned(x - 55, y + 35, str, TEXT_ALIGN_RIGHT);

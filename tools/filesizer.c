@@ -3,7 +3,7 @@
       (((x) & 0x0000ff00u) <<  8) | (((x) & 0x000000ffu) << 24))
 
 static __inline unsigned int
-__bswap_32 (unsigned int __bsx)
+__bswap_32x (unsigned int __bsx)
 {
   return __bswap_constant_32 (__bsx);
 }
@@ -78,7 +78,7 @@ int main(int argc, char *argv[argc + 1])
 	size_t fread_result = fread(data, insize, 1, fin);
 
 	size_stored = data + outsize - 4;
-	*size_stored = __bswap_32(atoi(argv[3]));
+	*size_stored = __bswap_32x(atoi(argv[3]));
 	
 	fwrite(data, outsize, 1, fout);
 
