@@ -152,6 +152,10 @@ static const struct Randomizer_AvoidancePoint c15AvoidancePoints[] = {
     {bhvStarRoadSRRoomba, {3168, -5940, -6155}, 3000.0f, 3000.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // no roombas near eyerock
 };
 
+static const struct Randomizer_AvoidancePoint ow3AvoidancePoints[] = {
+    {bhvStub, {-1447, 90, -3308}, 500.0f, 600.0f, Randomizer_AVOIDANCE_SAFETY_ALL} // top of the roof
+};
+
 
 // {Xmin, Xmax, Ymin, Ymax, Zmin, Zmax, 0, 0, NULL}
 
@@ -239,7 +243,7 @@ static const struct Randomizer_AreaParams ccParams[] = {
     {-3878, 8192, -3986, 4380, -3423, 7664, 0, ARRAY_SIZE(ccAvoidancePoints), &ccAvoidancePoints}
 };
 static const struct Randomizer_AreaParams icParams[] = {
-    {-6292, 4951, -436, 1800, -7893, 8192, 0, 0, NULL}
+    {-6292, 4951, -436, 1800, -7893, 8192, 0, ARRAY_SIZE(ow3AvoidancePoints), &ow3AvoidancePoints}
 };
 
 static const struct Randomizer_AreaParams b1fParams[] = {
