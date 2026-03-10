@@ -13,7 +13,7 @@
 
 #define SEQUENCE_ARGS_R(priority, seqId) ((priority << 8) | \
     ((Randomizer_gOptionsSettings.cosmetic.s.musicOn == 1) ? \
-        (((seqId) & 0x80) | Randomizer_gRandomSongs[(0x24 - 0x9 + 1) % Randomizer_gRandomSongsCount]) \
+        (((seqId) & 0x80) | Randomizer_gRandomSongs[(0x24 - 0x9 + 1 + seqId) % Randomizer_gRandomSongsCount]) \
     : (Randomizer_gOptionsSettings.cosmetic.s.musicOn == 2 ? \
         0 \
     : seqId)))

@@ -9,7 +9,7 @@
 
 #include "config.h"
 
-// #define TEST_LEVEL LEVEL_BITDW
+// #define TEST_LEVEL LEVEL_COTMC
 
 extern s32 Randomizer_init_randomizer_test(s32, s32);
 
