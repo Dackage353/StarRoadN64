@@ -126,7 +126,9 @@ static const struct Randomizer_AvoidancePoint slrAvoidancePoints[] = {
 };
 
 static const struct Randomizer_AvoidancePoint mmmAvoidancePoints[] = {
-    {bhvStub, {573, -2493, -1339}, 1500.0f, 3500.0f, Randomizer_AVOIDANCE_SAFETY_ALL} // Arph bottom
+    {bhvStub, {573, -2493, -1339}, 1500.0f, 3500.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // Arph bottom
+    {bhvMario, {-4272, -1834, 1476}, 1000.0f, 1000.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // Under guitar
+    {bhvExclamationBox, {-4272, -1834, 1476}, 1000.0f, 1000.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // Under guitar
 };
 
 static const struct Randomizer_AvoidancePoint micrAvoidancePoints[] = {
@@ -144,6 +146,10 @@ static const struct Randomizer_AvoidancePoint ccandyAvoidancePoints[] = {
     {bhvStub, {-4527, -3297, 1661}, 1100.0f, 500.0f, Randomizer_AVOIDANCE_SAFETY_HARD}, // top of the coin
     {bhvStub, {-5134, 890, -1687}, 1000.0f, 1000.0f, Randomizer_AVOIDANCE_SAFETY_HARD}, // on roof for coin
     {bhvStub, {-3016, 2808, 3412}, 1150.0f, 1500.0f, Randomizer_AVOIDANCE_SAFETY_HARD}, // on roof for coin
+};
+
+static const struct Randomizer_AvoidancePoint csAvoidancePoints[] = {
+    {bhvBobombBuddyOpensCannon, {-6337, 1350, -1969}, 2000.0f, 3000.0f, Randomizer_AVOIDANCE_SAFETY_HARD} // entire slide
 };
 
 static const struct Randomizer_AvoidancePoint b1fAvoidancePoints[] = {
@@ -200,7 +206,7 @@ static const struct Randomizer_AreaParams wdwParams[] = {
     {-5515, 7069, -4521, 4524, -6966, 6610, 0, ARRAY_SIZE(ccandyAvoidancePoints), &ccandyAvoidancePoints}
 };
 static const struct Randomizer_AreaParams ttmParams[] = {
-    {-7319, 7456, -1230, 5064, -8182, 7468, 0, 0, NULL}
+    {-7319, 7456, -1230, 5064, -8182, 7468, 0, ARRAY_SIZE(csAvoidancePoints), &csAvoidancePoints}
 };
 static const struct Randomizer_AreaParams thiParams[] = {
     {-7839, 7380, -3530, 3104, -6877, 8013, 0, 0, NULL}

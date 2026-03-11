@@ -486,7 +486,7 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
             object->pointerSeed = spawnInfo->pointerSeed;
             
             // Warps are done here so that they randomize before Mario is spawned
-            if ((Randomizer_is_warp_behavior(script)) && (gCurrCourseNum != COURSE_NONE && gCurrLevelNum != LEVEL_BOWSER_2) && (Randomizer_gOptionsSettings.gameplay.s.randomLevelSpawn)) {
+            if ((Randomizer_is_warp_behavior(script)) && (gCurrCourseNum != COURSE_NONE && gCurrCourseNum != COURSE_COTMC && gCurrLevelNum != LEVEL_BOWSER_2) && (Randomizer_gOptionsSettings.gameplay.s.randomLevelSpawn)) {
                 int ok = 0;
                 while (!ok)
                 {
