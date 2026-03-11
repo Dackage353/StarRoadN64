@@ -143,6 +143,7 @@ void bhv_star_spawn_loop(void) {
                         gObjCutsceneDone = TRUE;
                         clear_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
                         o->activeFlags &= ~ACTIVE_FLAG_INITIATED_TIME_STOP;
+                        o->oAction++;
                     }
                     else
                     {
@@ -151,7 +152,10 @@ void bhv_star_spawn_loop(void) {
                     }
                 }
             }
+            break;
 
+        case SPAWN_STAR_ARC_CUTSCENE_ACT_END + 1:
+            o->oFaceAngleYaw += 0x800;
             if (o->oInteractStatus & INT_STATUS_INTERACTED) {
                 obj_mark_for_deletion(o);
                 o->oInteractStatus = INT_STATUS_NONE;
