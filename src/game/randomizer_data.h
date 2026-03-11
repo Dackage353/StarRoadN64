@@ -116,7 +116,13 @@ const u8 Randomizer_gStarDoorReqLUT[] = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 
 // Use bhvStub for avoidance points for all objects.
 // Use bhv<OBJECT> for points that only those OBJECTs should avoid.
 static const struct Randomizer_AvoidancePoint boiAvoidancePoints[] = {
-    {bhvBobombBuddyOpensCannon, {4440, -864, -2526}, 1000.0f, 3500.0f, Randomizer_AVOIDANCE_SAFETY_ALL} // Arph bottom
+    {bhvBobombBuddyOpensCannon, {4440, -864, -2526}, 1000.0f, 3500.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // Ship top
+    {bhvMario, {-5217, -6100, -5269}, 600.0f, 4700.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // Inside the VC cage
+};
+
+static const struct Randomizer_AvoidancePoint slrAvoidancePoints[] = {
+    {bhvMario, {-3064, -2984, -5122}, 1300.0f, 1200.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // underwater cage
+    {bhvMario, {7493, 250, -5216}, 1100.0f, 750.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // purple switch cage
 };
 
 static const struct Randomizer_AvoidancePoint mmmAvoidancePoints[] = {
@@ -164,7 +170,7 @@ static const struct Randomizer_AreaParams bobParams[] = {
     {-7356, 7474, -3498, 2350, -8000, 6700, 0, ARRAY_SIZE(boiAvoidancePoints), &boiAvoidancePoints}
 };
 static const struct Randomizer_AreaParams wfParams[] = {
-    {-6000, 8192, -2166, 3564, -7200, 7000, 0, 0, NULL}
+    {-6000, 8192, -2166, 3564, -7200, 7000, 0, ARRAY_SIZE(slrAvoidancePoints), &slrAvoidancePoints}
 };
 static const struct Randomizer_AreaParams jrbParams[] = {
     {-8192, 8192, -2546, 3900, -7600, 8192, 0, 0, NULL}

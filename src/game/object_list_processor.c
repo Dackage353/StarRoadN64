@@ -490,7 +490,7 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
                 int ok = 0;
                 while (!ok)
                 {
-                    Randomizer_get_safe_position(object, spawnInfo->startPos, 700.f, 900.f, &gGlobalRandomState, Randomizer_FLOOR_SAFETY_HIGH, RAND_TYPE_MAX_VARIATION | RAND_TYPE_CAN_BE_UNDERWATER | RAND_TYPE_SPAWN_TOP_OF_SLIDE | RAND_TYPE_LIMITED_BBH_HMC_SPAWNS | RAND_TYPE_SAFE);
+                    Randomizer_get_safe_position(bhvMario, spawnInfo->startPos, 700.f, 900.f, &gGlobalRandomState, Randomizer_FLOOR_SAFETY_HIGH, RAND_TYPE_MAX_VARIATION | RAND_TYPE_CAN_BE_UNDERWATER | RAND_TYPE_SPAWN_TOP_OF_SLIDE | RAND_TYPE_LIMITED_BBH_HMC_SPAWNS | RAND_TYPE_SAFE);
                     
                     struct Surface *floor0 = NULL, *floor1 = NULL, *floor2 = NULL, *floor3 = NULL;
                     find_floor(spawnInfo->startPos[0] + 20.f, spawnInfo->startPos[1] + 20.f, spawnInfo->startPos[2] - 20.f, &floor0);

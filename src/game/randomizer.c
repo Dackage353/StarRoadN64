@@ -568,8 +568,8 @@ static u8 is_floor_safe(struct Surface *floor, u8 floorSafeLevel,
 }
 
 // Checks if near a specific avoidance point
-static u32 check_avoidance_point(Vec3s pos, struct Object *obj, const struct Randomizer_AvoidancePoint *avoidancePoint) {
-    void *behavior = segmented_to_virtual(avoidancePoint->behavior);
+static u32 check_avoidance_point(Vec3s pos, BehaviorScript* bhv, const struct Randomizer_AvoidancePoint *avoidancePoint) {
+    const void *behavior = avoidancePoint->behavior;
         
     if(((avoidancePoint->safety == Randomizer_AVOIDANCE_SAFETY_ALL) 
     || ((avoidancePoint->safety == Randomizer_AVOIDANCE_SAFETY_MED) && (Randomizer_gOptionsSettings.gameplay.s.safeSpawns == Randomizer_SPAWN_SAFETY_SAFE))
@@ -578,7 +578,7 @@ static u32 check_avoidance_point(Vec3s pos, struct Object *obj, const struct Ran
         return FALSE;
     }
 
-    if (behavior != segmented_to_virtual(bhvStub) && obj->behavior != behavior) {
+    if (behavior != bhvStub && bhv != behavior) {
         return FALSE;
     }
 
@@ -590,17 +590,17 @@ static u32 check_avoidance_point(Vec3s pos, struct Object *obj, const struct Ran
 }
 
 // Checks if near any avoidance point
-static u32 is_in_avoidance_point(Vec3s pos, const struct Randomizer_AreaParams *areaParams, struct Object *obj) {
+static u32 is_in_avoidance_point(Vec3s pos, const struct Randomizer_AreaParams *areaParams, BehaviorScript* bhv) {
     const struct Randomizer_AvoidancePoint *avoidancePoint;
 
     for (u32 i = 0; i < areaParams->numAvoidancePoints; i++) {
         avoidancePoint = &(*areaParams->avoidancePoints)[i];
-        if (check_avoidance_point(pos, obj, avoidancePoint)) {
+        if (check_avoidance_point(pos, bhv, avoidancePoint)) {
             return TRUE;
         }
     }
     for (u32 i = 0; i < Randomizer_gNumDynamicAvoidancePoints; i++) {
-        if (check_avoidance_point(pos, obj, &Randomizer_gDynamicAvoidancePoints[i])) {
+        if (check_avoidance_point(pos, bhv, &Randomizer_gDynamicAvoidancePoints[i])) {
             return TRUE;
         }
     }
@@ -663,7 +663,7 @@ int gFailReasons[30] = {0};
 #endif
 
 extern const BehaviorScript bhvStarRoadGGGrave[];
-void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRange, f32 maxHeightRange, tinymt32_t *randomState,
+void Randomizer_get_safe_position(BehaviorScript* bhv, Vec3s pos, f32 minHeightRange, f32 maxHeightRange, tinymt32_t *randomState,
                        u8 floorSafeLevel, u32 randPosFlags) {
     const struct Randomizer_AreaParams *areaParams = &(*Randomizer_sLevelParams[gCurrLevelNum - 4])[gCurrAreaIndex - 1];
     f32 minX, maxX, minY, maxY, minZ, maxZ, minHeight, maxHeight, waterLevel, lowFloorHeight, cHeight,
@@ -690,10 +690,10 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
     }
 
     if (Randomizer_gOptionsSettings.gameplay.s.nonstopMode == 1) {
-        if ((obj->behavior == segmented_to_virtual(bhvStar))
-         || (obj->behavior == segmented_to_virtual(bhvStarSpawnCoordinates))
-         || (obj->behavior == segmented_to_virtual(bhvHiddenRedCoinStar))
-         || (obj->behavior == segmented_to_virtual(bhvHiddenStar))) {
+        if ((bhv == bhvStar)
+         || (bhv == bhvStarSpawnCoordinates)
+         || (bhv == bhvHiddenRedCoinStar)
+         || (bhv == bhvHiddenStar)) {
             floorSafeLevel = Randomizer_FLOOR_SAFETY_MEDIUM;
             randPosFlags |= RAND_TYPE_SAFE;
         }
@@ -902,7 +902,7 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
         }
 
         // For the start warp, always spawn above the water
-        if ((obj->behavior == segmented_to_virtual(bhvSpinAirborneWarp)) && (waterLevel > pos[1])) {
+        if ((bhv == bhvSpinAirborneWarp) && (waterLevel > pos[1])) {
             minHeight = waterLevel + minHeightRange;
             maxHeight = waterLevel + maxHeightRange;
         }
@@ -1026,7 +1026,7 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
             }
         }
 
-        if (is_in_avoidance_point(pos, areaParams, obj)) { LOG_FAIL(15); continue; }
+        if (is_in_avoidance_point(pos, areaParams, bhv)) { LOG_FAIL(15); continue; }
 
         // Wall Check
         if (!Randomizer_raycast_wall_check(pos)) { LOG_FAIL(16); continue; }
@@ -1037,7 +1037,7 @@ void Randomizer_get_safe_position(struct Object *obj, Vec3s pos, f32 minHeightRa
             vec3_copy(fpos, pos);
             f32 radius = 100.f;
             f32 height = 200.f;
-            if (o->behavior == bhvStarRoadGGGrave || o->behavior == bhvPushableMetalBox)
+            if (bhv == bhvStarRoadGGGrave || bhv == bhvPushableMetalBox)
             {
                 radius *= 3.f;
                 height *= 1.5f;
