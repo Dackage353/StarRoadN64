@@ -4181,6 +4181,7 @@ const BehaviorScript bhvBigBullyWithMinions[] = {
 const BehaviorScript bhvSmallChillBully[] = {
     BEGIN(OBJ_LIST_GENACTOR),
     OR_INT(oFlags, (OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    RANDOMIZE_OBJ(RAND_TYPE_GROUNDED | RAND_TYPE_SAFE | RAND_TYPE_IMPORTANT),
     LOAD_ANIMATIONS(oAnimations, chilly_chief_seg6_anims_06003994),
     DROP_TO_FLOOR(),
     SET_HOME(),
