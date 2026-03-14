@@ -1860,7 +1860,7 @@ void print_hud_pause_colorful_str(void) {
     gSPDisplayList(gDisplayListHead++, dl_rgba16_text_end);
 }
 
-void render_pause_castle_course_stars(s16 x, s16 y, s16 fileIndex, s16 courseIndex) {
+static void render_pause_castle_course_stars(s16 x, s16 y, s16 fileIndex, s16 courseIndex, int wantEmpties) {
     s16 hasStar = 0;
 
     char str[30];
@@ -1881,13 +1881,13 @@ void render_pause_castle_course_stars(s16 x, s16 y, s16 fileIndex, s16 courseInd
             entries[nextStar] = "★";
             hasStar++;
         } else {
-            entries[nextStar] = "☆";
+            entries[nextStar] = wantEmpties ? "☆" : "";
         }
         nextStar++;
     }
 
     if (starCount == nextStar && starCount != 6) {
-        entries[nextStar] = "☆";
+        entries[nextStar] = wantEmpties ? "☆" : "";
         nextStar++;
     }
     while (nextStar < 6) {
@@ -1913,31 +1913,76 @@ LangArray textStarX = DEFINE_LANGUAGE_ARRAY(
     "★ｘ%s",
     "★× %s");
 
+static const u8 sCourseToLevelNum[] = {
+#define DEFINE_LEVEL(_0, l, c, _3, _4, _5, _6, _7, _8, _9, _10) [c - 1] = l,
+DEFINE_LEVEL("COURSE 5 BBH", LEVEL_BBH, COURSE_BBH, bbh, spooky, 20000, 0x00, 0x00, 0x00, sDynBbh, sCamBBH) 
+DEFINE_LEVEL("COURSE 4 CCM", LEVEL_CCM, COURSE_CCM, ccm, snow, 20000, 0x00, 0x00, 0x00, _, sCamCCM) 
+DEFINE_LEVEL("COURSE 6 HMC", LEVEL_HMC, COURSE_HMC, hmc, cave, 20000, 0x00, 0x00, 0x00, sDynHmc, sCamHMC) 
+DEFINE_LEVEL("COURSE 8 SSL", LEVEL_SSL, COURSE_SSL, ssl, generic, 20000, 0x00, 0x00, 0x00, _, sCamSSL) 
+DEFINE_LEVEL("COURSE 1 BOB", LEVEL_BOB, COURSE_BOB, bob, generic, 20000, 0x00, 0x00, 0x00, _, sCamBOB) 
+DEFINE_LEVEL("COURSE 10 SL", LEVEL_SL, COURSE_SL, sl, snow, 20000, 0x00, 0x00, 0x00, _, sCamSL) 
+DEFINE_LEVEL("COURSE 11 WDW", LEVEL_WDW, COURSE_WDW, wdw, grass, 20000, 0x00, 0x00, 0x00, sDynWdw, sCamWDW) 
+DEFINE_LEVEL("COURSE 3 JRB", LEVEL_JRB, COURSE_JRB, jrb, water, 20000, 0x00, 0x00, 0x00, sDynJrb, sCamJRB) 
+DEFINE_LEVEL("COURSE 13 THI", LEVEL_THI, COURSE_THI, thi, grass, 20000, 0x00, 0x00, 0x00, _, sCamTHI) 
+DEFINE_LEVEL("COURSE 14 TTC", LEVEL_TTC, COURSE_TTC, ttc, machine, 20000, 0x00, 0x00, 0x00, _, sCamTTC) 
+DEFINE_LEVEL("COURSE 15 RR", LEVEL_RR, COURSE_RR, rr, sky, 20000, 0x00, 0x00, 0x00, _, sCamRR) 
+DEFINE_LEVEL("BC1 BITDW", LEVEL_BITDW, COURSE_BITDW, bitdw, sky, 20000, 0x00, 0x00, 0x00, _, sCamBitDW) 
+DEFINE_LEVEL("VCL VCUTM", LEVEL_VCUTM, COURSE_VCUTM, vcutm, outside, 20000, 0x00, 0x00, 0x00, _, sCamVCUtM) 
+DEFINE_LEVEL("BC2 BITFS", LEVEL_BITFS, COURSE_BITFS, bitfs, sky, 20000, 0x00, 0x00, 0x00, _, sCamBitFS) 
+DEFINE_LEVEL("SC1 SEC AQUA", LEVEL_SA, COURSE_SA, sa, inside, 20000, 0x00, 0x00, 0x00, _, sCamSA) 
+DEFINE_LEVEL("BC3 BITS", LEVEL_BITS, COURSE_BITS, bits, sky, 20000, 0x00, 0x00, 0x00, _, sCamBitS) 
+DEFINE_LEVEL("COURSE 7 LLL", LEVEL_LLL, COURSE_LLL, lll, fire, 20000, 0x00, 0x00, 0x00, _, sCamLLL) 
+DEFINE_LEVEL("COURSE 9 DDD", LEVEL_DDD, COURSE_DDD, ddd, water, 20000, 0x00, 0x00, 0x00, sDynDdd, sCamDDD) 
+DEFINE_LEVEL("COURSE 2 WF", LEVEL_WF, COURSE_WF, wf, grass, 20000, 0x00, 0x00, 0x00, _, sCamWF) 
+DEFINE_LEVEL("END CAKE", LEVEL_ENDING, COURSE_CAKE_END, ending, generic, 20000, 0x00, 0x00, 0x00, _, sCamEnding) 
+DEFINE_LEVEL("SIC P SEC SLID", LEVEL_PSS, COURSE_PSS, pss, mountain, 20000, 0x00, 0x00, 0x00, _, sCamPSS) 
+DEFINE_LEVEL("MCL COTMC", LEVEL_COTMC, COURSE_COTMC, cotmc, cave, 20000, 0x00, 0x00, 0x00, _, sCamCotMC) 
+DEFINE_LEVEL("WCL TOTWC", LEVEL_TOTWC, COURSE_TOTWC, totwc, sky, 20000, 0x00, 0x00, 0x00, _, sCamTotWC) 
+DEFINE_LEVEL("SC2 WMOTR", LEVEL_WMOTR, COURSE_WMOTR, wmotr, generic, 20000, 0x00, 0x00, 0x00, _, sCamWMOtR) 
+DEFINE_LEVEL("COURSE 12 TTM", LEVEL_TTM, COURSE_TTM, ttm, mountain, 20000, 0x00, 0x00, 0x00, _, sCamTTM) 
+#undef DEFINE_LEVEL
+};
+
+static const char* sShortBonusCourseNames[] = {
+    [ COURSE_BITDW - 16 ] = "B1",
+    [ COURSE_BITFS - 16 ] = "B2",
+    [ COURSE_BITS  - 16 ] = "B3",
+    [ COURSE_VCUTM - 16 ] = "VC",
+    [ COURSE_TOTWC - 16 ] = "WC",
+    [ COURSE_COTMC - 16 ] = "MC",
+    [ COURSE_SA - 16 ]    = "Slide",
+    [ COURSE_PSS - 16 ]   = "MMT",
+    [ COURSE_WMOTR - 16 ] = "HPF",
+    [ COURSE_CAKE_END - 16] = "END",
+};
+
+extern s8 gLevelToCourseNumTable[];
+
 void render_pause_castle_main_strings(s16 x, s16 y) {
     void **courseNameTbl = segmented_to_virtual(gLanguageTables[gInGameLanguage].course_name_table);
 
     void *courseName;
 
-    char str[8];
+    char str[40];
     char countText[10];
     s16 prevCourseIndex = gDialogLineNum;
 
-
+    int max = COURSE_NUM_TO_INDEX(COURSE_CAKE_END) + 1;
     handle_menu_scrolling(
         MENU_SCROLL_VERTICAL, &gDialogLineNum,
-        COURSE_NUM_TO_INDEX(COURSE_MIN) - 1, COURSE_NUM_TO_INDEX(COURSE_BONUS_STAGES) + 1
+        COURSE_NUM_TO_INDEX(COURSE_MIN) - 1, max
     );
 
-    if (gDialogLineNum == COURSE_NUM_TO_INDEX(COURSE_BONUS_STAGES) + 1) {
+    if (gDialogLineNum == max) {
         gDialogLineNum = COURSE_NUM_TO_INDEX(COURSE_MIN); // Exceeded max, set to min
         prevCourseIndex = 0;
     }
 
     if (gDialogLineNum == COURSE_NUM_TO_INDEX(COURSE_MIN) - 1) {
-        gDialogLineNum = COURSE_NUM_TO_INDEX(COURSE_BONUS_STAGES); // Exceeded min, set to max
+        gDialogLineNum = max - 1; // Exceeded min, set to max
     }
 
-    if (gDialogLineNum != COURSE_NUM_TO_INDEX(COURSE_BONUS_STAGES)) {
+    if (gDialogLineNum != max - 1) {
         while (save_file_get_course_star_count(gCurrSaveFileNum - 1, gDialogLineNum) == 0) {
             if (gDialogLineNum >= prevCourseIndex) {
                 gDialogLineNum++;
@@ -1945,9 +1990,9 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
                 gDialogLineNum--;
             }
 
-            if (gDialogLineNum == COURSE_NUM_TO_INDEX(COURSE_STAGES_MAX) + 1
+            if (gDialogLineNum == max + 1
              || gDialogLineNum == COURSE_NUM_TO_INDEX(COURSE_MIN) - 1) {
-                gDialogLineNum = COURSE_NUM_TO_INDEX(COURSE_BONUS_STAGES);
+                gDialogLineNum = max - 1;
                 break;
             }
         }
@@ -1966,23 +2011,56 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
         courseName = segmented_to_virtual(courseNameTbl[gDialogLineNum]);
         print_generic_string(x - 50, y + 35, courseName);
 
-        render_pause_castle_course_stars(x - 65, y, gCurrSaveFileNum - 1, gDialogLineNum);
-
-        //format_int_to_string(countText, save_file_get_course_coin_score(gCurrSaveFileNum - 1, gDialogLineNum));
-        //sprintf(str, LANG_ARRAY(textCoinX), countText);
-        //print_generic_string(x - 22, y, str);
+        render_pause_castle_course_stars(x - 65, y, gCurrSaveFileNum - 1, gDialogLineNum, 1 /*wantEmpties*/);
 
         format_int_to_string(str, gDialogLineNum + 1);
         print_generic_string_aligned(x - 55, y + 35, str, TEXT_ALIGN_RIGHT);
-    } else { // Castle secret stars
-        courseName = segmented_to_virtual(courseNameTbl[COURSE_MAX]);
+    } else if (gDialogLineNum != max - 1) { // Castle secret stars
+        courseName = segmented_to_virtual(courseNameTbl[gDialogLineNum]);
         print_generic_string_aligned(x, y + 35, courseName, TEXT_ALIGN_CENTER);
 
-        format_int_to_string(countText, save_file_get_total_star_count(gCurrSaveFileNum - 1,
-                                                             COURSE_NUM_TO_INDEX(COURSE_BONUS_STAGES),
-                                                             COURSE_NUM_TO_INDEX(COURSE_MAX)));
+        render_pause_castle_course_stars(x - 65, y, gCurrSaveFileNum - 1, gDialogLineNum, 0 /*wantEmpties*/);
+    } else {
+        courseName = "Overworld";
+        print_generic_string_aligned(x, y + 35, courseName, TEXT_ALIGN_CENTER);
+
+        format_int_to_string(countText, save_file_get_course_star_count(gCurrSaveFileNum - 1, COURSE_NUM_TO_INDEX(COURSE_NONE)));
         sprintf(str, LANG_ARRAY(textStarX), countText);
         print_generic_string_aligned(x, y + 18, str, TEXT_ALIGN_CENTER);
+    }
+
+    if (gDialogLineNum != max - 1 && Randomizer_gOptionsSettings.gameplay.s.randomLevelWarp)
+    {
+        u8 levelDerandomized = Randomizer_get_nonrandom_level(sCourseToLevelNum[gDialogLineNum]);
+        if (levelDerandomized)
+        {
+            u8 courseDerandomized = gLevelToCourseNumTable[levelDerandomized - 1];
+            if (gDialogLineNum != COURSE_NUM_TO_INDEX(COURSE_COTMC)
+            && gDialogLineNum != COURSE_NUM_TO_INDEX(COURSE_TOTWC)
+            && gDialogLineNum != COURSE_NUM_TO_INDEX(COURSE_VCUTM))
+            {
+                char name[5];
+                sprintf(name, "C%d", courseDerandomized);
+                sprintf(str, "from %s", courseDerandomized < 16 ? name : sShortBonusCourseNames[courseDerandomized - 16]);
+                print_generic_string(x - 32, y, str);
+            }
+            else
+            {
+                u8 targetLevel = Randomizer_expected_mini_level_target(levelDerandomized);
+                u8 targetCourse = gLevelToCourseNumTable[targetLevel - 1];
+                u8 levelDerandomized2 = Randomizer_get_nonrandom_level(targetLevel);
+                u8 courseDerandomized2 = gLevelToCourseNumTable[levelDerandomized2 - 1];
+
+                char name[5];
+                sprintf(name, "C%d", targetCourse);
+                char name2[5];
+                sprintf(name2, "C%d", courseDerandomized2);
+
+                sprintf(str, "from %s via %s", targetCourse < 16        ? name  : sShortBonusCourseNames[targetCourse        - 16]
+                                             , courseDerandomized2 < 16 ? name2 : sShortBonusCourseNames[courseDerandomized2 - 16]);
+                print_generic_string(x - 40, y, str);
+            }
+        }
     }
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
