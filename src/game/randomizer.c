@@ -707,6 +707,41 @@ void Randomizer_get_safe_position(BehaviorScript* bhv, Vec3s pos, f32 minHeightR
         minZ = areaParams->minZ;
         maxZ = areaParams->maxZ;
 
+        if(bhvMario == bhv)
+        {
+            if (gCurrCourseNum == COURSE_HMC)
+            {
+                int zone = Randomizer_get_val_in_range_uniform(0, 3, randomState);
+                switch (zone)
+                {
+                    case 0: minY = 1743;
+                    break;
+                    case 1: minY = -2577;
+                    break;
+                    case 2:
+                    break;
+                }
+            }
+            if (gCurrCourseNum == COURSE_CCM)
+            {
+                int zone = Randomizer_get_val_in_range_uniform(0, 3, randomState);
+                switch (zone)
+                {
+                    case 0: minY = -441;
+                    break;
+                    case 1: minY = -4251;
+                    break;
+                    case 2:
+                    break;
+                }
+            }
+        }
+
+        if (bhvHiddenStarTrigger == bhv && gCurrCourseNum == COURSE_RR)
+        {
+            minY = 0;
+        }
+
         u32 dangerShiftedOverHighFloor = FALSE;
 
         // Generate random position
