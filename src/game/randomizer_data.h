@@ -140,7 +140,9 @@ static const struct Randomizer_AvoidancePoint micrAvoidancePoints[] = {
 static const struct Randomizer_AvoidancePoint ccAvoidancePoints[] = {
     {bhvStub, {923, -1785, 1529}, 300.0f, 200.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // ?
     {bhvStub, {50+958, 3711, -1325}, 200.0f, 2000.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // geometry pieces
-    {bhvStub, {-50-2924, 3711, -1325}, 200.0f, 2000.0f, Randomizer_AVOIDANCE_SAFETY_ALL} // 
+    {bhvStub, {-50-2924, 3711, -1325}, 200.0f, 2000.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // 
+    {bhvStub, {-967, 713, -3954}, 500.0f, 1000.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // other side of the door
+    {bhvStub, {-990, 1511, 1341}, 500.0f, 5000.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // other side of the door
 };
 
 static const struct Randomizer_AvoidancePoint cgAvoidancePoints[] = {
