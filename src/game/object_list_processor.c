@@ -487,52 +487,7 @@ void spawn_objects_from_info(UNUSED s32 unused, struct SpawnInfo *spawnInfo) {
             
             // Warps are done here so that they randomize before Mario is spawned
             if ((Randomizer_is_warp_behavior(script)) && (gCurrCourseNum != COURSE_NONE && gCurrCourseNum != COURSE_COTMC && gCurrLevelNum != LEVEL_BOWSER_2) && (Randomizer_gOptionsSettings.gameplay.s.randomLevelSpawn)) {
-                int ok = 0;
-                while (!ok)
-                {
-                    Randomizer_get_safe_position(bhvMario, spawnInfo->startPos, 700.f, 900.f, &gGlobalRandomState, Randomizer_FLOOR_SAFETY_HIGH, RAND_TYPE_MAX_VARIATION | RAND_TYPE_CAN_BE_UNDERWATER | RAND_TYPE_SPAWN_TOP_OF_SLIDE | RAND_TYPE_LIMITED_BBH_HMC_SPAWNS | RAND_TYPE_SAFE);
-
-                    f32 floorHeight;
-                    {
-                        struct Surface* floor = NULL;
-                        gCollisionFlags |= COLLISION_FLAG_EXCLUDE_DYNAMIC;
-                        f32 floorHeight = find_floor(spawnInfo->startPos[0], spawnInfo->startPos[1] + 20.f, spawnInfo->startPos[2], &floor);
-                        if (!floor)
-                        {
-                            ok = 0;
-                            continue;
-                        }
-                    }
-
-                    ok = 1;
-                    for (int i = 0; i < 8; i++)
-                    {
-                        struct Surface* dfloor;
-                        const f32 r = 60.f;
-                        f32 dx = r * sins(0x2000 * i);
-                        f32 dz = r * coss(0x2000 * i);
-                        gCollisionFlags |= COLLISION_FLAG_EXCLUDE_DYNAMIC;
-                        f32 dheight = find_floor(spawnInfo->startPos[0] + dx
-                                               , spawnInfo->startPos[1] + 20.f
-                                               , spawnInfo->startPos[2] + dz, &dfloor);
-                        if (!dfloor
-                          || dfloor->type == SURFACE_BURNING
-                          || dfloor->type == SURFACE_INSTANT_QUICKSAND
-                          || dfloor->type == SURFACE_DEATH_PLANE)
-                        {
-                            ok = 0;
-                            break;
-                        }
-
-                        if (dheight + 100.f < floorHeight)
-                        {
-                            ok = 0;
-                            break;
-                        }
-                    }
-
-                    // ..and check for 'ok'
-                }
+                Randomizer_get_safe_position(bhvMario, spawnInfo->startPos, 700.f, 900.f, &gGlobalRandomState, Randomizer_FLOOR_SAFETY_HIGH, RAND_TYPE_MAX_VARIATION | RAND_TYPE_CAN_BE_UNDERWATER | RAND_TYPE_SPAWN_TOP_OF_SLIDE | RAND_TYPE_LIMITED_BBH_HMC_SPAWNS | RAND_TYPE_SAFE | RAND_TYPE_HAS_SAFE_GROUND_AROUND);
             }
 
             // Record death/collection in the SpawnInfo

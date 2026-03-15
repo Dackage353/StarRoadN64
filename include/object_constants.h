@@ -72,6 +72,8 @@ enum RandoFlags {
     RAND_TYPE_SPAWN_BOTTOM_OF_SLIDE  = (1 << 12), // 0x00001000
     RAND_TYPE_THI_A3_ABOVE_MESH      = (1 << 13), // 0x00002000
     RAND_TYPE_LIMITED_BBH_HMC_SPAWNS = (1 << 14), // 0x00004000
+
+    RAND_TYPE_HAS_SAFE_GROUND_AROUND = (1 << 15), // 0x00008000
 };
 
 /* oHeldState */

@@ -21,7 +21,7 @@
 #include "segment2.h"
 #include "game/emutest.h"
 
-u32 Randomizer_gGameSeed = 4895256;
+u32 Randomizer_gGameSeed = 1201823;
 
 u8 Randomizer_gIsSetSeed = FALSE;
 
@@ -663,7 +663,7 @@ int gFailReasons[30] = {0};
 #endif
 
 extern const BehaviorScript bhvStarRoadGGGrave[];
-void Randomizer_get_safe_position(const BehaviorScript* bhv, Vec3s pos, f32 minHeightRange, f32 maxHeightRange, tinymt32_t *randomState,
+static void Randomizer_get_safe_position_impl(const BehaviorScript* bhv, Vec3s pos, f32 minHeightRange, f32 maxHeightRange, tinymt32_t *randomState,
                        u8 floorSafeLevel, u32 randPosFlags) {
     const struct Randomizer_AreaParams *areaParams = &(*Randomizer_sLevelParams[gCurrLevelNum - 4])[gCurrAreaIndex - 1];
     f32 minX, maxX, minY, maxY, minZ, maxZ, minHeight, maxHeight, waterLevel, lowFloorHeight, cHeight,
@@ -1084,6 +1084,61 @@ void Randomizer_get_safe_position(const BehaviorScript* bhv, Vec3s pos, f32 minH
     }
 }
 
+void Randomizer_get_safe_position(const BehaviorScript* bhv, Vec3s pos, f32 minHeightRange, f32 maxHeightRange, tinymt32_t *randomState,
+                       u8 floorSafeLevel, u32 randPosFlags)
+{
+    if (randPosFlags & RAND_TYPE_HAS_SAFE_GROUND_AROUND)
+    {
+        int ok = 0;
+        while (!ok)
+        {
+            Randomizer_get_safe_position_impl(bhv, pos, minHeightRange, maxHeightRange, randomState, floorSafeLevel, randPosFlags);
+            f32 floorHeight;
+            {
+                struct Surface* floor = NULL;
+                gCollisionFlags |= COLLISION_FLAG_EXCLUDE_DYNAMIC;
+                floorHeight = find_floor(pos[0], pos[1] + 20.f, pos[2], &floor);
+                if (!floor)
+                {
+                    ok = 0;
+                    continue;
+                }
+            }
+
+            ok = 1;
+            for (int i = 0; i < 8; i++)
+            {
+                struct Surface* dfloor;
+                const f32 r = bhv == bhvMrI ? 300.f : 60.f;
+                f32 dx = r * sins(0x2000 * i);
+                f32 dz = r * coss(0x2000 * i);
+                gCollisionFlags |= COLLISION_FLAG_EXCLUDE_DYNAMIC;
+                f32 dheight = find_floor(pos[0] + dx
+                                    , pos[1] + 20.f
+                                    , pos[2] + dz, &dfloor);
+                if (!dfloor
+                    || dfloor->type == SURFACE_BURNING
+                    || dfloor->type == SURFACE_INSTANT_QUICKSAND
+                    || dfloor->type == SURFACE_DEATH_PLANE)
+                {
+                    ok = 0;
+                    break;
+                }
+
+                if (dheight + 100.f < floorHeight)
+                {
+                    ok = 0;
+                    break;
+                }
+            }
+        }
+    }
+    else
+    {
+        Randomizer_get_safe_position_impl(bhv, pos, minHeightRange, maxHeightRange, randomState, floorSafeLevel, randPosFlags);
+    }
+}
+
 // Only uniform if used for floats. [min, max)
 f32 Randomizer_get_val_in_range_uniform(f32 min, f32 max, tinymt32_t *randomState) {
     if (min > max)
@@ -1356,7 +1411,7 @@ s32 Randomizer_init_randomizer_test(s32, s32 v)
 {
     Randomizer_gOverwriteFileOptions = 1;
     Randomizer_gOverwriteFileSeed = 1;
-    Randomizer_gOptionsSettings = Randomizer_gPresets[3];
+    Randomizer_gOptionsSettings = Randomizer_gPresets[1];
     Randomizer_init_randomizer(v);
     return v;
 }
