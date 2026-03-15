@@ -1493,7 +1493,7 @@ void lvl_calc_igt()
     gSaveFileModified = 1;
     save_file_do_save(gCurrSaveFileNum - 1);
     s32 timeLeft = gSaveBuffer.files[gCurrSaveFileNum - 1][0].timer;
-    s32 f = 3 * (timeLeft % 30);
+    s32 f = (timeLeft % 30) * 10 / 3;
     s32 s = (timeLeft / 30) % 60;
     s32 m = (timeLeft / 60 / 30) % 60;
     s32 h = timeLeft / 60 / 30 / 60;
