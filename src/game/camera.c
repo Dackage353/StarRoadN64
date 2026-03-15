@@ -8804,16 +8804,16 @@ void cutscene_exit_bowser_death(struct Camera *c) {
 void cutscene_non_painting_death_override_offset(UNUSED struct Camera *c) {
     switch (gPrevLevel) {
         case LEVEL_HMC:
-            vec3f_set(sCutsceneVars[5].point, 187.f, 369.f, -197.f);
+            // vec3f_set(sCutsceneVars[5].point, 187.f, 369.f, -197.f);
             break;
         case LEVEL_COTMC:
-            vec3f_set(sCutsceneVars[5].point, 187.f, 369.f, -197.f);
+            // vec3f_set(sCutsceneVars[5].point, 187.f, 369.f, -197.f);
             break;
         default:
             vec3f_set(sCutsceneVars[5].point, 107.f, 246.f, 1307.f);
             break;
         case LEVEL_BITDW:
-            vec3f_set(sCutsceneVars[5].point, 127.f, 226.f, 1187.f);
+            // vec3f_set(sCutsceneVars[5].point, 127.f, 226.f, 1187.f);
             break;
     }
 }
@@ -9566,10 +9566,12 @@ void cutscene_exit_painting_start(struct Camera *c) {
     vec3f_set(sCutsceneVars[2].point, 258.f, -352.f, 1189.f);
     vec3f_set(sCutsceneVars[1].point, 65.f, -155.f, 444.f);
 
+#if 0
     if (gPrevLevel == LEVEL_TTM) {
         sCutsceneVars[1].point[1] = 0.f;
         sCutsceneVars[1].point[2] = 0.f;
     }
+#endif
     vec3f_copy(sCutsceneVars[0].point, sMarioCamState->pos);
     sCutsceneVars[0].angle[0] = 0;
     sCutsceneVars[0].angle[1] = sMarioCamState->faceAngle[1];
@@ -9634,7 +9636,7 @@ void cutscene_exit_painting(struct Camera *c) {
 
     //! Hardcoded position. TTM's painting is close to an opposite wall, so just fix the pos.
     if (gPrevLevel == LEVEL_TTM) {
-        vec3f_set(c->pos, -296.f, 1261.f, 3521.f);
+        // vec3f_set(c->pos, -296.f, 1261.f, 3521.f);
     }
 
     update_camera_yaw(c);
