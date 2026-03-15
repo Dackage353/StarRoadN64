@@ -21,7 +21,7 @@
 #include "segment2.h"
 #include "game/emutest.h"
 
-u32 Randomizer_gGameSeed = 0;
+u32 Randomizer_gGameSeed = 1201823;
 
 u8 Randomizer_gIsSetSeed = FALSE;
 
@@ -1058,6 +1058,17 @@ static void Randomizer_get_safe_position_impl(const BehaviorScript* bhv, Vec3s p
 
                 f32 dx = hitPos[0] - loc[0];
                 if (dx < -10.f) { LOG_FAIL(14); continue; }
+            }
+
+            // underwater objects must never be higher than ceiling, otherwise clamping will occur
+            if (pos[1] < 2803.f)
+            {
+                struct Surface* surf = NULL;
+                f32 height = find_ceil(pos[0], lowFloorHeight, pos[2], &surf);
+                if (pos[1] > height)
+                {
+                    LOG_FAIL(14); continue;
+                }
             }
         }
 
