@@ -143,6 +143,10 @@ static const struct Randomizer_AvoidancePoint ccAvoidancePoints[] = {
     {bhvStub, {-50-2924, 3711, -1325}, 200.0f, 2000.0f, Randomizer_AVOIDANCE_SAFETY_ALL} // 
 };
 
+static const struct Randomizer_AvoidancePoint cgAvoidancePoints[] = {
+    {bhvStub, {2231, -614, -1510}, 500.0f, 1000.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // other side of the door
+};
+
 static const struct Randomizer_AvoidancePoint ccandyAvoidancePoints[] = {
     {bhvStub, {580, 1803, 5703}, 1500.0f, 1700.0f, Randomizer_AVOIDANCE_SAFETY_HARD}, // target
     {bhvStub, {-4527, -3297, 1661}, 1100.0f, 500.0f, Randomizer_AVOIDANCE_SAFETY_HARD}, // top of the coin
@@ -251,7 +255,7 @@ static const struct Randomizer_AreaParams bitsParams[] = {
 
 // Castle areas
 static const struct Randomizer_AreaParams cgParams[] = {
-    {-7956, 8192, -1798, 6841, -7460, 7913, 0, 0, NULL}
+    {-7956, 8192, -1798, 6841, -7460, 7913, 0, ARRAY_SIZE(cgAvoidancePoints), &cgAvoidancePoints}
 };
 static const struct Randomizer_AreaParams ccParams[] = {
     {-3878, 8192, -3986, 4380, -3423, 7664, 0, ARRAY_SIZE(ccAvoidancePoints), &ccAvoidancePoints}
