@@ -663,7 +663,7 @@ int gFailReasons[30] = {0};
 #endif
 
 extern const BehaviorScript bhvStarRoadGGGrave[];
-void Randomizer_get_safe_position(BehaviorScript* bhv, Vec3s pos, f32 minHeightRange, f32 maxHeightRange, tinymt32_t *randomState,
+void Randomizer_get_safe_position(const BehaviorScript* bhv, Vec3s pos, f32 minHeightRange, f32 maxHeightRange, tinymt32_t *randomState,
                        u8 floorSafeLevel, u32 randPosFlags) {
     const struct Randomizer_AreaParams *areaParams = &(*Randomizer_sLevelParams[gCurrLevelNum - 4])[gCurrAreaIndex - 1];
     f32 minX, maxX, minY, maxY, minZ, maxZ, minHeight, maxHeight, waterLevel, lowFloorHeight, cHeight,

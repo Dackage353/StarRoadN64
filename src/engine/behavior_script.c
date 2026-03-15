@@ -349,6 +349,7 @@ extern const BehaviorScript bhvStarRoadYoshi[];
 extern const BehaviorScript bhvStarRoadHPYoshi[];
 extern const BehaviorScript bhvStarRoadPeach[];
 extern const BehaviorScript bhvStarRoadLLFMips[];
+extern const BehaviorScript bhvStarRoadGGGrave[];
 static s32 bhv_cmd_randomize_object(void) {
     if (gCurrLevelNum == LEVEL_BOWSER_2)
     {
@@ -540,6 +541,11 @@ static s32 bhv_cmd_randomize_object(void) {
             {
                 gCurrentObject->oFaceAngleYaw = Randomizer_get_val_in_range_uniform(0, 65536, &randomState);
                 gCurrentObject->oMoveAngleYaw = gCurrentObject->oFaceAngleYaw;
+                if (gCurrentObject->behavior == segmented_to_virtual(bhvStarRoadGGGrave))
+                {
+                    gCurrentObject->oFaceAngleYaw &= 0xc000;
+                    gCurrentObject->oMoveAngleYaw &= 0xc000;
+                }
             }
         }
 
