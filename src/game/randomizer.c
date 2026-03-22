@@ -21,7 +21,7 @@
 #include "segment2.h"
 #include "game/emutest.h"
 
-u32 Randomizer_gGameSeed = 1201823;
+u32 Randomizer_gGameSeed = 6767420;
 
 u8 Randomizer_gIsSetSeed = FALSE;
 
@@ -1066,6 +1066,22 @@ static void Randomizer_get_safe_position_impl(const BehaviorScript* bhv, Vec3s p
                 struct Surface* surf = NULL;
                 f32 height = find_ceil(pos[0], lowFloorHeight, pos[2], &surf);
                 if (pos[1] > height)
+                {
+                    LOG_FAIL(14); continue;
+                }
+            }
+        }
+
+        if (gCurrLevelNum == LEVEL_THI)
+        {
+            if (lowFloor->type == SURFACE_BURNING)
+            {
+                // check if lava is covered by floor - do not spawn anything there
+                struct Surface* t;
+                gCollisionFlags |= COLLISION_FLAG_EXCLUDE_DYNAMIC;
+                f32 h = find_ceil(pos[0], pos[1], pos[2], &t);
+                h = find_floor(pos[0], h, pos[2], &t);
+                if (pos[1] < h)
                 {
                     LOG_FAIL(14); continue;
                 }
