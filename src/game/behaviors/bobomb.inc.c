@@ -12,6 +12,8 @@ static struct ObjectHitbox sBobombHitbox = {
     /* hurtboxHeight:     */ 0,
 };
 
+extern const BehaviorScript bhvBobombRespawn[];
+
 void bhv_bobomb_init(void) {
     o->oGravity = 2.5f;
     o->oFriction = 0.8f;
@@ -34,7 +36,7 @@ void bobomb_act_explode(void) {
         explosion->oGraphYOffset += 100.0f;
 
         bobomb_spawn_coin();
-        create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
+        create_respawner(MODEL_BLACK_BOBOMB, bhvBobombRespawn, 3000);
 
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
@@ -117,13 +119,13 @@ void generic_bobomb_free_loop(void) {
 
         case OBJ_ACT_LAVA_DEATH:
             if (obj_lava_death()) {
-                create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
+                create_respawner(MODEL_BLACK_BOBOMB, bhvBobombRespawn, 3000);
             }
             break;
 
         case OBJ_ACT_DEATH_PLANE_DEATH:
             o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
-            create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
+            create_respawner(MODEL_BLACK_BOBOMB, bhvBobombRespawn, 3000);
             break;
     }
 
@@ -146,13 +148,13 @@ void stationary_bobomb_free_loop(void) {
 
         case OBJ_ACT_LAVA_DEATH:
             if (obj_lava_death()) {
-                create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
+                create_respawner(MODEL_BLACK_BOBOMB, bhvBobombRespawn, 3000);
             }
             break;
 
         case OBJ_ACT_DEATH_PLANE_DEATH:
             o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
-            create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
+            create_respawner(MODEL_BLACK_BOBOMB, bhvBobombRespawn, 3000);
             break;
     }
 

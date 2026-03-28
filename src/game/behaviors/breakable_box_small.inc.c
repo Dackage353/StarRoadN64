@@ -12,6 +12,8 @@ struct ObjectHitbox sBreakableBoxSmallHitbox = {
     /* hurtboxHeight:     */ 250,
 };
 
+extern const BehaviorScript bhvBreakableBoxSmallRespawn[];
+
 void bhv_breakable_box_small_init(void) {
     o->oGravity = 2.5f;
     o->oFriction = 0.99f;
@@ -65,7 +67,7 @@ void breakable_box_small_released_loop(void) {
 
     // Despawn, and create a corkbox respawner
     if (o->oBreakableBoxSmallFramesSinceReleased > 900) {
-        create_respawner(MODEL_BREAKABLE_BOX, bhvBreakableBoxSmall, 3000);
+        create_respawner(MODEL_BREAKABLE_BOX, bhvBreakableBoxSmallRespawn, 3000);
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
 }
@@ -82,7 +84,7 @@ void breakable_box_small_idle_loop(void) {
 
         case OBJ_ACT_DEATH_PLANE_DEATH:
             o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
-            create_respawner(MODEL_BREAKABLE_BOX, bhvBreakableBoxSmall, 3000);
+            create_respawner(MODEL_BREAKABLE_BOX, bhvBreakableBoxSmallRespawn, 3000);
             break;
     }
 
