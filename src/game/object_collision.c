@@ -22,6 +22,13 @@ UNUSED struct Object *debug_print_obj_collision(struct Object *a) {
     return NULL;
 }
 
+extern const BehaviorScript bhvBobombRespawn[];
+extern const BehaviorScript bhvBobomb[];
+
+static s32 is_bobomb(struct Object *obj) {
+    return obj->behavior == bhvBobombRespawn || obj->behavior == bhvBobomb;
+}
+
 s32 detect_object_hitbox_overlap(struct Object *a, struct Object *b) {
     f32 dya_bottom = a->oPosY - a->hitboxDownOffset;
     f32 dyb_bottom = b->oPosY - b->hitboxDownOffset;
@@ -33,6 +40,12 @@ s32 detect_object_hitbox_overlap(struct Object *a, struct Object *b) {
     if (sqr(collisionRadius) > distance) {
         f32 dya_top = a->hitboxHeight + dya_bottom;
         f32 dyb_top = b->hitboxHeight + dyb_bottom;
+
+        if ((is_bobomb(a) && (b->oInteractType & INTERACT_DOOR))
+         || (is_bobomb(b) && (a->oInteractType & INTERACT_DOOR)))
+        {
+            return FALSE;
+        }
 
         if (dya_bottom > dyb_top
             || dya_top < dyb_bottom
