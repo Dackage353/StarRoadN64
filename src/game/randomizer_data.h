@@ -118,6 +118,7 @@ const u8 Randomizer_gStarDoorReqLUT[] = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 
 static const struct Randomizer_AvoidancePoint boiAvoidancePoints[] = {
     {bhvBobombBuddyOpensCannon, {4440, -864, -2526}, 1000.0f, 3500.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // Ship top
     {bhvMario, {-5217, -6100, -5269}, 600.0f, 4700.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // Inside the VC cage
+    {bhvStub, {-2814, -150, 3139}, 190.0f, 1300.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // active cannon
 };
 
 static const struct Randomizer_AvoidancePoint slrAvoidancePoints[] = {
