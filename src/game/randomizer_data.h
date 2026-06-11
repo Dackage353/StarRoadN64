@@ -165,6 +165,11 @@ static const struct Randomizer_AvoidancePoint csAvoidancePoints[] = {
     {bhvBobombBuddyOpensCannon, {-6337, 1350, -1969}, 2000.0f, 3000.0f, Randomizer_AVOIDANCE_SAFETY_HARD} // entire slide
 };
 
+static const struct Randomizer_AvoidancePoint fffAvoidancePoints[] = {
+    {bhvStub, {6505, -550, 6760}, 170.0f, 1200.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // left pillar near clown car
+    {bhvStub, {4195, -550, 6760}, 170.0f, 1200.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // right pillar near clown car
+};
+
 static const struct Randomizer_AvoidancePoint b1fAvoidancePoints[] = {
     {bhvStub, {3258, 465, -2816}, 700.0f, 700.0f, Randomizer_AVOIDANCE_SAFETY_ALL} // top of the roof
 };
@@ -222,7 +227,7 @@ static const struct Randomizer_AreaParams ttmParams[] = {
     {-7319, 7456, -1230, 5064, -8182, 7468, 0, ARRAY_SIZE(csAvoidancePoints), &csAvoidancePoints}
 };
 static const struct Randomizer_AreaParams thiParams[] = {
-    {-7839, 7380, -3530, 3104, -6877, 8013, 0, 0, NULL}
+    {-7839, 7380, -3530, 3104, -6877, 8013, 0, ARRAY_SIZE(fffAvoidancePoints), &fffAvoidancePoints}
 };
 static const struct Randomizer_AreaParams ttcParams[] = {
     {-5834, 6167, -1524, 3785, -7578, 5612, 0, 0, NULL}
