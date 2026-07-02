@@ -22,7 +22,14 @@ UNUSED struct Object *debug_print_obj_collision(struct Object *a) {
     return NULL;
 }
 
-s32 detect_object_hitbox_overlap(struct Object *a, struct Object *b) {
+extern const BehaviorScript bhvBobombRespawn[];
+extern const BehaviorScript bhvBobomb[];
+
+static s32 is_bobomb(struct Object *obj) {
+    return obj->behavior == bhvBobombRespawn || obj->behavior == bhvBobomb;
+}
+
+static s32 detect_object_hitbox_overlap(struct Object *a, struct Object *b) {
     f32 dya_bottom = a->oPosY - a->hitboxDownOffset;
     f32 dyb_bottom = b->oPosY - b->hitboxDownOffset;
     f32 dx = a->oPosX - b->oPosX;
@@ -33,6 +40,12 @@ s32 detect_object_hitbox_overlap(struct Object *a, struct Object *b) {
     if (sqr(collisionRadius) > distance) {
         f32 dya_top = a->hitboxHeight + dya_bottom;
         f32 dyb_top = b->hitboxHeight + dyb_bottom;
+
+        if ((is_bobomb(a) && (b->oInteractType & INTERACT_DOOR))
+         || (is_bobomb(b) && (a->oInteractType & INTERACT_DOOR)))
+        {
+            return FALSE;
+        }
 
         if (dya_bottom > dyb_top
             || dya_top < dyb_bottom
@@ -52,7 +65,7 @@ s32 detect_object_hitbox_overlap(struct Object *a, struct Object *b) {
     return FALSE;
 }
 
-s32 detect_object_hurtbox_overlap(struct Object *a, struct Object *b) {
+static s32 detect_object_hurtbox_overlap(struct Object *a, struct Object *b) {
     f32 dya_bottom = a->oPosY - a->hitboxDownOffset;
     f32 dyb_bottom = b->oPosY - b->hitboxDownOffset;
     f32 dx = a->oPosX - b->oPosX;
@@ -80,7 +93,7 @@ s32 detect_object_hurtbox_overlap(struct Object *a, struct Object *b) {
     return FALSE;
 }
 
-void clear_object_collision(struct Object *a) {
+static void clear_object_collision(struct Object *a) {
     struct Object *nextObj = (struct Object *) a->header.next;
 
     while (nextObj != a) {
@@ -93,7 +106,7 @@ void clear_object_collision(struct Object *a) {
     }
 }
 
-void check_collision_in_list(struct Object *a, struct Object *b, struct Object *c) {
+static void check_collision_in_list(struct Object *a, struct Object *b, struct Object *c) {
     if (a->oIntangibleTimer == 0) {
         while (b != c) {
             if (b->oIntangibleTimer == 0) {
@@ -106,7 +119,7 @@ void check_collision_in_list(struct Object *a, struct Object *b, struct Object *
     }
 }
 
-void check_player_object_collision(void) {
+static void check_player_object_collision(void) {
     struct Object *playerObj = (struct Object *) &gObjectLists[OBJ_LIST_PLAYER];
     struct Object   *nextObj = (struct Object *) playerObj->header.next;
 
@@ -134,7 +147,7 @@ void check_player_object_collision(void) {
     }
 }
 
-void check_pushable_object_collision(void) {
+static void check_pushable_object_collision(void) {
     struct Object *pushableObj = (struct Object *) &gObjectLists[OBJ_LIST_PUSHABLE];
     struct Object *nextObj = (struct Object *) pushableObj->header.next;
 
@@ -144,7 +157,7 @@ void check_pushable_object_collision(void) {
     }
 }
 
-void check_destructive_object_collision(void) {
+static void check_destructive_object_collision(void) {
     struct Object *destructiveObj = (struct Object *) &gObjectLists[OBJ_LIST_DESTRUCTIVE];
     struct Object *nextObj = (struct Object *) destructiveObj->header.next;
 
