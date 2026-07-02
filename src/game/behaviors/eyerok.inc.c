@@ -283,7 +283,7 @@ static void eyerok_hand_act_show_eye(void) {
             if (o->parentObj->oEyerokBossNumHands != 2) {
                 obj_face_yaw_approach(o->oMoveAngleYaw, 0x800);
                 if (o->oTimer > 10
-                    && (o->oPosZ - gMarioObject->oPosZ > 0.0f || (o->oMoveFlags & OBJ_MOVE_HIT_EDGE))) {
+                    && (o->oPosZ - gMarioObject->oPosZ > 0.0f || (absf((o->oPosZ - o->parentObj->oPosZ)) > 1500.0f))) {
                     o->parentObj->oEyerokBossActiveHand = 0;
                     o->oForwardVel = 0.0f;
                 }
@@ -312,7 +312,7 @@ static void eyerok_hand_act_attacked(void) {
         o->collisionData = segmented_to_virtual(ssl_seg7_collision_07028274);
     }
 
-    if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
+    if (o->oPosY == o->oHomeY) {
         o->oForwardVel = 0.0f;
     }
 }
@@ -392,7 +392,7 @@ static void eyerok_hand_act_target_mario(void) {
 
 static void eyerok_hand_act_smash(void) {
     if (o->oTimer > 20) {
-        if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
+        if (o->oPosY == o->oHomeY) {
             if (o->oGravity < -4.0f) {
                 eyerok_hand_pound_ground();
                 o->oGravity = -4.0f;
@@ -420,7 +420,7 @@ static void eyerok_hand_act_smash(void) {
 }
 
 static void eyerok_hand_act_fist_push(void) {
-    if (o->oTimer > 5 && (o->oPosZ - gMarioObject->oPosZ > 0.0f || (o->oMoveFlags & OBJ_MOVE_HIT_EDGE))) {
+    if (o->oTimer > 5 && (o->oPosZ - gMarioObject->oPosZ > 0.0f || (absf((o->oPosZ - o->parentObj->oPosZ)) > 1500.0f))) {
         o->oAction = EYEROK_HAND_ACT_FIST_SWEEP;
         o->oForwardVel = 0.0f;
 
@@ -435,7 +435,7 @@ static void eyerok_hand_act_fist_push(void) {
 }
 
 static void eyerok_hand_act_fist_sweep(void) {
-    if (o->oPosZ - o->parentObj->oPosZ < 1000.0f || (o->oMoveFlags & OBJ_MOVE_HIT_EDGE)) {
+    if ((o->oPosZ - o->parentObj->oPosZ < 1000.0f) || (absf((o->oPosX - o->parentObj->oPosX)) > 825.0f)) {
         o->oAction = EYEROK_HAND_ACT_RETREAT;
         o->oForwardVel = 0.0f;
     } else {
@@ -469,7 +469,7 @@ static void eyerok_hand_act_double_pound(void) {
         o->oAction = EYEROK_HAND_ACT_RETREAT;
         o->parentObj->oEyerokBossActiveHandId = o->oBehParams2ndByte;
     } else if (o->parentObj->oEyerokBossActiveHand == o->oBehParams2ndByte) {
-        if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
+        if (o->oPosY == o->oHomeY) {
             if (o->oGravity < -15.0f) {
                 o->parentObj->oEyerokBossActiveHand = 0;
                 eyerok_hand_pound_ground();
@@ -479,6 +479,7 @@ static void eyerok_hand_act_double_pound(void) {
                 o->oForwardVel = 30.0f * absf(o->parentObj->oEyerokBossFightSideZ);
                 o->oVelY = 100.0f;
                 o->oMoveFlags = OBJ_MOVE_NONE;
+                o->oGravity = -20.0f;
             }
         } else if (o->oVelY <= 0.0f) {
             o->oGravity = -20.0f;
@@ -544,6 +545,10 @@ void bhv_eyerok_hand_loop(void) {
 
         o->oEyerokReceivedAttack = obj_check_attacks(&sEyerokHitbox, o->oAction);
         cur_obj_move_standard(-78);
+
+        if (o->oPosY < o->oHomeY) {
+            o->oPosY = o->oHomeY;
+        }
     }
 
     load_object_collision_model();
