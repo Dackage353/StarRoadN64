@@ -174,6 +174,13 @@ static const struct Randomizer_AvoidancePoint b1fAvoidancePoints[] = {
     {bhvStub, {3258, 465, -2816}, 700.0f, 700.0f, Randomizer_AVOIDANCE_SAFETY_ALL} // top of the roof
 };
 
+static const struct Randomizer_AvoidancePoint bobfAvoidancePoints[] = {
+    {bhvStub, {1220, -774, 2445}, 230.0f, 900.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // metal pillars
+    {bhvStub, {1220, -774, 1564}, 230.0f, 900.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // metal pillars
+    {bhvStub, {2135, -774, 2445}, 230.0f, 900.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // metal pillars
+    {bhvStub, {2135, -774, 1564}, 230.0f, 900.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // metal pillars
+};
+
 extern const BehaviorScript bhvStarRoadSRRoomba[];
 static const struct Randomizer_AvoidancePoint c15AvoidancePoints[] = {
     {bhvStub, {3900, -3008, -4141}, 600.0f, 1000.0f, Randomizer_AVOIDANCE_SAFETY_ALL}, // bulb1
@@ -230,8 +237,9 @@ static const struct Randomizer_AreaParams thiParams[] = {
     {-7839, 7380, -3530, 3104, -6877, 8013, 0, ARRAY_SIZE(fffAvoidancePoints), &fffAvoidancePoints}
 };
 static const struct Randomizer_AreaParams ttcParams[] = {
-    {-5834, 6167, -1524, 3785, -7578, 5612, 0, 0, NULL}
+    {-5834, 6167, -1524, 3785, -7578, 5612, 0, ARRAY_SIZE(bobfAvoidancePoints), &bobfAvoidancePoints}
 };
+
 static const struct Randomizer_AreaParams rrParams[] = {
     {-7883, 7637, -6624, 11416, -7451, 7450, 0, ARRAY_SIZE(c15AvoidancePoints), &c15AvoidancePoints}
 };

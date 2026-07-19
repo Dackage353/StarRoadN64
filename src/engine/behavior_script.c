@@ -504,12 +504,12 @@ static s32 bhv_cmd_randomize_object(void) {
                 height = 600.f;
             }
 
-            Randomizer_get_safe_position(gCurrentObject->behavior, pos, 300.f, height, &randomState, (randType & RAND_TYPE_SAFE ? Randomizer_FLOOR_SAFETY_MEDIUM : Randomizer_FLOOR_SAFETY_LOW), randType);
+            Randomizer_get_safe_position_obj(gCurrentObject, pos, 300.f, height, &randomState, (randType & RAND_TYPE_SAFE ? Randomizer_FLOOR_SAFETY_MEDIUM : Randomizer_FLOOR_SAFETY_LOW), randType);
             randomize = TRUE;
         }
         // Grounded
         else if (randType & RAND_TYPE_GROUNDED) {
-            Randomizer_get_safe_position(gCurrentObject->behavior, pos, 0.f, 0.f, &randomState, Randomizer_FLOOR_SAFETY_HIGH, randType);
+            Randomizer_get_safe_position_obj(gCurrentObject, pos, 0.f, 0.f, &randomState, Randomizer_FLOOR_SAFETY_HIGH, randType);
             randomize = TRUE;
         }
         // Min variation
@@ -524,7 +524,7 @@ static s32 bhv_cmd_randomize_object(void) {
             case Randomizer_SPAWN_SAFETY_HARD:
                 height = 250.f;
             }
-            Randomizer_get_safe_position(gCurrentObject->behavior, pos, 50.f, height, &randomState, (randType & RAND_TYPE_SAFE ? Randomizer_FLOOR_SAFETY_MEDIUM : Randomizer_FLOOR_SAFETY_LOW), randType);
+            Randomizer_get_safe_position_obj(gCurrentObject, pos, 50.f, height, &randomState, (randType & RAND_TYPE_SAFE ? Randomizer_FLOOR_SAFETY_MEDIUM : Randomizer_FLOOR_SAFETY_LOW), randType);
             randomize = TRUE;
         }
 

@@ -133,6 +133,7 @@ extern void Randomizer_refreshPreset();
 extern void Randomizer_create_dynamic_avoidance_point(Vec3f pos, f32 radius, f32 height, f32 downOffset);
 extern u32 Randomizer_raycast_wall_check(Vec3s pos);
 extern void Randomizer_get_safe_position(const BehaviorScript* bhv, Vec3s, f32, f32, tinymt32_t *, u8, u32);
+extern void Randomizer_get_safe_position_obj(const struct Object* obj, Vec3s, f32, f32, tinymt32_t *, u8, u32);
 extern f32 Randomizer_get_val_in_range_uniform(f32, f32, tinymt32_t *);
 extern void Randomizer_init_randomizer(s32 fileNum);
 extern u8 Randomizer_get_nonrandom_level(u8 level);

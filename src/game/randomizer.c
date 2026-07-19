@@ -21,7 +21,7 @@
 #include "segment2.h"
 #include "game/emutest.h"
 
-u32 Randomizer_gGameSeed = 80052;
+u32 Randomizer_gGameSeed = 7224515;
 
 u8 Randomizer_gIsSetSeed = FALSE;
 
@@ -933,7 +933,11 @@ static void Randomizer_get_safe_position_impl(const BehaviorScript* bhv, Vec3s p
             || (randPosFlags & RAND_TYPE_MUST_BE_UNDERWATER)) {
             if ((objCanBeUnderwater && (waterLevel > maxHeight))
                 || (randPosFlags & RAND_TYPE_MUST_BE_UNDERWATER))
-                maxHeight = waterLevel;
+                {
+                    // Clamp underwater height to ceiling - helps CCCoral
+                    cHeight = find_ceil(pos[0], pos[1], pos[2], &ceil);
+                    maxHeight = MIN(waterLevel, cHeight);
+                }
         }
 
         // For the start warp, always spawn above the water
@@ -1164,6 +1168,36 @@ void Randomizer_get_safe_position(const BehaviorScript* bhv, Vec3s pos, f32 minH
     {
         Randomizer_get_safe_position_impl(bhv, pos, minHeightRange, maxHeightRange, randomState, floorSafeLevel, randPosFlags);
     }
+}
+
+void Randomizer_get_safe_position_obj(const struct Object* obj, Vec3s pos, f32 minHeightRange, f32 maxHeightRange, tinymt32_t *randomState, u8 floorSafeLevel, u32 randPosFlags)
+{
+    if (obj->behavior == bhvCoinFormation)
+    {
+        s32 snapToGround = TRUE;
+        int shape = obj->oBehParams2ndByte;
+
+        switch (shape & COIN_FORMATION_BP_SHAPE_MASK) {
+            case COIN_FORMATION_BP_SHAPE_HORIZONTAL_LINE:
+                break;
+            case COIN_FORMATION_BP_SHAPE_VERTICAL_LINE:
+                snapToGround = FALSE;
+                break;
+            case COIN_FORMATION_BP_SHAPE_HORIZONTAL_RING:
+                break;
+            case COIN_FORMATION_BP_SHAPE_VERTICAL_RING:
+                snapToGround = FALSE;
+                break;
+            case COIN_FORMATION_BP_SHAPE_ARROW:
+                break;
+        }
+
+        if (snapToGround) {
+            randPosFlags |= RAND_TYPE_GROUNDED;
+        }
+    }
+
+    Randomizer_get_safe_position(obj->behavior, pos, minHeightRange, maxHeightRange, randomState, floorSafeLevel, randPosFlags);
 }
 
 // Only uniform if used for floats. [min, max)
